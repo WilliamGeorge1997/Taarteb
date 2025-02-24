@@ -85,3 +85,13 @@ function allStatusCode(): array
         "not_implemented" => Response::HTTP_NOT_IMPLEMENTED,
     ];
 }
+
+
+//Pagination Response Helper
+function getCaseCollection($builder, array $data)
+{
+    if ($data['paginated'] ?? null) {
+        return $builder->paginate($data['paginated'] ?? 20);
+    }
+    return $builder->get();
+}

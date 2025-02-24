@@ -11,6 +11,7 @@
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "nwidart/laravel-modules": "^10",
+        "spatie/laravel-activitylog": "^4.10",
         "spatie/laravel-permission": "^6.15",
         "tymon/jwt-auth": "^2.1"
     },

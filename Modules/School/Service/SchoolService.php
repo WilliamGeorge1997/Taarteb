@@ -2,14 +2,15 @@
 
 namespace Modules\School\Service;
 
+use Modules\Admin\App\Models\Admin;
 use Modules\School\App\Models\School;
 
 class SchoolService
 {
-    function findAll()
+    function findAll($data = [])
     {
-        $schools = School::all();
-        return $schools;
+        $schools = School::query()->orderByDesc('created_at');
+        return getCaseCollection($schools, $data);
     }
 
     function findById($id)
@@ -24,9 +25,13 @@ class SchoolService
         return $school;
     }
 
-    function create($data)
+    function create($data, $managerData)
     {
-        return School::create($data);
+        $school = School::create($data);
+        $managerData['school_id'] = $school->id;
+        $schoolManager = Admin::create($managerData);
+        $schoolManager->assignRole('School Manager');
+        return $school;
     }
 
     function update($school, $data)

@@ -6,23 +6,32 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class Admin extends Authenticatable implements JWTSubject
 {
-    use HasFactory, HasRoles;
-
+    use HasFactory, HasRoles, LogsActivity;
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll()
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->useLogName('Admin')
+            ->dontLogIfAttributesChangedOnly(['updated_at']);
+    }
     /**
      * The attributes that are mass assignable.
      */
     protected $fillable = ['name', 'email', 'password', 'is_active', 'image', 'school_id'];
     protected $hidden =['password'];
-    protected static $logName  = 'Admin';
-    protected static $logAttributes = ['*'];
-    protected static $ignoreChangedAttributes = ['updated_at'];
-    protected static $logOnlyDirty = true;
-    protected static $submitEmptyLogs = false;
 
 
+    protected function serializeDate(\DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d h:i A');
+    }
 
     //JWT
 

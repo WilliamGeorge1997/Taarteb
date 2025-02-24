@@ -4,5 +4,7 @@
     "Admin": true,
     "Teacher": true,
     "Student": true,
-    "Class": true
+    "Class": true,
+    "Subject": true,
+    "Grade": true
 }

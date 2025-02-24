@@ -38,8 +38,8 @@ class SchoolRequest extends FormRequest
                 'phone' => ['required', 'string', 'unique:schools,phone'],
                 'grade' => ['required', 'string'],
                 'manager_name' => ['required', 'string', 'max:255'],
-                'manager_email' => ['required', 'email', 'unique:managers,email'],
-                'manager_password' => ['required', 'string', 'min:8'],
+                'manager_email' => ['required', 'email', 'unique:admins,email'],
+                'manager_password' => ['required', 'string', 'min:6'],
             ];
         }
         if ($this->isMethod('PUT')) {
