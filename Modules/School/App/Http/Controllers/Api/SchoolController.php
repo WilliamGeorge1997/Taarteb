@@ -18,11 +18,11 @@ class SchoolController extends Controller
    public function __construct(SchoolService $schoolService){
       $this->middleware('auth:admin');
       $this->middleware('role:Super Admin');
-      $this->schoolService = $schoolService;
       $this->middleware('permission:Index-school|Create-school|Edit-school|Delete-school', ['only' => ['index', 'store']]);
       $this->middleware('permission:Create-school', ['only' => ['create', 'store']]);
       $this->middleware('permission:Edit-school', ['only' => ['edit', 'update', 'activate']]);
       $this->middleware('permission:Delete-school', ['only' => ['destroy']]);
+      $this->schoolService = $schoolService;
    }
    public function index(Request $request){
       $data = $request->all();

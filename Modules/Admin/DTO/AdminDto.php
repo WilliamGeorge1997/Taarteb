@@ -13,9 +13,9 @@ class AdminDto
     public $password;
 
     public function __construct($request) {
-        $this->name = $request->get('manager_name');
-        $this->email = $request->get('manager_email');
-        $this->password = Hash::make($request->get('manager_password'));
+        if($request->get('manager_name')) $this->name = $request->get('manager_name');
+        if($request->get('manager_email')) $this->email = $request->get('manager_email');
+        if($request->get('manager_password')) $this->password = Hash::make($request->get('manager_password'));
     }
 
     public function dataFromRequest()

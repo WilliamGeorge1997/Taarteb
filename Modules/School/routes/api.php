@@ -15,7 +15,4 @@ use Modules\School\App\Http\Controllers\Api\SchoolController;
     |
 */
 
-// Route::middleware(['auth:sanctum'])->prefix('v1')->name('api.')->group(function () {
-//     Route::get('school', fn (Request $request) => $request->user())->name('school');
-// });
 Route::apiResource('schools',SchoolController::class);

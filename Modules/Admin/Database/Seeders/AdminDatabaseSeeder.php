@@ -65,6 +65,16 @@ class AdminDatabaseSeeder extends Seeder
             ['Create-class', 'Class', 'Create'],
             ['Edit-class', 'Class', 'Edit'],
             ['Delete-class', 'Class', 'Delete'],
+
+            ['Index-subject', 'Subject', 'Index'],
+            ['Create-subject', 'Subject', 'Create'],
+            ['Edit-subject', 'Subject', 'Edit'],
+            ['Delete-subject', 'Subject', 'Delete'],
+
+            ['Index-grade', 'Grade', 'Index'],
+            ['Create-grade', 'Grade', 'Create'],
+            ['Edit-grade', 'Grade', 'Edit'],
+            ['Delete-grade', 'Grade', 'Delete'],
         ];
 
         foreach ($permissions as $permission) {
@@ -83,6 +93,8 @@ class AdminDatabaseSeeder extends Seeder
     function role2Creation()
     {
         $role = Role::create(['name' => 'School Manager', 'guard_name' => 'admin']);
+        $permissions = Permission::where('category', 'Teacher')->get();
+        $role->syncPermissions($permissions);
         return $role;
     }
     function role3Creation()

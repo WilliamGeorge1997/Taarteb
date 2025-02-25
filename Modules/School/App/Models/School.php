@@ -25,7 +25,7 @@ class School extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['name', 'address', 'phone', 'email', 'grade', 'is_active'];
+    protected $fillable = ['name', 'address', 'phone', 'email', 'grade_id', 'is_active'];
 
     protected function serializeDate(\DateTimeInterface $date)
     {

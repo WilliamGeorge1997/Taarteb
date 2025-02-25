@@ -3,6 +3,7 @@
 namespace Modules\Admin\App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Modules\Admin\App\resources\AdminResource;
 use Modules\Admin\App\Http\Requests\AdminLoginRequest;
 
 class AdminAuthController extends Controller
@@ -86,8 +87,8 @@ class AdminAuthController extends Controller
         return returnMessage(true,'Successfully Logged in',[
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => auth('admin')->user()
+            'expires_in' => auth('admin')->factory()->getTTL() * 60,
+            'user' => new AdminResource(auth('admin')->user()->load(['roles.permissions'])),
         ]);
     }
 }

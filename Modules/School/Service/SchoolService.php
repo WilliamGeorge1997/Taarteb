@@ -15,7 +15,7 @@ class SchoolService
 
     function findById($id)
     {
-        $school = School::find($id);
+        $school = School::findOrFail($id);
         return $school;
     }
 
@@ -40,9 +40,8 @@ class SchoolService
         return $school;
     }
 
-    function delete($id)
+    function delete($school)
     {
-        $school = $this->findById($id);
         $school->delete();
     }
 

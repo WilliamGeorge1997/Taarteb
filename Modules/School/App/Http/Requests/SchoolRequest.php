@@ -16,10 +16,10 @@ class SchoolRequest extends FormRequest
     public function credentials(): array
     {
         if($this->isMethod('POST')){
-            return $this->only(['name', 'email', 'phone', 'grade', 'manager_name', 'manager_email', 'manager_password']);
+            return $this->only(['name', 'email', 'phone', 'grade_id', 'manager_name', 'manager_email', 'manager_password']);
         }
         if($this->isMethod('PUT')){
-            return $this->only(['name', 'email', 'phone', 'grade']);
+            return $this->only(['name', 'email', 'phone', 'grade_id']);
         }
         return [];
     }
@@ -36,7 +36,7 @@ class SchoolRequest extends FormRequest
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'email', 'unique:schools,email'],
                 'phone' => ['required', 'string', 'unique:schools,phone'],
-                'grade' => ['required', 'string'],
+                'grade_id' => ['required', 'exists:grades,id'],
                 'manager_name' => ['required', 'string', 'max:255'],
                 'manager_email' => ['required', 'email', 'unique:admins,email'],
                 'manager_password' => ['required', 'string', 'min:6'],
@@ -47,7 +47,7 @@ class SchoolRequest extends FormRequest
                 'name' => ['nullable', 'string', 'max:255'],
                 'email' => ['nullable', 'email', 'unique:schools,email,' . $this->school->id],
                 'phone' => ['nullable', 'string', 'unique:schools,phone,' . $this->school->id],
-                'grade' => ['nullable', 'string'],
+                'grade_id' => ['nullable', 'exists:grades,id'],
             ];
         }
         return [];
@@ -62,7 +62,7 @@ class SchoolRequest extends FormRequest
             'name' => 'Name',
             'email' => 'Email Address',
             'phone' => 'Phone Number',
-            'grade' => 'Grade',
+            'grade_id' => 'Grade',
         ];
     }
 

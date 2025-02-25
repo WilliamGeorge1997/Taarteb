@@ -33,6 +33,12 @@ class Admin extends Authenticatable implements JWTSubject
         return $date->format('Y-m-d h:i A');
     }
 
+    public function getImageAttribute($value)
+    {
+        return !is_null($value) && $value !== '' && filter_var($value, FILTER_VALIDATE_URL) ? $value : asset('uploads/admin/' . $value);
+    }
+
+
     //JWT
 
     /**
