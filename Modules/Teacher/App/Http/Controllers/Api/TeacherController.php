@@ -16,10 +16,10 @@ class TeacherController extends Controller
    private $teacherService;
    public function __construct(TeacherService $teacherService){
       $this->middleware('auth:admin');
-      $this->middleware('role:Super Admin,School Manager');
+      $this->middleware('role:Super Admin|School Manager');
       $this->middleware('permission:Index-teacher|Create-teacher|Edit-teacher|Delete-teacher', ['only' => ['index', 'store']]);
-      $this->middleware('permission:Create-teacher', ['only' => ['create', 'store']]);
-      $this->middleware('permission:Edit-teacher', ['only' => ['edit', 'update', 'activate']]);
+      $this->middleware('permission:Create-teacher', ['only' => ['store']]);
+      $this->middleware('permission:Edit-teacher', ['only' => ['update', 'activate']]);
       $this->middleware('permission:Delete-teacher', ['only' => ['destroy']]);
       $this->teacherService = $teacherService;
    }

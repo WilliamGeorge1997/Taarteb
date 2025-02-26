@@ -19,8 +19,8 @@ class SchoolController extends Controller
       $this->middleware('auth:admin');
       $this->middleware('role:Super Admin');
       $this->middleware('permission:Index-school|Create-school|Edit-school|Delete-school', ['only' => ['index', 'store']]);
-      $this->middleware('permission:Create-school', ['only' => ['create', 'store']]);
-      $this->middleware('permission:Edit-school', ['only' => ['edit', 'update', 'activate']]);
+      $this->middleware('permission:Create-school', ['only' => ['store']]);
+      $this->middleware('permission:Edit-school', ['only' => ['update', 'activate']]);
       $this->middleware('permission:Delete-school', ['only' => ['destroy']]);
       $this->schoolService = $schoolService;
    }

@@ -15,7 +15,6 @@ class TeacherDto
     public $subject_id;
     public $grade_id;
     public $school_id;
-    public $is_active;
 
     public function __construct($request) {
         if($request->get('name')) $this->name = $request->get('name');

@@ -29,7 +29,7 @@ class Teacher extends Authenticatable implements JWTSubject
      * The attributes that are mass assignable.
      */
     protected $fillable = ['name', 'email', 'phone', 'password', 'image', 'subject_id', 'grade_id', 'school_id', 'is_active'];
-
+    protected $hidden =['password'];
     protected function serializeDate(\DateTimeInterface $date)
     {
         return $date->format('Y-m-d h:i A');

@@ -16,7 +16,7 @@ trait UploadHelper
         $fileName = time() . $imageFromRequest->getClientOriginalName();
         $location = public_path('uploads/' . $imageFolder . '/' . $fileName);
 
-        $image = Image::make($imageFromRequest);
+        $image = Image::read($imageFromRequest);
         if ($resize == true) {
 
             $image->resize(500, 500);

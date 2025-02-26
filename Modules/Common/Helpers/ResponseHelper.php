@@ -63,26 +63,26 @@ function getStatusCode(string $type = 'ok'): int
 function allStatusCode(): array
 {
     return [
-        "ok" => Response::HTTP_OK,
-        "created" => Response::HTTP_CREATED,
-        "accepted" => Response::HTTP_ACCEPTED,
-        "no_content" => Response::HTTP_NO_CONTENT,
-        "moved" => Response::HTTP_MOVED_PERMANENTLY,
-        "found" => Response::HTTP_FOUND,
-        "see_other" => Response::HTTP_SEE_OTHER,
-        "not_modified" => Response::HTTP_NOT_MODIFIED,
-        "temporary_redirect" => Response::HTTP_TEMPORARY_REDIRECT,
-        "bad_request" => Response::HTTP_BAD_REQUEST,
-        "unauthorized" => Response::HTTP_UNAUTHORIZED,
-        "forbidden" => Response::HTTP_FORBIDDEN,
-        "not_found" => Response::HTTP_NOT_FOUND,
+        "ok" => Response::HTTP_OK, // 200
+        "created" => Response::HTTP_CREATED, // 201
+        "accepted" => Response::HTTP_ACCEPTED, // 202
+        "no_content" => Response::HTTP_NO_CONTENT, // 204
+        "moved" => Response::HTTP_MOVED_PERMANENTLY, // 301
+        "found" => Response::HTTP_FOUND, // 302
+        "see_other" => Response::HTTP_SEE_OTHER, // 303
+        "not_modified" => Response::HTTP_NOT_MODIFIED, // 304
+        "temporary_redirect" => Response::HTTP_TEMPORARY_REDIRECT, // 307
+        "bad_request" => Response::HTTP_BAD_REQUEST, // 400
+        "unauthorized" => Response::HTTP_UNAUTHORIZED, // 401
+        "forbidden" => Response::HTTP_FORBIDDEN, // 403
+        "not_found" => Response::HTTP_NOT_FOUND, // 404
         "method_not_allowed" => Response::HTTP_METHOD_NOT_ALLOWED,
-        "not_acceptable" => Response::HTTP_NOT_ACCEPTABLE,
-        "precondition_failed" => Response::HTTP_PRECONDITION_FAILED,
-        "unsupported_media_type" => Response::HTTP_UNSUPPORTED_MEDIA_TYPE,
-        "unprocessable_entity" => Response::HTTP_UNPROCESSABLE_ENTITY,
-        "server_error" => Response::HTTP_INTERNAL_SERVER_ERROR,
-        "not_implemented" => Response::HTTP_NOT_IMPLEMENTED,
+        "not_acceptable" => Response::HTTP_NOT_ACCEPTABLE, // 406
+        "precondition_failed" => Response::HTTP_PRECONDITION_FAILED, // 412
+        "unsupported_media_type" => Response::HTTP_UNSUPPORTED_MEDIA_TYPE, // 415
+        "unprocessable_entity" => Response::HTTP_UNPROCESSABLE_ENTITY, // 422
+        "server_error" => Response::HTTP_INTERNAL_SERVER_ERROR, // 500
+        "not_implemented" => Response::HTTP_NOT_IMPLEMENTED, // 501
     ];
 }
 
