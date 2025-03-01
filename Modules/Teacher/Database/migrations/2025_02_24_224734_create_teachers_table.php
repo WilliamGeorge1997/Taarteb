@@ -21,9 +21,9 @@ return new class extends Migration
             $table->string('phone')->unique();
             $table->string('password');
             $table->string('image')->nullable();
-            $table->foreignIdFor(Subject::class)->nullable()->index()->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Grade::class)->nullable()->index()->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(School::class)->nullable()->index()->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Subject::class)->nullable()->index()->constrained()->restrictOnDelete();
+            $table->foreignIdFor(Grade::class)->nullable()->index()->constrained()->restrictOnDelete();
+            $table->foreignIdFor(School::class)->nullable()->index()->constrained()->restrictOnDelete();
             $table->rememberToken();
             $table->boolean('is_active')->default(1);
             $table->timestamps();

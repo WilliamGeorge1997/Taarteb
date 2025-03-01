@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('$TABLE$', function (Blueprint $table) {
-            $FIELDS_UP$
+        Schema::create('classes', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('$TABLE$', function (Blueprint $table) {
-            $FIELDS_DOWN$
-        });
+        Schema::dropIfExists('classes');
     }
 };

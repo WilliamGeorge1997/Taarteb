@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('image')->nullable();
-            $table->foreignIdFor(School::class)->nullable()->index()->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(School::class)->nullable()->index()->constrained()->restrictOnDelete();
             $table->rememberToken();
             $table->boolean('is_active')->default(1);
             $table->timestamps();
