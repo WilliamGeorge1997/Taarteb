@@ -5,7 +5,6 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Modules\Admin\Database\Seeders\AdminDatabaseSeeder;
-use Modules\Class\Database\Seeders\ClassDatabaseSeeder;
 use Modules\Grade\Database\Seeders\GradeDatabaseSeeder;
 use Modules\Subject\Database\Seeders\SubjectDatabaseSeeder;
 
@@ -20,7 +19,6 @@ class DatabaseSeeder extends Seeder
             AdminDatabaseSeeder::class,
             SubjectDatabaseSeeder::class,
             GradeDatabaseSeeder::class,
-            ClassDatabaseSeeder::class,
         ]);
     }
 }

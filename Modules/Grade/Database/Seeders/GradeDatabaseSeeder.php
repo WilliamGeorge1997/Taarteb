@@ -13,12 +13,12 @@ class GradeDatabaseSeeder extends Seeder
     public function run(): void
     {
         $grades = [
-            ['title' => 'Grade 1', 'created_at' => now(), 'updated_at' => now()],
-            ['title' => 'Grade 2', 'created_at' => now(), 'updated_at' => now()],
-            ['title' => 'Grade 3', 'created_at' => now(), 'updated_at' => now()],
-            ['title' => 'Grade 4', 'created_at' => now(), 'updated_at' => now()],
-            ['title' => 'Grade 5', 'created_at' => now(), 'updated_at' => now()],
-            ['title' => 'Grade 6', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Grade 1', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Grade 2', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Grade 3', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Grade 4', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Grade 5', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Grade 6', 'created_at' => now(), 'updated_at' => now()],
         ];
 
         Grade::insert($grades);

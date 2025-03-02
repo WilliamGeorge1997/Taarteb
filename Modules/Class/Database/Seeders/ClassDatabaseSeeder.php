@@ -12,15 +12,5 @@ class ClassDatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $classes = [
-            ['title' => 'Class 1', 'created_at' => now(), 'updated_at' => now()],
-            ['title' => 'Class 2', 'created_at' => now(), 'updated_at' => now()],
-            ['title' => 'Class 3', 'created_at' => now(), 'updated_at' => now()],
-            ['title' => 'Class 4', 'created_at' => now(), 'updated_at' => now()],
-            ['title' => 'Class 5', 'created_at' => now(), 'updated_at' => now()],
-            ['title' => 'Class 6', 'created_at' => now(), 'updated_at' => now()],
-        ];
-
-        Classroom::insert($classes);
     }
 }

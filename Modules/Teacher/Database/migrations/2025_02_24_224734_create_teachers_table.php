@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone')->unique();
             $table->string('password');
+            $table->enum('gender', ['m', 'f']);
             $table->string('image')->nullable();
             $table->foreignIdFor(Subject::class)->nullable()->index()->constrained()->restrictOnDelete();
             $table->foreignIdFor(Grade::class)->nullable()->index()->constrained()->restrictOnDelete();

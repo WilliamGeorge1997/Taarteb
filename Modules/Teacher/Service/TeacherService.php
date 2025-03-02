@@ -11,7 +11,14 @@ class TeacherService
     use UploadHelper;
     function findAll($data = [])
     {
-        $teachers = Teacher::query()->available()->orderByDesc('created_at');
+        $teachers = Teacher::query()
+            ->when($data['name'] ?? null, function ($query) use ($data) {
+                $query->where('name', 'like', '%' . $data['name'] . '%');
+            })
+            ->when($data['email'] ?? null, function ($query) use ($data) {
+                $query->where('email', 'like', '%' . $data['email'] . '%');
+            })
+            ->available()->orderByDesc('created_at');
         return getCaseCollection($teachers, $data);
     }
 
@@ -34,7 +41,8 @@ class TeacherService
             $imageName = $this->upload($image, 'teacher');
             $data['image'] = $imageName;
         }
-        if(auth('admin')->user()->hasRole('School Manager')) $data['school_id'] = auth('admin')->user()->school_id;
+        if (auth('admin')->user()->hasRole('School Manager'))
+            $data['school_id'] = auth('admin')->user()->school_id;
         $teacher = Teacher::create($data);
         return $teacher;
     }

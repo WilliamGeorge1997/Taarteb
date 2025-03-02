@@ -2,13 +2,13 @@
 
 namespace Modules\Teacher\App\Models;
 
-use Spatie\Activitylog\LogOptions;
 use Modules\Grade\App\Models\Grade;
 use Modules\School\App\Models\School;
 use Spatie\Permission\Traits\HasRoles;
 use Modules\Subject\App\Models\Subject;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -29,7 +29,7 @@ class Teacher extends Authenticatable implements JWTSubject
      * The attributes that are mass assignable.
      */
     protected $fillable = ['name', 'email', 'phone', 'password', 'image', 'subject_id', 'grade_id', 'school_id', 'is_active'];
-    protected $hidden =['password'];
+    protected $hidden = ['password'];
     protected function serializeDate(\DateTimeInterface $date)
     {
         return $date->format('Y-m-d h:i A');

@@ -13,17 +13,17 @@ class SubjectDatabaseSeeder extends Seeder
     public function run(): void
     {
         $subjects = [
-            ['title' => 'Mathematics', 'created_at' => now(), 'updated_at' => now()],
-            ['title' => 'English', 'created_at' => now(), 'updated_at' => now()],
-            ['title' => 'Science', 'created_at' => now(), 'updated_at' => now()],
-            ['title' => 'History', 'created_at' => now(), 'updated_at' => now()],
-            ['title' => 'Geography', 'created_at' => now(), 'updated_at' => now()],
-            ['title' => 'Physics', 'created_at' => now(), 'updated_at' => now()],
-            ['title' => 'Chemistry', 'created_at' => now(), 'updated_at' => now()],
-            ['title' => 'Biology', 'created_at' => now(), 'updated_at' => now()],
-            ['title' => 'Computer Science', 'created_at' => now(), 'updated_at' => now()],
-            ['title' => 'Art', 'created_at' => now(), 'updated_at' => now()],
-            ['title' => 'Physical Education', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Mathematics', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'English', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Science', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'History', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Geography', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Physics', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Chemistry', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Biology', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Computer Science', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Art', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Physical Education', 'created_at' => now(), 'updated_at' => now()],
         ];
 
         Subject::insert($subjects);

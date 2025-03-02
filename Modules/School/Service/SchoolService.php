@@ -9,7 +9,15 @@ class SchoolService
 {
     function findAll($data = [])
     {
-        $schools = School::query()->orderByDesc('created_at');
+        $schools = School::query()
+            ->when($data['name'] ?? null, function ($query) use ($data) {
+                $query->where('name', 'like', '%' . $data['name'] . '%');
+            })
+            ->when($data['email'] ?? null, function ($query) use ($data) {
+                $query->where('email', 'like', '%' . $data['email'] . '%');
+            })
+            ->orderByDesc('created_at');
+
         return getCaseCollection($schools, $data);
     }
 
