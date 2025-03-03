@@ -15,9 +15,6 @@ return new class extends Migration
         Schema::create('schools', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
-            $table->string('phone')->unique();
-            $table->foreignIdFor(Grade::class)->index()->constrained()->restrictOnDelete();
             $table->boolean('is_active')->default(1);
             $table->timestamps();
         });

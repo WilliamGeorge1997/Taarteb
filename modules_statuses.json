@@ -7,5 +7,6 @@
     "Class": true,
     "Subject": true,
     "Grade": true,
-    "Classroom": true
+    "Classroom": true,
+    "User": true
 }
