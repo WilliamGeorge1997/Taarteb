@@ -5,18 +5,24 @@ namespace Modules\Teacher\Service;
 use Modules\User\App\Models\User;
 use Illuminate\Support\Facades\File;
 use Modules\Common\Helpers\UploadHelper;
+use Modules\Teacher\App\Models\TeacherProfile;
 
 class TeacherService
 {
     use UploadHelper;
     function findAll($data = [])
     {
-        $teachers = Teacher::query()
+        $teachers = TeacherProfile::query()
+            ->with('teacher')
             ->when($data['name'] ?? null, function ($query) use ($data) {
-                $query->where('name', 'like', '%' . $data['name'] . '%');
+                $query->whereHas('teacher', function ($query) use ($data) {
+                    $query->where('name', 'like', '%' . $data['name'] . '%');
+                });
             })
             ->when($data['email'] ?? null, function ($query) use ($data) {
-                $query->where('email', 'like', '%' . $data['email'] . '%');
+                $query->whereHas('teacher', function ($query) use ($data) {
+                    $query->where('email', 'like', '%' . $data['email'] . '%');
+                });
             })
             ->available()->orderByDesc('created_at');
         return getCaseCollection($teachers, $data);
@@ -39,26 +45,30 @@ class TeacherService
         if (request()->hasFile('image')) {
             $image = request()->file('image');
             $imageName = $this->upload($image, 'user');
-            $teacherProfileData['image'] = $imageName;
+            $teacherData['image'] = $imageName;
         }
         if (auth('user')->user()->hasRole('School Manager'))
             $teacherProfileData['school_id'] = auth('user')->user()->school_id;
+        $teacherData['role'] = 'Teacher';
         $teacher = User::create($teacherData);
         $teacher->assignRole('Teacher');
         $teacher->teacherProfile()->create($teacherProfileData);
         return $teacher;
     }
 
-    function update($teacher, $data)
+    function update($teacherProfile, $teacherData, $teacherProfileData)
     {
         if (request()->hasFile('image')) {
-            File::delete(public_path('uploads/user/' . $this->getImageName('user', $teacher->image)));
+            File::delete(public_path('uploads/user/' . $this->getImageName('user', $teacherProfile->user->image)));
             $image = request()->file('image');
             $imageName = $this->upload($image, 'user');
-            $data['image'] = $imageName;
+            $teacherData['image'] = $imageName;
         }
-        $teacher->update($data);
-        return $teacher;
+        if ($teacherData)
+            $teacherProfile->user()->update($teacherData);
+        if ($teacherProfileData)
+            $teacherProfile->update($teacherProfileData);
+        return $teacherProfile;
     }
 
     function delete($teacher)

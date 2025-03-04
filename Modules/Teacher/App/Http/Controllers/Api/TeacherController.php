@@ -5,11 +5,12 @@ namespace Modules\Teacher\App\Http\Controllers\Api;
 use Exception;
 use Illuminate\Http\Request;
 use Modules\User\DTO\TeacherDto;
-use Modules\User\App\Models\User;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Modules\Teacher\DTO\TeacherProfileDto;
 use Modules\Teacher\Service\TeacherService;
+use Modules\Teacher\App\Models\TeacherProfile;
+use Modules\Teacher\App\resources\TeacherResource;
 use Modules\Teacher\App\Http\Requests\TeacherRequest;
 
 class TeacherController extends Controller
@@ -27,7 +28,7 @@ class TeacherController extends Controller
    public function index(Request $request){
       $data = $request->all();
       $teachers = $this->teacherService->findAll($data);
-      return returnMessage(true, 'Teachers Fetched Successfully', $teachers);
+      return returnMessage(true, 'Teachers Fetched Successfully', TeacherResource::collection($teachers)->response()->getData(true));
    }
 
    public function store(TeacherRequest $request){
@@ -44,11 +45,12 @@ class TeacherController extends Controller
       }
    }
 
-   public function update(TeacherRequest $request, User $teacher){
+   public function update(TeacherRequest $request, TeacherProfile $teacher){
       try{
          DB::beginTransaction();
-         $data = (new TeacherDto($request))->dataFromRequest();
-         $teacher = $this->teacherService->update($teacher, $data);
+         $teacherData = (new TeacherDto($request))->dataFromRequest();
+         $teacherProfileData = (new TeacherProfileDto($request))->dataFromRequest();
+         $teacher = $this->teacherService->update($teacher, $teacherData, $teacherProfileData);
          DB::commit();
          return returnMessage(true, 'Teacher Updated Successfully', $teacher);
       }catch(Exception $e){

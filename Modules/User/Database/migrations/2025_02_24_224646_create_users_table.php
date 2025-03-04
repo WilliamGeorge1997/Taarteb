@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('phone')->unique();
             $table->string('password');
             $table->string('image')->nullable();
+            $table->enum('role', ['Super Admin', 'School Manager', 'Teacher']);
             $table->foreignIdFor(School::class)->nullable()->index()->constrained()->restrictOnDelete();
             $table->rememberToken();
             $table->boolean('is_active')->default(1);

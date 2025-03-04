@@ -28,6 +28,7 @@ class UserDatabaseSeeder extends Seeder
             'name' => 'admin',
             'email' => 'admin@admin.com',
             'phone' => '0123456789',
+            'role' => 'Super Admin',
             'password' => Hash::make('123456'),
             'is_active' => 1,
         ]);

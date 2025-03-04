@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Hash;
 class TeacherProfileDto
 {
     public $gender;
-    public $image;
     public $subject_id;
     public $grade_id;
 

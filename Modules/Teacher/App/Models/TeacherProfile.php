@@ -34,11 +34,10 @@ class TeacherProfile extends Model
     }
 
     //Relations
-    public function user()
+    public function teacher()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
-
     public function grade()
     {
         return $this->belongsTo(Grade::class);
@@ -47,5 +46,19 @@ class TeacherProfile extends Model
     public function subject()
     {
         return $this->belongsTo(Subject::class);
+    }
+
+
+    public function scopeAvailable($query){
+        if(auth('user')->check()){
+            $admin = auth('user')->user();
+            if($admin->hasRole('Super Admin')){
+            }
+            if($admin->hasRole('School Manager')){
+                return $query->whereHas('teacher', function ($query) use ($admin) {
+                    $query->where('school_id', $admin->school_id);
+                });
+            }
+        }
     }
 }

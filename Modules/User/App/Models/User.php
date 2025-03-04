@@ -3,6 +3,7 @@
 namespace Modules\User\App\Models;
 
 use Spatie\Activitylog\LogOptions;
+use Modules\School\App\Models\School;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -15,7 +16,7 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, HasRoles, LogsActivity;
 
-    protected $fillable = ['name', 'email', 'phone', 'password', 'is_active', 'image', 'school_id'];
+    protected $fillable = ['name', 'email', 'phone', 'password', 'role', 'is_active', 'image', 'school_id'];
     protected $hidden = ['password', 'remember_token'];
 
 
@@ -53,6 +54,12 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasOne(TeacherProfile::class, 'user_id');
     }
+
+    public function school()
+    {
+        return $this->belongsTo(School::class);
+    }
+
 
     //JWT
 

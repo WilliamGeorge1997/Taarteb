@@ -45,6 +45,7 @@ class SchoolService
         }
         $school = School::create($data);
         $managerData['school_id'] = $school->id;
+        $managerData['role'] = 'School Manager';
         $schoolManager = User::create($managerData);
         $schoolManager->assignRole('School Manager');
         $school->grades()->sync($schoolGradesData['grades']);

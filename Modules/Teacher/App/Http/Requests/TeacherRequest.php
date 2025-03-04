@@ -54,12 +54,12 @@ class TeacherRequest extends FormRequest
         if ($this->isMethod('PUT')) {
             $rules = [
                 'name' => ['nullable', 'string', 'max:255'],
-                'email' => ['nullable', 'email', 'unique:users,email,' . $this->teacher->id],
-                'phone' => ['nullable', 'string', 'unique:users,phone,' . $this->teacher->id],
+                'email' => ['nullable', 'email', 'unique:users,email,' . $this->teacher->teacher->id],
+                'phone' => ['nullable', 'string', 'unique:users,phone,' . $this->teacher->teacher->id],
                 'password' => ['nullable', 'string', 'min:6'],
                 'gender' => ['nullable', 'in:m,f'],
                 'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
-                'subject_id' => ['nullable', 'exists:subjects,id'], 
+                'subject_id' => ['nullable', 'exists:subjects,id'],
                 'grade_id' => ['nullable', 'exists:grades,id'],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
@@ -97,7 +97,7 @@ class TeacherRequest extends FormRequest
             $admin = auth('user')->user();
             if ($admin->hasRole('School Manager')) {
                 // Check if the teacher's school ID matches the authenticated user's school ID
-                return $admin->school_id == $this->teacher->school_id;
+                return $admin->school_id == $this->teacherProfile->teacher->school_id;
             }
         }
         return true;

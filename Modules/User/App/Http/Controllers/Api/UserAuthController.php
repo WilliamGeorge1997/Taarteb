@@ -88,8 +88,7 @@ class UserAuthController extends Controller
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth('user')->factory()->getTTL() * 60,
-            // 'user' => new UserResource(auth('user')->user()->load(['roles.permissions'])),
-            'user' => new UserResource(auth('user')->user()->load(['roles'])),
+            'user' => new UserResource(auth('user')->user()),
         ]);
     }
 }
