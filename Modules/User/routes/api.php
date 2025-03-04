@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Modules\User\App\Http\Controllers\Api\UserAuthController;
 
 /*
     |--------------------------------------------------------------------------
@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Route;
     |
 */
 
-Route::middleware(['auth:sanctum'])->prefix('v1')->name('api.')->group(function () {
-    Route::get('user', fn (Request $request) => $request->user())->name('user');
+Route::group([
+    'prefix' => 'user/auth'
+], function ($router) {
+    Route::post('login', [UserAuthController::class, 'login']);
+    Route::post('logout', [UserAuthController::class, 'logout']);
+    Route::post('refresh', [UserAuthController::class, 'refresh']);
+    Route::post('me', [UserAuthController::class, 'me']);
 });

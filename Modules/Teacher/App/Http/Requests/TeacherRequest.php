@@ -15,7 +15,7 @@ class TeacherRequest extends FormRequest
      */
     public function credentials(): array
     {
-        $user = auth('admin')->user();
+        $user = auth('user')->user();
         $baseFields = ['name', 'email', 'phone', 'password', 'gender', 'image', 'subject_id', 'grade_id'];
 
         if ($this->isMethod('POST') || $this->isMethod('PUT')) {
@@ -38,15 +38,15 @@ class TeacherRequest extends FormRequest
         if ($this->isMethod('POST')) {
             $rules = [
                 'name' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'email', 'unique:teachers,email'],
-                'phone' => ['required', 'string', 'unique:teachers,phone'],
+                'email' => ['required', 'email', 'unique:users,email'],
+                'phone' => ['required', 'string', 'unique:users,phone'],
                 'password' => ['required', 'string', 'min:6'],
                 'gender' => ['required', 'in:m,f'],
                 'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
                 'grade_id' => ['required', 'exists:grades,id'],
                 'subject_id' => ['required', 'exists:subjects,id'],
             ];
-            if (auth('admin')->user()->hasRole('Super Admin')) {
+            if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['required', 'exists:schools,id'];
             }
             return $rules;
@@ -54,15 +54,15 @@ class TeacherRequest extends FormRequest
         if ($this->isMethod('PUT')) {
             $rules = [
                 'name' => ['nullable', 'string', 'max:255'],
-                'email' => ['nullable', 'email', 'unique:teachers,email,' . $this->teacher->id],
-                'phone' => ['nullable', 'string', 'unique:teachers,phone,' . $this->teacher->id],
+                'email' => ['nullable', 'email', 'unique:users,email,' . $this->teacher->id],
+                'phone' => ['nullable', 'string', 'unique:users,phone,' . $this->teacher->id],
                 'password' => ['nullable', 'string', 'min:6'],
                 'gender' => ['nullable', 'in:m,f'],
                 'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
-                'subject_id' => ['nullable', 'exists:subjects,id'],
+                'subject_id' => ['nullable', 'exists:subjects,id'], 
                 'grade_id' => ['nullable', 'exists:grades,id'],
             ];
-            if (auth('admin')->user()->hasRole('Super Admin')) {
+            if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['nullable', 'exists:schools,id'];
             }
             return $rules;
@@ -94,7 +94,7 @@ class TeacherRequest extends FormRequest
     public function authorize(): bool
     {
         if($this->isMethod('PUT')){
-            $admin = auth('admin')->user();
+            $admin = auth('user')->user();
             if ($admin->hasRole('School Manager')) {
                 // Check if the teacher's school ID matches the authenticated user's school ID
                 return $admin->school_id == $this->teacher->school_id;

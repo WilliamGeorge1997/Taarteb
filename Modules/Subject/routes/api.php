@@ -15,4 +15,4 @@ use Modules\Subject\App\Http\Controllers\Api\SubjectController;
     |
 */
 
-Route::get('subjects', [SubjectController::class, 'index']);
+Route::get('subjects/{grade}', [SubjectController::class, 'subjectsByGradeId']);

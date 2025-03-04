@@ -2,15 +2,21 @@
 
 namespace Modules\School\App\Models;
 
-use Modules\Admin\App\Models\Admin;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Spatie\Activitylog\Traits\LogsActivity;
+use Modules\User\App\Models\User;
 use Spatie\Activitylog\LogOptions;
+use Modules\Grade\App\Models\Grade;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class School extends Model
 {
     use HasFactory, LogsActivity;
+
+      /**
+     * The attributes that are mass assignable.
+     */
+    protected $fillable = ['name', 'is_active'];
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -22,11 +28,6 @@ class School extends Model
             ->dontLogIfAttributesChangedOnly(['updated_at']);
     }
 
-    /**
-     * The attributes that are mass assignable.
-     */
-    protected $fillable = ['name', 'address', 'phone', 'email', 'grade_id', 'is_active'];
-
     protected function serializeDate(\DateTimeInterface $date)
     {
         return $date->format('Y-m-d h:i A');
@@ -36,6 +37,11 @@ class School extends Model
     //Relations
     public function manager()
     {
-        return $this->hasOne(Admin::class);
+        return $this->hasOne(User::class);
+    }
+
+    public function grades()
+    {
+        return $this->belongsToMany(Grade::class, 'school_grades');
     }
 }

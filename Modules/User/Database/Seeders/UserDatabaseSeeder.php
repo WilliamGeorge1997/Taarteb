@@ -27,6 +27,7 @@ class UserDatabaseSeeder extends Seeder
         return $admin = User::create([
             'name' => 'admin',
             'email' => 'admin@admin.com',
+            'phone' => '0123456789',
             'password' => Hash::make('123456'),
             'is_active' => 1,
         ]);
@@ -50,10 +51,10 @@ class UserDatabaseSeeder extends Seeder
             ['Edit-school', 'School', 'Edit'],
             ['Delete-school', 'School', 'Delete'],
 
-            ['Index-teacher-profile', 'Teacher Profile', 'Index'],
-            ['Create-teacher-profile', 'Teacher Profile', 'Create'],
-            ['Edit-teacher-profile', 'Teacher Profile', 'Edit'],
-            ['Delete-teacher-profile', 'Teacher Profile', 'Delete'],
+            ['Index-teacher', 'Teacher', 'Index'],
+            ['Create-teacher', 'Teacher', 'Create'],
+            ['Edit-teacher', 'Teacher', 'Edit'],
+            ['Delete-teacher', 'Teacher', 'Delete'],
 
             ['Index-student', 'Student', 'Index'],
             ['Create-student', 'Student', 'Create'],
@@ -79,16 +80,21 @@ class UserDatabaseSeeder extends Seeder
             ['Create-grade-category', 'Grade Category', 'Create'],
             ['Edit-grade-category', 'Grade Category', 'Edit'],
             ['Delete-grade-category', 'Grade Category', 'Delete'],
+
+            ['Index-attendance', 'Attendance', 'Index'],
+            ['Create-attendance', 'Attendance', 'Create'],
+            ['Edit-attendance', 'Attendance', 'Edit'],
+            ['Delete-attendance', 'Attendance', 'Delete'],
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission[0], 'category' => $permission[1], 'guard_name' => 'admin', 'display' => $permission[2]]);
+            Permission::create(['name' => $permission[0], 'category' => $permission[1], 'guard_name' => 'user', 'display' => $permission[2]]);
         }
     }
 
     function roleCreation()
     {
-        $role = Role::create(['name' => 'Super Admin', 'guard_name' => 'admin']);
+        $role = Role::create(['name' => 'Super Admin', 'guard_name' => 'user']);
         $permissions = Permission::all();
         $role->syncPermissions($permissions);
         return $role;
@@ -96,14 +102,16 @@ class UserDatabaseSeeder extends Seeder
 
     function role2Creation()
     {
-        $role = Role::create(['name' => 'School Manager', 'guard_name' => 'admin']);
-        $permissions = Permission::where('category', 'Teacher')->get();
+        $role = Role::create(['name' => 'School Manager', 'guard_name' => 'user']);
+        $permissions = Permission::whereIn('category', ['Teacher', 'Student', 'Class', 'Subject', 'Attendance'])->get();
         $role->syncPermissions($permissions);
         return $role;
     }
     function role3Creation()
     {
-        $role = Role::create(['name' => 'Teacher', 'guard_name' => 'teacher']);
+        $role = Role::create(['name' => 'Teacher', 'guard_name' => 'user']);
+        $permissions = Permission::whereIn('category', ['Attendance'])->get();
+        $role->syncPermissions($permissions);
         return $role;
     }
 }

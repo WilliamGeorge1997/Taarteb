@@ -4,10 +4,11 @@ namespace Modules\Teacher\App\Http\Controllers\Api;
 
 use Exception;
 use Illuminate\Http\Request;
+use Modules\User\DTO\TeacherDto;
+use Modules\User\App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Modules\Teacher\DTO\TeacherDto;
 use App\Http\Controllers\Controller;
-use Modules\Teacher\App\Models\Teacher;
+use Modules\Teacher\DTO\TeacherProfileDto;
 use Modules\Teacher\Service\TeacherService;
 use Modules\Teacher\App\Http\Requests\TeacherRequest;
 
@@ -15,7 +16,7 @@ class TeacherController extends Controller
 {
    private $teacherService;
    public function __construct(TeacherService $teacherService){
-      $this->middleware('auth:admin');
+      $this->middleware('auth:user');
       $this->middleware('role:Super Admin|School Manager');
       $this->middleware('permission:Index-teacher|Create-teacher|Edit-teacher|Delete-teacher', ['only' => ['index', 'store']]);
       $this->middleware('permission:Create-teacher', ['only' => ['store']]);
@@ -30,10 +31,11 @@ class TeacherController extends Controller
    }
 
    public function store(TeacherRequest $request){
-      try{
+        try{
          DB::beginTransaction();
-         $data = (new TeacherDto($request))->dataFromRequest();
-         $teacher = $this->teacherService->create($data);
+         $teacherData = (new TeacherDto($request))->dataFromRequest();
+         $teacherProfileData = (new TeacherProfileDto($request))->dataFromRequest();
+         $teacher = $this->teacherService->create($teacherData, $teacherProfileData);
          DB::commit();
          return returnMessage(true, 'Teacher Created Successfully', $teacher);
       }catch(Exception $e){
@@ -42,7 +44,7 @@ class TeacherController extends Controller
       }
    }
 
-   public function update(TeacherRequest $request, Teacher $teacher){
+   public function update(TeacherRequest $request, User $teacher){
       try{
          DB::beginTransaction();
          $data = (new TeacherDto($request))->dataFromRequest();

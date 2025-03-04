@@ -1,7 +1,8 @@
 <?php
 
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
 /**
  * Returns a JSON response with status, message, and data

@@ -2,11 +2,13 @@
 
 namespace Modules\School\Service;
 
-use Modules\Admin\App\Models\Admin;
+use Modules\Common\Helpers\UploadHelper;
+use Modules\User\App\Models\User;
 use Modules\School\App\Models\School;
-
+use Illuminate\Support\Facades\File;
 class SchoolService
 {
+    use UploadHelper;
     function findAll($data = [])
     {
         $schools = School::query()
@@ -16,6 +18,7 @@ class SchoolService
             ->when($data['email'] ?? null, function ($query) use ($data) {
                 $query->where('email', 'like', '%' . $data['email'] . '%');
             })
+            ->with('manager')
             ->orderByDesc('created_at');
 
         return getCaseCollection($schools, $data);
@@ -33,23 +36,43 @@ class SchoolService
         return $school;
     }
 
-    function create($data, $managerData)
+    function create($data, $managerData, $schoolGradesData)
     {
+        if (request()->hasFile('image')) {
+            $image = request()->file('image');
+            $imageName = $this->upload($image, 'user');
+            $managerData['image'] = $imageName;
+        }
         $school = School::create($data);
         $managerData['school_id'] = $school->id;
-        $schoolManager = Admin::create($managerData);
+        $schoolManager = User::create($managerData);
         $schoolManager->assignRole('School Manager');
+        $school->grades()->sync($schoolGradesData['grades']);
         return $school;
     }
 
-    function update($school, $data)
+    function update($school, $schoolData, $managerData, $schoolGradesData)
     {
-        $school->update($data);
-        return $school;
+        if (request()->hasFile('image')) {
+            File::delete(public_path('uploads/user/' . $this->getImageName('user', $school->manager->image)));
+            $image = request()->file('image');
+            $imageName = $this->upload($image, 'user');
+            $managerData['image'] = $imageName;
+        }
+        if ($schoolData)
+            $school->update($schoolData);
+        if ($managerData) {
+            $school->manager()->update($managerData);
+        }
+        if ($schoolGradesData) {
+            $school->grades()->sync($schoolGradesData['grades']);
+        }
+        return $school->fresh()->load('manager');
     }
 
     function delete($school)
     {
+        File::delete(public_path('uploads/user/' . $this->getImageName('user', $school->manager->image)));
         $school->delete();
     }
 

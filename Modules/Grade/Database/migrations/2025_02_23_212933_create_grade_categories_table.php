@@ -1,6 +1,5 @@
 <?php
 
-use Modules\Grade\App\Models\GradeCategory;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('grades', function (Blueprint $table) {
+        Schema::create('grade_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignIdFor(GradeCategory::class)->index()->constrained()->restrictOnDelete();
             $table->timestamps();
         });
     }
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('grades');
+        Schema::dropIfExists('grade_cateogries');
     }
 };

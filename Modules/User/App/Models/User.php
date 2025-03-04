@@ -2,19 +2,21 @@
 
 namespace Modules\User\App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Tymon\JWTAuth\Contracts\JWTSubject;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Model;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Modules\Teacher\App\Models\TeacherProfile;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+
 class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, HasRoles, LogsActivity;
 
-    protected $fillable = ['name', 'email', 'password', 'is_active', 'image', 'school_id'];
-    protected $hidden =['password', 'remember_token'];
+    protected $fillable = ['name', 'email', 'phone', 'password', 'is_active', 'image', 'school_id'];
+    protected $hidden = ['password', 'remember_token'];
 
 
     public function getActivitylogOptions(): LogOptions
@@ -23,7 +25,7 @@ class User extends Authenticatable implements JWTSubject
             ->logAll()
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
-            ->useLogName('Admin')
+            ->useLogName('User')
             ->dontLogIfAttributesChangedOnly(['updated_at']);
     }
     /**
@@ -35,12 +37,24 @@ class User extends Authenticatable implements JWTSubject
     {
         return $date->format('Y-m-d h:i A');
     }
-     public function getImageAttribute($value)
+    public function getImageAttribute($value)
     {
-        return !is_null($value) && $value !== '' && filter_var($value, FILTER_VALIDATE_URL) ? $value : asset('uploads/user/' . $value);
+        if ($value != null && $value != '') {
+            if (filter_var($value, FILTER_VALIDATE_URL)) {
+                return $value;
+            } else {
+                return asset('uploads/user/' . $value);
+            }
+        }
+    }
+    //Relation
+
+    public function teacherProfile()
+    {
+        return $this->hasOne(TeacherProfile::class, 'user_id');
     }
 
-   //JWT
+    //JWT
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.

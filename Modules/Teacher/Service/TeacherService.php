@@ -2,8 +2,8 @@
 
 namespace Modules\Teacher\Service;
 
+use Modules\User\App\Models\User;
 use Illuminate\Support\Facades\File;
-use Modules\Teacher\App\Models\Teacher;
 use Modules\Common\Helpers\UploadHelper;
 
 class TeacherService
@@ -34,25 +34,27 @@ class TeacherService
         return $teacher;
     }
 
-    function create($data)
+    function create($teacherData, $teacherProfileData)
     {
         if (request()->hasFile('image')) {
             $image = request()->file('image');
-            $imageName = $this->upload($image, 'teacher');
-            $data['image'] = $imageName;
+            $imageName = $this->upload($image, 'user');
+            $teacherProfileData['image'] = $imageName;
         }
-        if (auth('admin')->user()->hasRole('School Manager'))
-            $data['school_id'] = auth('admin')->user()->school_id;
-        $teacher = Teacher::create($data);
+        if (auth('user')->user()->hasRole('School Manager'))
+            $teacherProfileData['school_id'] = auth('user')->user()->school_id;
+        $teacher = User::create($teacherData);
+        $teacher->assignRole('Teacher');
+        $teacher->teacherProfile()->create($teacherProfileData);
         return $teacher;
     }
 
     function update($teacher, $data)
     {
         if (request()->hasFile('image')) {
-            File::delete(public_path('uploads/teacher/' . $this->getImageName('teacher', $teacher->image)));
+            File::delete(public_path('uploads/user/' . $this->getImageName('user', $teacher->image)));
             $image = request()->file('image');
-            $imageName = $this->upload($image, 'teacher');
+            $imageName = $this->upload($image, 'user');
             $data['image'] = $imageName;
         }
         $teacher->update($data);
@@ -61,7 +63,7 @@ class TeacherService
 
     function delete($teacher)
     {
-        File::delete(public_path('uploads/teacher/' . $this->getImageName('teacher', $teacher->image)));
+        File::delete(public_path('uploads/user/' . $this->getImageName('user', $teacher->image)));
         $teacher->delete();
     }
 

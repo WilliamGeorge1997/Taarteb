@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\School\App\Http\Requests;
+namespace Modules\User\App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class SchoolRequest extends FormRequest
+class UserLoginRequest extends FormRequest
 {
     /**
      * Get the credentials for authentication.
@@ -15,13 +15,7 @@ class SchoolRequest extends FormRequest
      */
     public function credentials(): array
     {
-        if ($this->isMethod('POST')) {
-            return $this->only(['name', 'email', 'phone', 'grades']);
-        }
-        if ($this->isMethod('PUT')) {
-            return $this->only(['name', 'email', 'phone', 'grades']);
-        }
-        return [];
+        return $this->only(['email', 'password']);
     }
 
     /**
@@ -31,25 +25,10 @@ class SchoolRequest extends FormRequest
      */
     public function rules(): array
     {
-        if ($this->isMethod('POST')) {
-            return [
-                'name' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'email', 'unique:users,email'],
-                'phone' => ['required', 'string', 'unique:users,phone'],
-                'grades' => ['required', 'array'],
-                'grades.*' => ['required', 'exists:grades,id'],
-            ];
-        }
-        if ($this->isMethod('PUT')) {
-            return [
-                'name' => ['nullable', 'string', 'max:255'],
-                'email' => ['nullable', 'email', 'unique:users,email,' . $this->school->manager->id],
-                'phone' => ['nullable', 'string', 'unique:users,phone,' . $this->school->manager->id],
-                'grades' => ['nullable', 'array'],
-                'grades.*' => ['nullable', 'exists:grades,id'],
-            ];
-        }
-        return [];
+        return [
+            'email' => ['required', 'email', 'exists:users,email'],
+            'password' => ['required'],
+        ];
     }
 
     /**
@@ -58,11 +37,8 @@ class SchoolRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'name' => 'Name',
             'email' => 'Email Address',
-            'phone' => 'Phone Number',
-            'grades' => 'Grades',
-            'grades.*' => 'Grade',
+            'password' => 'Password',
         ];
     }
 

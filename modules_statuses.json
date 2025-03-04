@@ -1,7 +1,6 @@
 {
     "Common": true,
     "School": true,
-    "Admin": true,
     "Teacher": true,
     "Student": true,
     "Class": true,
