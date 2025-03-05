@@ -3,6 +3,7 @@
 namespace Modules\Session\App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Modules\Session\App\Rules\SessionLimit;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
@@ -41,9 +42,9 @@ class SessionRequest extends FormRequest
                 'session_number' => ['required', 'integer'],
                 'semester' => ['required', 'in:first,second'],
                 'year' => ['required', 'string'],
-                'class_id' => ['required', 'exists:classes,id'],
+                'class_id' => ['required', 'exists:classes,id', new SessionLimit($this->input('class_id'))],
                 'subject_id' => ['required', 'exists:subjects,id'],
-                'teacher_id' => ['required', 'exists:teachers,id'],
+                'teacher_id' => ['required', 'exists:teacher_profiles,id'],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['required', 'exists:schools,id'];
@@ -58,7 +59,7 @@ class SessionRequest extends FormRequest
                 'year' => ['nullable', 'string'],
                 'class_id' => ['nullable', 'exists:classes,id'],
                 'subject_id' => ['nullable', 'exists:subjects,id'],
-                'teacher_id' => ['nullable', 'exists:teachers,id'],
+                'teacher_id' => ['nullable', 'exists:teacher_profiles,id'],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['nullable', 'exists:schools,id'];
@@ -93,7 +94,6 @@ class SessionRequest extends FormRequest
         if ($this->isMethod('PUT')) {
             $admin = auth('user')->user();
             if ($admin->hasRole('School Manager')) {
-                // Check if the student's school ID matches the authenticated user's school ID
                 return $admin->school_id == $this->session->school_id;
             }
         }

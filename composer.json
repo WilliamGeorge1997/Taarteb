@@ -27,7 +27,8 @@
     },
     "autoload": {
         "files": [
-            "Modules/Common/Helpers/ResponseHelper.php"
+            "Modules/Common/Helpers/ResponseHelper.php",
+            "Modules/Common/Helpers/HistoryHelper.php"
         ],
         "psr-4": {
             "App\\": "app/",

@@ -19,7 +19,7 @@ class TeacherController extends Controller
    public function __construct(TeacherService $teacherService){
       $this->middleware('auth:user');
       $this->middleware('role:Super Admin|School Manager');
-      $this->middleware('permission:Index-teacher|Create-teacher|Edit-teacher|Delete-teacher', ['only' => ['index', 'store']]);
+      $this->middleware('permission:Index-teacher|Create-teacher|Edit-teacher|Delete-teacher', ['only' => ['index', 'store', 'getTeachersBySubjectId']]);
       $this->middleware('permission:Create-teacher', ['only' => ['store']]);
       $this->middleware('permission:Edit-teacher', ['only' => ['update', 'activate']]);
       $this->middleware('permission:Delete-teacher', ['only' => ['destroy']]);
@@ -57,5 +57,10 @@ class TeacherController extends Controller
          DB::rollBack();
          return returnMessage(false, $e->getMessage(), null, 500);
       }
+   }
+
+   public function getTeachersBySubjectId(Request $request, $subjectId)
+   {
+      return returnMessage(true, 'Teachers fetched successfully', TeacherResource::collection($this->teacherService->getTeachersBySubjectId($subjectId))->response()->getData(true));
    }
 }

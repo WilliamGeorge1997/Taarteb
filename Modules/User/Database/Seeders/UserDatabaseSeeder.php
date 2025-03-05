@@ -82,6 +82,11 @@ class UserDatabaseSeeder extends Seeder
             ['Edit-grade-category', 'Grade Category', 'Edit'],
             ['Delete-grade-category', 'Grade Category', 'Delete'],
 
+            ['Index-session', 'Session', 'Index'],
+            ['Create-session', 'Session', 'Create'],
+            ['Edit-session', 'Session', 'Edit'],
+            ['Delete-session', 'Session', 'Delete'],
+
             ['Index-attendance', 'Attendance', 'Index'],
             ['Create-attendance', 'Attendance', 'Create'],
             ['Edit-attendance', 'Attendance', 'Edit'],
@@ -104,7 +109,7 @@ class UserDatabaseSeeder extends Seeder
     function role2Creation()
     {
         $role = Role::create(['name' => 'School Manager', 'guard_name' => 'user']);
-        $permissions = Permission::whereIn('category', ['Teacher', 'Student', 'Class', 'Subject', 'Attendance'])->get();
+        $permissions = Permission::whereIn('category', ['Teacher', 'Student', 'Class', 'Subject', 'Attendance', 'Session'])->get();
         $role->syncPermissions($permissions);
         return $role;
     }

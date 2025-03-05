@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Modules\Session\App\Http\Controllers\Api\SessionController;
+use Modules\Session\App\Http\Controllers\Api\AttendanceController;
 
 /*
     |--------------------------------------------------------------------------
@@ -15,4 +16,5 @@ use Modules\Session\App\Http\Controllers\Api\SessionController;
     |
 */
 
-Route::apiResource('session', SessionController::class);
+Route::apiResource('sessions', SessionController::class);
+Route::apiResource('attendances', AttendanceController::class);

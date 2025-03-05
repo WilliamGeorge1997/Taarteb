@@ -55,4 +55,16 @@ class Session extends Model
         return $this->belongsTo(School::class);
     }
 
+    //Helper
+    public function scopeAvailable($query){
+        if(auth('user')->check()){
+            $admin = auth('user')->user();
+            if($admin->hasRole('Super Admin')){
+            }
+            if($admin->hasRole('School Manager')){
+                $query->where('school_id', $admin->school_id);
+            }
+        }
+    }
+
 }

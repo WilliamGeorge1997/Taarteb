@@ -83,4 +83,9 @@ class TeacherService
         $teacher->is_active = !$teacher->is_active;
         $teacher->save();
     }
+
+    function getTeachersBySubjectId($subjectId)
+    {
+        return TeacherProfile::with('teacher')->where('subject_id', $subjectId)->available()->orderByDesc('created_at')->get();
+    }
 }

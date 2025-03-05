@@ -17,3 +17,4 @@ use Modules\Teacher\App\Http\Controllers\Api\TeacherController;
 
 
 Route::apiResource('teachers',TeacherController::class);
+Route::get('teachers/subject/{subjectId}', [TeacherController::class, 'getTeachersBySubjectId']);

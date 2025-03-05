@@ -11,6 +11,18 @@ class SessionResource extends JsonResource
      */
     public function toArray($request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'day' => $this->day,
+            'session_number' => $this->session_number,
+            'semester' => $this->semester,
+            'year' => $this->year,
+            'class' => $this->class->name,
+            'subject' => $this->subject->name,
+            'teacher' => $this->teacher->teacher->name,
+            'school' => $this->school->name,
+           "created_at" => $this->created_at->format('Y-m-d h:i A'),
+            "updated_at" => $this->updated_at->format('Y-m-d h:i A'),
+        ];
     }
 }
