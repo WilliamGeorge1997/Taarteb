@@ -2,11 +2,12 @@
 
 namespace Modules\Class\App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 use Modules\Grade\App\Models\Grade;
+use Modules\School\App\Models\School;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Classroom extends Model
 {
@@ -23,9 +24,8 @@ class Classroom extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['title', 'grade_id', 'max_students', 'period_number'];
+    protected $fillable = ['name', 'grade_id', 'school_id', 'max_students', 'session_number'];
     protected $table = 'classes';
-    protected $hidden = ['created_at', 'updated_at'];
     protected function serializeDate(\DateTimeInterface $date)
     {
         return $date->format('Y-m-d h:i A');
@@ -36,12 +36,16 @@ class Classroom extends Model
     {
         return $this->belongsTo(Grade::class);
     }
+    public function school()
+    {
+        return $this->belongsTo(School::class);
+    }
 
     //Helper
     protected function scopeAvailable($query)
     {
-        if (auth('admin')->check()) {
-            $admin = auth('admin')->user();
+        if (auth('user')->check()) {
+            $admin = auth('user')->user();
             if ($admin->hasRole('Super Admin')) {
                 // Show All Teachers
             } else if ($admin->hasRole('School Manager')) {

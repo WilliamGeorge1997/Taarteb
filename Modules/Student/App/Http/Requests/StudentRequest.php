@@ -15,8 +15,8 @@ class StudentRequest extends FormRequest
      */
     public function credentials(): array
     {
-        $user = auth('admin')->user();
-        $baseFields = ['name', 'email', 'identity_number', 'gender', 'grade_id', 'class_id', 'school_id'];
+        $user = auth('user')->user();
+        $baseFields = ['name', 'email', 'identity_number', 'parent_email', 'gender', 'grade_id', 'class_id'];
 
         if ($this->isMethod('POST') || $this->isMethod('PUT')) {
             if ($user->hasRole('Super Admin')) {
@@ -38,13 +38,14 @@ class StudentRequest extends FormRequest
         if ($this->isMethod('POST')) {
             $rules = [
                 'name' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'email', 'unique:students,email'],
+                'email' => ['required', 'email', 'unique:students,email,parent_email'],
                 'identity_number' => ['required', 'string', 'unique:students,identity_number'],
                 'gender' => ['required', 'in:m,f'],
                 'grade_id' => ['required', 'exists:grades,id'],
                 'class_id' => ['required', 'exists:classes,id'],
+                'parent_email' => ['required', 'email', 'unique:students,parent_email'],
             ];
-            if (auth('admin')->user()->hasRole('Super Admin')) {
+            if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['required', 'exists:schools,id'];
             }
             return $rules;
@@ -52,12 +53,14 @@ class StudentRequest extends FormRequest
         if ($this->isMethod('PUT')) {
             $rules = [
                 'name' => ['nullable', 'string', 'max:255'],
-                'email' => ['nullable', 'email', 'unique:students,email,' . $this->student->id],
+                'email' => ['nullable', 'email', 'unique:students,email,parent_email' . $this->student->id],
                 'identity_number' => ['nullable', 'string', 'unique:students,identity_number,' . $this->student->id],
                 'gender' => ['nullable', 'in:m,f'],
                 'grade_id' => ['nullable', 'exists:grades,id'],
+                'class_id' => ['nullable', 'exists:classes,id'],
+                'parent_email' => ['nullable', 'email', 'unique:students,parent_email,' . $this->student->id],
             ];
-            if (auth('admin')->user()->hasRole('Super Admin')) {
+            if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['nullable', 'exists:schools,id'];
             }
             return $rules;
@@ -78,6 +81,7 @@ class StudentRequest extends FormRequest
             'class_id' => 'Class',
             'grade_id' => 'Grade',
             'school_id' => 'School',
+            'parent_email' => 'Parent Email',
         ];
     }
 
@@ -87,7 +91,7 @@ class StudentRequest extends FormRequest
     public function authorize(): bool
     {
         if($this->isMethod('PUT')){
-            $admin = auth('admin')->user();
+            $admin = auth('user')->user();
             if ($admin->hasRole('School Manager')) {
                 // Check if the student's school ID matches the authenticated user's school ID
                 return $admin->school_id == $this->student->school_id;

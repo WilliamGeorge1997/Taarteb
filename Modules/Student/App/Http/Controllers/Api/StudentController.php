@@ -9,13 +9,14 @@ use Modules\Student\DTO\StudentDto;
 use App\Http\Controllers\Controller;
 use Modules\Student\App\Models\Student;
 use Modules\Student\Service\StudentService;
+use Modules\Student\App\resources\StudentResource;
 use Modules\Student\App\Http\Requests\StudentRequest;
 
 class StudentController extends Controller
 {
    private $studentService;
    public function __construct(StudentService $studentService){
-      $this->middleware('auth:admin');
+      $this->middleware('auth:user');
       $this->middleware('role:Super Admin|School Manager');
       $this->middleware('permission:Index-student|Create-student|Edit-student|Delete-student', ['only' => ['index', 'store']]);
       $this->middleware('permission:Create-student', ['only' => ['store']]);
@@ -26,7 +27,7 @@ class StudentController extends Controller
    public function index(Request $request){
       $data = $request->all();
       $students = $this->studentService->findAll($data);
-      return returnMessage(true, 'Students Fetched Successfully', $students);
+      return returnMessage(true, 'Students Fetched Successfully', StudentResource::collection($students)->response()->getData(true));
    }
 
    public function store(StudentRequest $request){

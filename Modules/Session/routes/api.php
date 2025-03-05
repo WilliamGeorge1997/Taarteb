@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Modules\Student\App\Http\Controllers\Api\StudentController;
+use Modules\Session\App\Http\Controllers\Api\SessionController;
 
 /*
     |--------------------------------------------------------------------------
@@ -15,4 +15,4 @@ use Modules\Student\App\Http\Controllers\Api\StudentController;
     |
 */
 
-Route::apiResource('students', StudentController::class);
+Route::apiResource('session', SessionController::class);

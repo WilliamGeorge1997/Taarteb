@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Teacher\App\Http\Requests;
+namespace Modules\Session\App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class TeacherRequest extends FormRequest
+class SessionRequest extends FormRequest
 {
     /**
      * Get the credentials for authentication.
@@ -16,7 +16,7 @@ class TeacherRequest extends FormRequest
     public function credentials(): array
     {
         $user = auth('user')->user();
-        $baseFields = ['name', 'email', 'phone', 'password', 'gender', 'image', 'subject_id', 'grade_id'];
+        $baseFields = ['day', 'session_number', 'semester', 'year', 'class_id', 'subject_id', 'teacher_id'];
 
         if ($this->isMethod('POST') || $this->isMethod('PUT')) {
             if ($user->hasRole('Super Admin')) {
@@ -37,14 +37,13 @@ class TeacherRequest extends FormRequest
     {
         if ($this->isMethod('POST')) {
             $rules = [
-                'name' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'email', 'unique:users,email'],
-                'phone' => ['required', 'string', 'unique:users,phone'],
-                'password' => ['required', 'string', 'min:6'],
-                'gender' => ['required', 'in:m,f'],
-                'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
-                'grade_id' => ['required', 'exists:grades,id'],
+                'day' => ['required', 'in:saturday,sunday,monday,tuesday,wednesday,thursday,friday'],
+                'session_number' => ['required', 'integer'],
+                'semester' => ['required', 'in:first,second'],
+                'year' => ['required', 'string'],
+                'class_id' => ['required', 'exists:classes,id'],
                 'subject_id' => ['required', 'exists:subjects,id'],
+                'teacher_id' => ['required', 'exists:teachers,id'],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['required', 'exists:schools,id'];
@@ -53,14 +52,13 @@ class TeacherRequest extends FormRequest
         }
         if ($this->isMethod('PUT')) {
             $rules = [
-                'name' => ['nullable', 'string', 'max:255'],
-                'email' => ['nullable', 'email', 'unique:users,email,' . $this->teacher->teacher->id],
-                'phone' => ['nullable', 'string', 'unique:users,phone,' . $this->teacher->teacher->id],
-                'password' => ['nullable', 'string', 'min:6'],
-                'gender' => ['nullable', 'in:m,f'],
-                'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
+                'day' => ['nullable', 'in:saturday,sunday,monday,tuesday,wednesday,thursday,friday'],
+                'session_number' => ['nullable', 'integer'],
+                'semester' => ['nullable', 'in:first,second'],
+                'year' => ['nullable', 'string'],
+                'class_id' => ['nullable', 'exists:classes,id'],
                 'subject_id' => ['nullable', 'exists:subjects,id'],
-                'grade_id' => ['nullable', 'exists:grades,id'],
+                'teacher_id' => ['nullable', 'exists:teachers,id'],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['nullable', 'exists:schools,id'];
@@ -76,14 +74,13 @@ class TeacherRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'name' => 'Name',
-            'email' => 'Email Address',
-            'phone' => 'Phone Number',
-            'password' => 'Password',
-            'gender' => 'Gender',
-            'image' => 'Image',
+            'day' => 'Day',
+            'session_number' => 'Session Number',
+            'semester' => 'Semester',
+            'year' => 'Year',
+            'class_id' => 'Class',
             'subject_id' => 'Subject',
-            'grade_id' => 'Grade',
+            'teacher_id' => 'Teacher',
             'school_id' => 'School',
         ];
     }
@@ -93,11 +90,11 @@ class TeacherRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        if($this->isMethod('PUT')){
+        if ($this->isMethod('PUT')) {
             $admin = auth('user')->user();
             if ($admin->hasRole('School Manager')) {
-                // Check if the teacher's school ID matches the authenticated user's school ID
-                return $admin->school_id == $this->teacher->teacher->school_id;
+                // Check if the student's school ID matches the authenticated user's school ID
+                return $admin->school_id == $this->session->school_id;
             }
         }
         return true;

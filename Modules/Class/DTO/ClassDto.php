@@ -6,25 +6,28 @@ namespace Modules\Class\DTO;
 
 class ClassDto
 {
-    public $title;
+    public $name;
     public $grade_id;
+    public $school_id;
     public $max_students;
-    public $period_number;
+    public $session_number;
 
     public function __construct($request) {
-        if($request->get('title')) $this->title = $request->get('title');
+        if($request->get('name')) $this->name = $request->get('name');
         if($request->get('grade_id')) $this->grade_id = $request->get('grade_id');
+        if($request->get('school_id')) $this->school_id = $request->get('school_id');
         if($request->get('max_students')) $this->max_students = $request->get('max_students');
-        if($request->get('period_number')) $this->period_number = $request->get('period_number');
+        if($request->get('session_number')) $this->session_number = $request->get('session_number');
     }
 
     public function dataFromRequest()
     {
         $data =  json_decode(json_encode($this), true);
-        if($this->title == null) unset($data['title']);
+        if($this->name == null) unset($data['name']);
         if($this->grade_id == null) unset($data['grade_id']);
+        if($this->school_id == null) unset($data['school_id']);
         if($this->max_students == null) unset($data['max_students']);
-        if($this->period_number == null) unset($data['period_number']);
+        if($this->session_number == null) unset($data['session_number']);
         return $data;
     }
 }

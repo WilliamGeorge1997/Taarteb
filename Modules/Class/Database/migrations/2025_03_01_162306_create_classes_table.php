@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignIdFor(Grade::class)->index()->constrained()->restrictOnDelete();
             $table->foreignIdFor(School::class)->index()->constrained()->restrictOnDelete();
             $table->integer('max_students');
-            $table->enum('period_number', ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'])->default('1');
+            $table->integer('session_number')->nullable();
             $table->timestamps();
         });
     }

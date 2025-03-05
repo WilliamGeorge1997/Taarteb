@@ -35,4 +35,20 @@ class Grade extends Model
     {
         return $this->hasMany(Subject::class, 'grade_id', 'id');
     }
+
+    //Helper
+
+    protected function scopeAvailable($query)
+    {
+        if (auth('user')->check()) {
+            $admin = auth('user')->user();
+            if ($admin->hasRole('Super Admin')) {
+                // Show All Teachers
+            } else if ($admin->hasRole('School Manager')) {
+                $query->whereHas('schools', function ($query) use ($admin) {
+                    $query->where('school_id', $admin->school_id);
+                });
+            }
+        }
+    }
 }

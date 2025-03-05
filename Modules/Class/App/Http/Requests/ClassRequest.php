@@ -13,11 +13,20 @@ class ClassRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function credentials(): array
+
+      public function credentials(): array
     {
-        return ['title', 'grade_id', 'max_students', 'period_number'];
+        $user = auth('user')->user();
+        $baseFields = ['name', 'grade_id', 'max_students', 'session_number'];
 
+        if ($this->isMethod('POST') || $this->isMethod('PUT')) {
+            if ($user->hasRole('Super Admin')) {
+                $baseFields[] = 'school_id';
+            }
+            return $this->only($baseFields);
+        }
 
+        return [];
     }
 
     /**
@@ -28,20 +37,28 @@ class ClassRequest extends FormRequest
     public function rules(): array
     {
         if ($this->isMethod('POST')) {
-            return [
-                'title' => ['required', 'string', 'max:255'],
+            $rules = [
+                'name' => ['required', 'string', 'max:255'],
                 'grade_id' => ['required', 'exists:grades,id'],
-                'max_students' => ['required', 'integer', 'min:1'],
-                'period_number' => ['required', 'integer', 'min:1'],
+                'max_students' => ['required', 'integer'],
+                'session_number' => ['nullable', 'integer'],
             ];
+            if (auth('user')->user()->hasRole('Super Admin')) {
+                $rules['school_id'] = ['required', 'exists:schools,id'];
+            }
+            return $rules;
         }
         if ($this->isMethod('PUT')) {
-            return  [
-                'title' => ['nullable', 'string', 'max:255'],
+            $rules = [
+                'name' => ['nullable', 'string', 'max:255'],
                 'grade_id' => ['nullable', 'exists:grades,id'],
-                'max_students' => ['nullable', 'integer', 'min:1'],
-                'period_number' => ['nullable', 'integer', 'min:1'],
+                'max_students' => ['nullable', 'integer'],
+                'session_number' => ['nullable', 'integer'],
             ];
+            if (auth('user')->user()->hasRole('Super Admin')) {
+                $rules['school_id'] = ['nullable', 'exists:schools,id'];
+            }
+            return $rules;
         }
         return [];
     }
@@ -52,10 +69,11 @@ class ClassRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'title' => 'Title',
+            'name' => 'Name',
             'grade_id' => 'Grade',
             'max_students' => 'Max Students',
-            'period_number' => 'Period Number',
+            'session_number' => 'Session Number',
+            'school_id' => 'School',
         ];
     }
 
@@ -64,6 +82,13 @@ class ClassRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        if($this->isMethod('PUT')){
+            $admin = auth('user')->user();
+            if ($admin->hasRole('School Manager')) {
+                // Check if the class's school ID matches the authenticated user's school ID
+                return $admin->school_id == $this->class->school_id;
+            }
+        }
         return true;
     }
 

@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Modules\Class\App\Http\Controllers\Api\ClassController;
 
 /*
     |--------------------------------------------------------------------------
@@ -14,6 +15,4 @@ use Illuminate\Support\Facades\Route;
     |
 */
 
-Route::middleware(['auth:sanctum'])->prefix('v1')->name('api.')->group(function () {
-    Route::get('class', fn (Request $request) => $request->user())->name('class');
-});
+Route::apiResource('classes', ClassController::class);

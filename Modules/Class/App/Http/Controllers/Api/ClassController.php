@@ -9,13 +9,14 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Modules\Class\App\Models\Classroom;
 use Modules\Class\Service\ClassService;
+use Modules\Class\App\resources\ClassResource;
 use Modules\Class\App\Http\Requests\ClassRequest;
 
 class ClassController extends Controller
 {
    private $classService;
    public function __construct(ClassService $classService){
-      $this->middleware('auth:admin');
+      $this->middleware('auth:user');
       $this->middleware('role:Super Admin|School Manager');
       $this->middleware('permission:Index-class|Create-class|Edit-class|Delete-class', ['only' => ['index', 'store']]);
       $this->middleware('permission:Create-class', ['only' => ['store']]);
@@ -26,7 +27,7 @@ class ClassController extends Controller
    public function index(Request $request){
       $data = $request->all();
       $classes = $this->classService->findAll($data);
-      return returnMessage(true, 'Classes Fetched Successfully', $classes);
+      return returnMessage(true, 'Classes Fetched Successfully', ClassResource::collection($classes)->response()->getData(true));
    }
 
    public function store(ClassRequest $request){

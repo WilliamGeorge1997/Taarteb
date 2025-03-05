@@ -9,7 +9,7 @@ class ClassService
 {
     function findAll($data = [])
     {
-        $classes = Classroom::query()->orderByDesc('created_at');
+        $classes = Classroom::query()->available()->with(['school:id,name', 'grade:id,name'])->orderByDesc('created_at');
         return getCaseCollection($classes, $data);
     }
 
@@ -25,7 +25,10 @@ class ClassService
 
     function create($data)
     {
-        return Classroom::create($data);
+        if (auth('user')->user()->hasRole('School Manager'))
+            $data['school_id'] = auth('user')->user()->school_id;
+        $class = Classroom::create($data);
+        return $class;
     }
 
     function update($class, $data)

@@ -1,11 +1,12 @@
 <?php
 
-use Modules\Grade\App\Models\Grade;
 use Modules\School\App\Models\School;
 use Illuminate\Support\Facades\Schema;
 use Modules\Class\App\Models\Classroom;
+use Modules\Subject\App\Models\Subject;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Modules\Teacher\App\Models\TeacherProfile;
 
 return new class extends Migration
 {
@@ -14,17 +15,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('students', function (Blueprint $table) {
+        Schema::create('sessions', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->enum('gender', ['m', 'f']);
-            $table->string('email')->unique();
-            $table->string('identity_number')->unique();
-            $table->string('parent_email')->unique();
-            $table->foreignIdFor(Grade::class)->index()->constrained()->restrictOnDelete();
+            $table->enum('day', ['saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday']);
+            $table->integer('session_number');
+            $table->enum('semester', ['first', 'second'])->nullable();
+            $table->string('year')->nullable();
             $table->foreignIdFor(Classroom::class, 'class_id')->index()->constrained()->restrictOnDelete();
+            $table->foreignIdFor(Subject::class)->index()->constrained()->restrictOnDelete();
             $table->foreignIdFor(School::class)->index()->constrained()->restrictOnDelete();
-            $table->boolean('is_active')->default(1);
+            $table->foreignIdFor(TeacherProfile::class, 'teacher_id')->index()->constrained('teacher_profiles')->restrictOnDelete();
             $table->timestamps();
         });
     }
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('students');
+        Schema::dropIfExists('sessions');
     }
 };
