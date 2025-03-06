@@ -4,16 +4,18 @@ namespace Modules\School\App\Http\Controllers\Api;
 
 use Exception;
 use Illuminate\Http\Request;
+use App\Imports\SchoolsImport;
 use Modules\School\DTO\SchoolDto;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use Modules\School\App\Models\School;
 use Modules\School\DTO\SchoolGradeDto;
 use Modules\User\DTO\SchoolManagerDto;
 use Modules\School\Service\SchoolService;
-use Modules\Common\Helpers\BaseResource;
 use Modules\School\App\resources\SchoolResource;
 use Modules\School\App\Http\Requests\SchoolRequest;
+use Modules\School\App\Http\Requests\SchoolImportRequest;
 
 
 class SchoolController extends Controller
@@ -66,5 +68,11 @@ class SchoolController extends Controller
             DB::rollBack();
             return returnMessage(false, $e->getMessage(), null, 500);
         }
+    }
+
+    public function importSchools(SchoolImportRequest $request)
+    {
+        $response = Excel::import(new SchoolsImport, $request->file('file'));
+        $response == true ? returnMessage(true, 'Schools Imported Successfully', null) : returnMessage(false, 'Schools Imported Failed', null, 500);
     }
 }

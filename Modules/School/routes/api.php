@@ -16,3 +16,4 @@ use Modules\School\App\Http\Controllers\Api\SchoolController;
 */
 
 Route::apiResource('schools',SchoolController::class);
+Route::post('schools/import', [SchoolController::class, 'importSchools']);

@@ -2,6 +2,7 @@
 
 namespace Modules\Student\App\Http\Requests;
 
+use Modules\Student\App\Rules\MaxStudents;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -42,7 +43,7 @@ class StudentRequest extends FormRequest
                 'identity_number' => ['required', 'string', 'unique:students,identity_number'],
                 'gender' => ['required', 'in:m,f'],
                 'grade_id' => ['required', 'exists:grades,id'],
-                'class_id' => ['required', 'exists:classes,id'],
+                'class_id' => ['required', 'exists:classes,id', new MaxStudents($this->input('class_id'))],
                 'parent_email' => ['required', 'email', 'unique:students,parent_email'],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {

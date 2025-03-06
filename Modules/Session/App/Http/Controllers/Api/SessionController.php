@@ -6,7 +6,6 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Modules\Session\DTO\SessionDto;
-use Modules\Student\DTO\StudentDto;
 use App\Http\Controllers\Controller;
 use Modules\Session\App\Models\Session;
 use Modules\Session\Service\SessionService;
