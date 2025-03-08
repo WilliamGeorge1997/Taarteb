@@ -48,7 +48,7 @@ class TeacherService
             $teacherData['image'] = $imageName;
         }
         if (auth('user')->user()->hasRole('School Manager'))
-            $teacherProfileData['school_id'] = auth('user')->user()->school_id;
+            $teacherData['school_id'] = auth('user')->user()->school_id;
         $teacherData['role'] = 'Teacher';
         $teacher = User::create($teacherData);
         $teacher->assignRole('Teacher');
