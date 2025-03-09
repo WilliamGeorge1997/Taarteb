@@ -1,9 +1,10 @@
 <?php
 
+use Modules\School\App\Models\School;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 use Modules\Grade\App\Models\GradeCategory;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -16,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignIdFor(GradeCategory::class)->index()->constrained()->restrictOnDelete();
+            $table->foreignIdFor(School::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

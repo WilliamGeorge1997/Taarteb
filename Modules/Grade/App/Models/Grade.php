@@ -15,7 +15,7 @@ class Grade extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['name', 'grade_category_id'];
+    protected $fillable = ['name', 'grade_category_id', 'school_id'];
 
     protected $hidden = ['created_at', 'updated_at'];
 
@@ -26,9 +26,9 @@ class Grade extends Model
         return $this->belongsTo(GradeCategory::class);
     }
 
-    public function schools()
+    public function school()
     {
-        return $this->belongsToMany(School::class, 'school_grades');
+        return $this->belongsTo(School::class);
     }
 
     public function subjects()
@@ -43,11 +43,9 @@ class Grade extends Model
         if (auth('user')->check()) {
             $admin = auth('user')->user();
             if ($admin->hasRole('Super Admin')) {
-                // Show All Teachers
+                // Show All Grades
             } else if ($admin->hasRole('School Manager')) {
-                $query->whereHas('schools', function ($query) use ($admin) {
-                    $query->where('school_id', $admin->school_id);
-                });
+                $query->where('school_id', $admin->school_id);
             }
         }
     }

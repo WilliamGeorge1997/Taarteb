@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\User\App\Http\Controllers\Api\UserController;
 use Modules\User\App\Http\Controllers\Api\UserAuthController;
 
 /*
@@ -15,10 +16,14 @@ use Modules\User\App\Http\Controllers\Api\UserAuthController;
 */
 
 Route::group([
-    'prefix' => 'user/auth'
+    'prefix' => 'user'
 ], function ($router) {
-    Route::post('login', [UserAuthController::class, 'login']);
-    Route::post('logout', [UserAuthController::class, 'logout']);
-    Route::post('refresh', [UserAuthController::class, 'refresh']);
-    Route::post('me', [UserAuthController::class, 'me']);
+    Route::group(['prefix' => 'auth'], function ($router) {
+        Route::post('login', [UserAuthController::class, 'login']);
+        Route::post('logout', [UserAuthController::class, 'logout']);
+        Route::post('refresh', [UserAuthController::class, 'refresh']);
+        Route::post('me', [UserAuthController::class, 'me']);
+    });
+    Route::post('change-password', [UserController::class, 'changePassword']);
+    Route::post('update-profile', [UserController::class, 'updateProfile']);
 });

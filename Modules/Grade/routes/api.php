@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Grade\App\Http\Controllers\Api\GradeController;
+use Modules\Grade\App\Http\Controllers\Api\GradeCategoryController;
 
 /*
     |--------------------------------------------------------------------------
@@ -14,4 +15,5 @@ use Modules\Grade\App\Http\Controllers\Api\GradeController;
     |
 */
 
-Route::get('grades', [GradeController::class, 'index']);
+Route::apiResource('grade-categories', GradeCategoryController::class);
+Route::apiResource('grades', GradeController::class);

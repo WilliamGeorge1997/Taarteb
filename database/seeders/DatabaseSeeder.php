@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Modules\Grade\Database\Seeders\GradeDatabaseSeeder;
+// use Modules\Grade\Database\Seeders\GradeDatabaseSeeder;
 use Modules\Subject\Database\Seeders\SubjectDatabaseSeeder;
 use Modules\User\Database\Seeders\UserDatabaseSeeder;
 
@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserDatabaseSeeder::class,
-            GradeDatabaseSeeder::class,
+            // GradeDatabaseSeeder::class,
             SubjectDatabaseSeeder::class,
         ]);
     }

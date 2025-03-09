@@ -4,7 +4,7 @@ namespace Modules\Grade\App\resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class GradeResource extends JsonResource
+class GradeCategoryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,7 +14,6 @@ class GradeResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'category' => $this->gradeCategory->name,
             'school' => $this->school->name,
             'created_at' => $this->created_at->format('Y-m-d h:i A'),
             'updated_at' => $this->updated_at->format('Y-m-d h:i A'),

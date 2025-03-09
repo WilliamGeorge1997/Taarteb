@@ -24,7 +24,8 @@ class TeacherDto
             $this->phone = $request->get('phone');
         if ($request->get('password'))
             $this->password = Hash::make($request->get('password'));
-            if($request->get('school_id')) $this->school_id = $request->get('school_id');
+        if ($request->get('school_id'))
+            $this->school_id = $request->get('school_id');
     }
 
     public function dataFromRequest()
