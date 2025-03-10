@@ -19,7 +19,8 @@ class GradeRequest extends FormRequest
     {
         if ($this->isMethod('POST')) {
             $rules = [
-                'name' => ['required', 'string', 'max:255'],
+                'name' => ['required', 'array'],
+                'name.*' => ['required', 'string', 'max:255'],
                 'grade_category_id' => auth('user')->user()->hasRole('School Manager') ?
                     ['required', 'exists:grade_categories,id', new GradeCategoryBelongToSchool($this->input('grade_category_id'))] :
                     ['required', 'exists:grade_categories,id'],
@@ -33,7 +34,8 @@ class GradeRequest extends FormRequest
         }
         if ($this->isMethod('PUT')) {
             $rules = [
-                'name' => ['nullable', 'string', 'max:255'],
+                'name' => ['nullable', 'array'],
+                'name.*' => ['nullable', 'string', 'max:255'],
                 'grade_category_id' => auth('user')->user()->hasRole('School Manager') ?
                     ['nullable', 'exists:grade_categories,id', new GradeCategoryBelongToSchool($this->input('grade_category_id'))] :
                     ['nullable', 'exists:grade_categories,id'],

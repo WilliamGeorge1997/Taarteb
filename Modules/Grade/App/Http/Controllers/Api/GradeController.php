@@ -38,9 +38,9 @@ class GradeController extends Controller
         try {
             DB::beginTransaction();
             $data = (new GradeDto($request))->dataFromRequest();
-            $grade = $this->gradeService->create($data);
+            $this->gradeService->create($data);
             DB::commit();
-            return returnMessage(true, 'Grade Created Successfully', $grade);
+            return returnMessage(true, 'Grade Created Successfully', null);
         } catch (Exception $e) {
             DB::rollBack();
             return returnMessage(false, $e->getMessage(), null, 500);

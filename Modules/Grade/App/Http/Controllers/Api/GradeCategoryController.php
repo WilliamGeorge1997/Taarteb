@@ -37,9 +37,9 @@ class GradeCategoryController extends Controller
         try {
             DB::beginTransaction();
             $data = (new GradeCategoryDto($request))->dataFromRequest();
-            $gradeCategory = $this->gradeCategoryService->create($data);
+             $this->gradeCategoryService->create($data);
             DB::commit();
-            return returnMessage(true, 'Grade Category Created Successfully', $gradeCategory);
+            return returnMessage(true, 'Grade Category Created Successfully', null);
         } catch (Exception $e) {
             DB::rollBack();
             return returnMessage(false, $e->getMessage(), null, 500);

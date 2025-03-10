@@ -5,7 +5,7 @@ namespace Modules\Grade\DTO;
 
 class GradeDto
 {
-    public $name;
+    public array $name;
     public $grade_category_id;
     public $school_id;
     public function __construct($request)

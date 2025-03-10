@@ -33,8 +33,12 @@ class GradeCategoryService
 
     function create($data)
     {
-        $gradeCategory = GradeCategory::create($data);
-        return $gradeCategory;
+        foreach ($data['name'] as $name) {
+            GradeCategory::create([
+                'name' => $name,
+                'school_id' => $data['school_id']
+            ]);
+        }
     }
 
     function update($gradeCategory, $data)
