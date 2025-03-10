@@ -48,13 +48,14 @@ class TeacherProfile extends Model
         return $this->belongsTo(Subject::class);
     }
 
-
-    public function scopeAvailable($query){
-        if(auth('user')->check()){
+    //Helper
+    public function scopeAvailable($query)
+    {
+        if (auth('user')->check()) {
             $admin = auth('user')->user();
-            if($admin->hasRole('Super Admin')){
+            if ($admin->hasRole('Super Admin')) {
             }
-            if($admin->hasRole('School Manager')){
+            if ($admin->hasRole('School Manager')) {
                 return $query->whereHas('teacher', function ($query) use ($admin) {
                     $query->where('school_id', $admin->school_id);
                 });

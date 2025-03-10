@@ -4,14 +4,14 @@ namespace Modules\Subject\App\Http\Controllers\Api;
 
 use Exception;
 use Illuminate\Http\Request;
-use Modules\Grade\DTO\GradeDto;
 use Illuminate\Support\Facades\DB;
 use Modules\Grade\App\Models\Grade;
+use Modules\Subject\DTO\SubjectDto;
 use App\Http\Controllers\Controller;
-use Modules\Grade\Service\GradeService;
+use Modules\Subject\App\Models\Subject;
 use Modules\Subject\Service\SubjectService;
-use Modules\Grade\App\resources\GradeResource;
-use Modules\Grade\App\Http\Requests\GradeRequest;
+use Modules\Subject\App\resources\SubjectResource;
+use Modules\Subject\App\Http\Requests\SubjectRequest;
 
 
 class SubjectController extends Controller
@@ -28,12 +28,6 @@ class SubjectController extends Controller
         $this->subjectService = $subjectService;
     }
 
-    // public function subjectsByGradeId(Grade $grade)
-    // {
-    //     return returnMessage(true, 'Subjects fetched successfully', SubjectResource::collection($grade->subjects()->get())->response()->getData(true));
-    // }
-
-
     public function index(Request $request)
     {
         $data = $request->all();
@@ -48,25 +42,31 @@ class SubjectController extends Controller
             $data = (new SubjectDto($request))->dataFromRequest();
             $subject = $this->subjectService->create($data);
             DB::commit();
-            return returnMessage(true, 'Grade Created Successfully', $grade);
+            return returnMessage(true, 'Subject Created Successfully', $subject);
         } catch (Exception $e) {
             DB::rollBack();
             return returnMessage(false, $e->getMessage(), null, 500);
         }
     }
 
-    public function update(GradeRequest $request, Grade $grade)
+    public function update(SubjectRequest $request, Subject $subject)
     {
         try {
             DB::beginTransaction();
-            $data = (new GradeDto($request))->dataFromRequest();
-            $grade = $this->gradeService->update($grade, $data);
+            $data = (new SubjectDto($request))->dataFromRequest();
+            $subject = $this->subjectService->update($subject, $data);
             DB::commit();
-            return returnMessage(true, 'Grade Updated Successfully', $grade);
+            return returnMessage(true, 'Subject Updated Successfully', $subject);
         } catch (Exception $e) {
             DB::rollBack();
             return returnMessage(false, $e->getMessage(), null, 500);
         }
+    }
+
+       public function subjectsByGradeId(Grade $grade)
+    {
+        $subjects = $this->subjectService->getSubjectsByGradeId($grade);
+        return returnMessage(true, 'Subjects fetched successfully', SubjectResource::collection($subjects)->response()->getData(true));
     }
 
 }

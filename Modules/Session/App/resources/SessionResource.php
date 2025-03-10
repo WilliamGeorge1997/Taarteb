@@ -21,7 +21,7 @@ class SessionResource extends JsonResource
             'subject' => $this->subject->name,
             'teacher' => $this->teacher->teacher->name,
             'school' => $this->school->name,
-           "created_at" => $this->created_at->format('Y-m-d h:i A'),
+            "created_at" => $this->created_at->format('Y-m-d h:i A'),
             "updated_at" => $this->updated_at->format('Y-m-d h:i A'),
         ];
     }

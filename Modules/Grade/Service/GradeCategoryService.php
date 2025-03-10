@@ -33,8 +33,6 @@ class GradeCategoryService
 
     function create($data)
     {
-        if (auth('user')->user()->hasRole('School Manager'))
-            $data['school_id'] = auth('user')->user()->school_id;
         $gradeCategory = GradeCategory::create($data);
         return $gradeCategory;
     }

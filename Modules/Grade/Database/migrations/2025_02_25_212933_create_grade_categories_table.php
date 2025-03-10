@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('grade_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignIdFor(School::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(School::class)->index()->constrained()->restrictOnDelete();
             $table->timestamps();
         });
     }

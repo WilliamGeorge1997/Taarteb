@@ -9,26 +9,6 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 class GradeCategoryRequest extends FormRequest
 {
     /**
-     * Get the credentials for authentication.
-     *
-     * @return array<string, mixed>
-     */
-    public function credentials(): array
-    {
-        $user = auth('user')->user();
-        $baseFields = ['name'];
-
-        if ($this->isMethod('POST') || $this->isMethod('PUT')) {
-            if ($user->hasRole('Super Admin')) {
-                $baseFields[] = 'school_id';
-            }
-            return $this->only($baseFields);
-        }
-
-        return [];
-    }
-
-    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, mixed>
@@ -39,18 +19,26 @@ class GradeCategoryRequest extends FormRequest
             $rules = [
                 'name' => ['required', 'string', 'max:255'],
             ];
+
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['required', 'exists:schools,id'];
+            } else {
+                $rules['school_id'] = ['prohibited'];
             }
+
             return $rules;
         }
         if ($this->isMethod('PUT')) {
             $rules = [
                 'name' => ['nullable', 'string', 'max:255'],
             ];
+
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['nullable', 'exists:schools,id'];
+            } else {
+                $rules['school_id'] = ['prohibited'];
             }
+
             return $rules;
         }
         return [];

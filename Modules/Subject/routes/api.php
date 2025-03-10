@@ -16,4 +16,4 @@ use Modules\Subject\App\Http\Controllers\Api\SubjectController;
 */
 
 Route::apiResource('subjects', SubjectController::class);
-Route::get('subjects/{grade}', [SubjectController::class, 'subjectsByGradeId']);
+Route::get('subjects/grades/{grade}', [SubjectController::class, 'subjectsByGradeId']);

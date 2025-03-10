@@ -6,7 +6,7 @@ use Closure;
 use Modules\Grade\App\Models\GradeCategory;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class BelongToSchool implements ValidationRule
+class GradeCategoryBelongToSchool implements ValidationRule
 {
     private $gradeCategoryId;
     public function __construct($gradeCategoryId)

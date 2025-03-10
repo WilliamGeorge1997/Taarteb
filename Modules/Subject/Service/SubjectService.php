@@ -8,13 +8,14 @@ class SubjectService
 {
     function findAll($data = [])
     {
-        $grades = Subject::query()
+        $subjects = Subject::query()
             ->when($data['name'] ?? null, function ($query) use ($data) {
                 $query->where('name', 'like', '%' . $data['name'] . '%');
             })
+            ->with('grade', 'school')
             ->available()
             ->orderByDesc('created_at');
-        return getCaseCollection($grades, $data);
+        return getCaseCollection($subjects, $data);
     }
 
     function findById($id)
@@ -31,8 +32,6 @@ class SubjectService
 
     function create($data)
     {
-        if (auth('user')->user()->hasRole('School Manager'))
-            $data['school_id'] = auth('user')->user()->school_id;
         $subject = Subject::create($data);
         return $subject;
     }
@@ -46,5 +45,10 @@ class SubjectService
     function delete($subject)
     {
         $subject->delete();
+    }
+
+    function getSubjectsByGradeId($grade)
+    {
+       return Subject::available()->with(['grade', 'school'])->where('grade_id', $grade->id)->orderByDesc('created_at')->get();
     }
 }

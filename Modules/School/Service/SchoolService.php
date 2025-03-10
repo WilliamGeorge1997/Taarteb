@@ -36,7 +36,7 @@ class SchoolService
         return $school;
     }
 
-    function create($data, $managerData, $schoolGradesData)
+    function create($data, $managerData)
     {
         if (request()->hasFile('image')) {
             $image = request()->file('image');
@@ -48,7 +48,7 @@ class SchoolService
         $managerData['role'] = 'School Manager';
         $schoolManager = User::create($managerData);
         $schoolManager->assignRole('School Manager');
-        $school->grades()->sync($schoolGradesData['grades']);
+        // $school->grades()->sync($schoolGradesData['grades']);
         return $school;
     }
 

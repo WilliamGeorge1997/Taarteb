@@ -14,8 +14,15 @@ class GradeDto
             $this->name = $request->get('name');
         if ($request->get('grade_category_id'))
             $this->grade_category_id = $request->get('grade_category_id');
-        if ($request->get('school_id'))
-            $this->school_id = $request->get('school_id');
+        if (auth('user')->user()->hasRole('Super Admin')) {
+            if ($request->get('school_id')) {
+                $this->school_id = $request->get('school_id');
+            }
+        } else if (auth('user')->user()->hasRole('School Manager')) {
+            if ($request->isMethod('POST')) {
+                $this->school_id = auth('user')->user()->school_id;
+            }
+        }
     }
 
     public function dataFromRequest()

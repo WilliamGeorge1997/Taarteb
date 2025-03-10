@@ -44,8 +44,8 @@ class SchoolController extends Controller
             DB::beginTransaction();
             $data = (new SchoolDto($request))->dataFromRequest();
             $managerData = (new SchoolManagerDto($request))->dataFromRequest();
-            $schoolGradesData = (new SchoolGradeDto($request))->dataFromRequest();
-            $school = $this->schoolService->create($data, $managerData, $schoolGradesData);
+            // $schoolGradesData = (new SchoolGradeDto($request))->dataFromRequest();
+            $school = $this->schoolService->create($data, $managerData);
             DB::commit();
             return returnMessage(true, 'School Created Successfully', $school);
         } catch (Exception $e) {
