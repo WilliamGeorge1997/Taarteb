@@ -22,8 +22,8 @@ class GradeRequest extends FormRequest
                 'name' => ['required', 'array'],
                 'name.*' => ['required', 'string', 'max:255'],
                 'grade_category_id' => auth('user')->user()->hasRole('School Manager') ?
-                    ['required', 'exists:grade_categories,id', new GradeCategoryBelongToSchool($this->input('grade_category_id'))] :
-                    ['required', 'exists:grade_categories,id'],
+                    ['required', 'exists:grade_categories,id', new GradeCategoryBelongToSchool($this->input('grade_category_id'), auth('user')->user()->school_id)] :
+                    ['required', 'exists:grade_categories,id', new GradeCategoryBelongToSchool($this->input('grade_category_id'), $this->input('school_id'))],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['required', 'exists:schools,id'];
@@ -37,8 +37,8 @@ class GradeRequest extends FormRequest
                 'name' => ['nullable', 'array'],
                 'name.*' => ['nullable', 'string', 'max:255'],
                 'grade_category_id' => auth('user')->user()->hasRole('School Manager') ?
-                    ['nullable', 'exists:grade_categories,id', new GradeCategoryBelongToSchool($this->input('grade_category_id'))] :
-                    ['nullable', 'exists:grade_categories,id'],
+                    ['nullable', 'exists:grade_categories,id', new GradeCategoryBelongToSchool($this->input('grade_category_id'), auth('user')->user()->school_id)] :
+                    ['nullable', 'exists:grade_categories,id', new GradeCategoryBelongToSchool($this->input('grade_category_id'), $this->input('school_id'))],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['nullable', 'exists:schools,id'];

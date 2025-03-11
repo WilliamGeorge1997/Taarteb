@@ -4,30 +4,11 @@ namespace Modules\Class\App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Modules\Subject\App\Rules\GradeBelongToSchool;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ClassRequest extends FormRequest
 {
-    /**
-     * Get the credentials for authentication.
-     *
-     * @return array<string, mixed>
-     */
-
-      public function credentials(): array
-    {
-        $user = auth('user')->user();
-        $baseFields = ['name', 'grade_id', 'max_students', 'session_number'];
-
-        if ($this->isMethod('POST') || $this->isMethod('PUT')) {
-            if ($user->hasRole('Super Admin')) {
-                $baseFields[] = 'school_id';
-            }
-            return $this->only($baseFields);
-        }
-
-        return [];
-    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -39,24 +20,32 @@ class ClassRequest extends FormRequest
         if ($this->isMethod('POST')) {
             $rules = [
                 'name' => ['required', 'string', 'max:255'],
-                'grade_id' => ['required', 'exists:grades,id'],
+                'grade_id' => auth('user')->user()->hasRole('School Manager') ?
+                    ['required', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), auth('user')->user()->school_id)] :
+                    ['required', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), $this->input('school_id'))],
                 'max_students' => ['required', 'integer'],
                 'session_number' => ['nullable', 'integer'],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['required', 'exists:schools,id'];
+            } else {
+                $rules['school_id'] = ['prohibited'];
             }
             return $rules;
         }
         if ($this->isMethod('PUT')) {
             $rules = [
                 'name' => ['nullable', 'string', 'max:255'],
-                'grade_id' => ['nullable', 'exists:grades,id'],
+                'grade_id' => auth('user')->user()->hasRole('School Manager') ?
+                    ['nullable', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), auth('user')->user()->school_id)] :
+                    ['nullable', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), $this->input('school_id'))],
                 'max_students' => ['nullable', 'integer'],
                 'session_number' => ['nullable', 'integer'],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['nullable', 'exists:schools,id'];
+            } else {
+                $rules['school_id'] = ['prohibited'];
             }
             return $rules;
         }

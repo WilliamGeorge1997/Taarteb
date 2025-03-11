@@ -2,6 +2,7 @@
 
 namespace Modules\Session\Service;
 
+use Modules\Session\App\Models\Session;
 use Modules\Student\App\Models\Student;
 use Modules\Session\App\Models\Attendance;
 
@@ -28,9 +29,21 @@ class AttendanceService
 
     function create($data)
     {
-        $attendance = Attendance::create($data);
-        saveHistory($data);
-        return $attendance;
+        foreach ($data['attendance'] as $attendance) {
+            $existingAttendance = Attendance::where('session_id', $data['session_id'])
+                ->where('student_id', $attendance['student_id'])
+                ->whereDate('created_at', now()->toDateString())
+                ->first();
+
+            if (!$existingAttendance) {
+                Attendance::create([
+                    'session_id' => $data['session_id'],
+                    'student_id' => $attendance['student_id'],
+                    'is_present' => $attendance['is_present'],
+                ]);
+                saveHistory($data);
+            }
+        }
     }
 
     function update($attendance, $data)
@@ -44,27 +57,59 @@ class AttendanceService
         $attendance->delete();
     }
 
-    function getStudentsForAttendance($data = [])
+    function getSessionWithStudents($data = [])
     {
-        $students = Student::query()
+        $session = Session::query()
+            ->available()
             ->where('class_id', $data['class_id'])
-            ->whereHas('class.sessions', function ($q) use ($data) {
-                $q->where('class_id', $data['class_id'])
-                    ->where('year', $data['year'])
-                    ->where('day', $data['day'])
-                    ->where('semester', $data['semester'])
-                    ->where('session_number', $data['session_number']);
-            })
-            ->whereDoesntHave('attendance', function ($q) use ($data) {
-                $q->whereHas('session', function ($q) use ($data) {
-                    $q->where('class_id', $data['class_id'])
-                        ->where('day', $data['day'])
-                        ->where('semester', $data['semester'])
-                        ->where('session_number', $data['session_number'])
-                        ->where('year', $data['year']);
-                })
-                ->whereDate('created_at', now()->toDateString());
-            });
-        return getCaseCollection($students, $data);
+            ->where('year', $data['year'])
+            ->where('day', $data['day'])
+            ->where('semester', $data['semester'])
+            ->where('session_number', $data['session_number'])
+            ->with([
+                'class.students' => function ($query) use ($data) {
+                    $query->withCount([
+                        'attendance as is_attend' => function ($q) use ($data) {
+                            $q->whereHas('session', function ($sq) use ($data) {
+                                $sq->where('class_id', $data['class_id'])
+                                    ->where('day', $data['day'])
+                                    ->where('semester', $data['semester'])
+                                    ->where('session_number', $data['session_number'])
+                                    ->where('year', $data['year']);
+                            })
+                                ->whereDate('created_at', now()->toDateString());
+                        }
+                    ]);
+                }
+            ])
+            ->first();
+
+        // $students = Student::query()
+        //     ->where('class_id', $data['class_id'])
+        //     ->whereHas('class.sessions', function ($q) use ($data) {
+        //         $q->where('class_id', $data['class_id'])
+        //             ->where('year', $data['year'])
+        //             ->where('day', $data['day'])
+        //             ->where('semester', $data['semester'])
+        //             ->where('session_number', $data['session_number']);
+        //     })
+        //     ->with('class.sessions', function ($q) use ($data) {
+        //         $q->where('class_id', $data['class_id'])
+        //             ->where('day', $data['day'])
+        //             ->where('semester', $data['semester'])
+        //             ->where('session_number', $data['session_number'])
+        //             ->where('year', $data['year']);
+        //     })
+        //     ->whereDoesntHave('attendance', function ($q) use ($data) {
+        //         $q->whereHas('session', function ($q) use ($data) {
+        //             $q->where('class_id', $data['class_id'])
+        //                 ->where('day', $data['day'])
+        //                 ->where('semester', $data['semester'])
+        //                 ->where('session_number', $data['session_number'])
+        //                 ->where('year', $data['year']);
+        //         })
+        //         ->whereDate('created_at', now()->toDateString());
+        //     });
+        return $session;
     }
 }

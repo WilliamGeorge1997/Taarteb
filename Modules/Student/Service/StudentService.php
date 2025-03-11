@@ -36,8 +36,6 @@ class StudentService
 
     function create($data)
     {
-        if (auth('user')->user()->hasRole('School Manager'))
-            $data['school_id'] = auth('user')->user()->school_id;
         $student = Student::create($data);
         return $student;
     }

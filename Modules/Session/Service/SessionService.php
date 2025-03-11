@@ -28,8 +28,6 @@ class SessionService
 
     function create($data)
     {
-        if (auth('user')->user()->hasRole('School Manager'))
-            $data['school_id'] = auth('user')->user()->school_id;
         $session = Session::create($data);
         return $session;
     }
@@ -44,4 +42,21 @@ class SessionService
     {
         $session->delete();
     }
+
+    function getSession($data){
+        $session = Session::where('class_id', $data['class_id'])
+            ->where('day', $data['day'])
+            ->where('semester', $data['semester'])
+            ->where('session_number', $data['session_number'])
+            ->where('year', $data['year'])
+            ->when(auth('user')->user()->hasRole('School Manager'), function($q) {
+                $q->where('school_id', auth('user')->user()->school_id);
+            })
+            ->when(auth('user')->user()->hasRole('Super Admin'), function($q) use ($data) {
+                $q->where('school_id', $data['school_id']);
+            })
+            ->first();
+        return $session;
+    }
 }
+

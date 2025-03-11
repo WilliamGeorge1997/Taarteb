@@ -12,27 +12,27 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 class AttendanceRequest extends FormRequest
 {
     /**
-     * Get the credentials for authentication.
-     *
-     * @return array<string, mixed>
-     */
-    public function credentials(): array
-    {
-        return ['student_id', 'session_id', 'is_present'];
-    }
-
-    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, mixed>
      */
     public function rules(): array
     {
+        if($this->isMethod('GET')){
+            return [
+                'class_id' => ['required'],
+                'day' => ['required', 'in:monday,tuesday,wednesday,thursday,friday,saturday,sunday'],
+                'semester' => ['required', 'string', 'in:first,second'],
+                'session_number' => ['required', 'integer', 'min:1', 'max:15'],
+                'year' => ['required', 'integer'],
+            ];
+        }
         if ($this->isMethod('POST')) {
             return [
-                'student_id' => ['required', 'exists:students,id'],
                 'session_id' => ['required', 'exists:sessions,id'],
-                'is_present' => ['required', 'boolean'],
+                'attendance' => ['required', 'array'],
+                'attendance.*.student_id' => ['required', 'exists:students,id'],
+                'attendance.*.is_present' => ['required', 'boolean'],
             ];
         }
         if ($this->isMethod('PUT')) {
@@ -52,6 +52,11 @@ class AttendanceRequest extends FormRequest
             'day' => 'Day',
             'session_number' => 'Session Number',
             'is_present' => 'Is Present',
+            'class_id' => 'Class',
+            'semester' => 'Semester',
+            'year' => 'Year',
+            'student_id' => 'Student',
+            'session_id' => 'Session',
         ];
     }
 

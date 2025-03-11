@@ -14,6 +14,4 @@ use Illuminate\Support\Facades\Route;
     |
 */
 
-Route::middleware(['auth:sanctum'])->prefix('v1')->name('api.')->group(function () {
-    Route::get('common', fn (Request $request) => $request->user())->name('common');
-});
+Route::apiResource('history', HistoryController::class)->only(['index']);

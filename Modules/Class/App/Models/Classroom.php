@@ -7,6 +7,7 @@ use Modules\Grade\App\Models\Grade;
 use Modules\School\App\Models\School;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Session\App\Models\Session;
+use Modules\Student\App\Models\Student;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -47,6 +48,10 @@ class Classroom extends Model
         return $this->hasMany(Session::class, 'class_id');
     }
 
+    public function students()
+    {
+        return $this->hasMany(Student::class, 'class_id');
+    }
     //Helper
     protected function scopeAvailable($query)
     {

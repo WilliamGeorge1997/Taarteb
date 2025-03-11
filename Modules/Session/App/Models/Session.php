@@ -26,7 +26,7 @@ class Session extends Model
             ->logAll()
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
-            ->useLogName('Student')
+            ->useLogName('Session')
             ->dontLogIfAttributesChangedOnly(['updated_at']);
     }
     protected function serializeDate(\DateTimeInterface $date)
@@ -62,6 +62,9 @@ class Session extends Model
             if($admin->hasRole('Super Admin')){
             }
             if($admin->hasRole('School Manager')){
+                $query->where('school_id', $admin->school_id);
+            }
+            if($admin->hasRole('Teacher')){
                 $query->where('school_id', $admin->school_id);
             }
         }

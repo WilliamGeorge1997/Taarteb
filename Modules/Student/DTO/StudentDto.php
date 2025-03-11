@@ -23,7 +23,15 @@ class StudentDto
         if($request->get('parent_email')) $this->parent_email = $request->get('parent_email');
         if($request->get('grade_id')) $this->grade_id = $request->get('grade_id');
         if($request->get('class_id')) $this->class_id = $request->get('class_id');
-        if($request->get('school_id')) $this->school_id = $request->get('school_id');
+        if (auth('user')->user()->hasRole('Super Admin')) {
+            if ($request->get('school_id')) {
+                $this->school_id = $request->get('school_id');
+            }
+        } else if (auth('user')->user()->hasRole('School Manager')) {
+            if ($request->isMethod('POST')) {
+                $this->school_id = auth('user')->user()->school_id;
+            }
+        }
     }
 
     public function dataFromRequest()

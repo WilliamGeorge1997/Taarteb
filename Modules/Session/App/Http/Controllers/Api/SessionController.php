@@ -32,6 +32,10 @@ class SessionController extends Controller
    }
 
    public function store(SessionRequest $request){
+        $session = $this->sessionService->getSession($request->all());
+        if($session){
+            return returnMessage(false, 'Session Already Exists', null, 'bad_request');
+        }
       try{
          DB::beginTransaction();
          $data = (new SessionDto($request))->dataFromRequest();

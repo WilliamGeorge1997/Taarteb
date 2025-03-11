@@ -11,7 +11,7 @@ class StudentResource extends JsonResource
      */
     public function toArray($request): array
     {
-        return [
+        $data = [
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
@@ -25,5 +25,11 @@ class StudentResource extends JsonResource
             'created_at' => $this->created_at->format('Y-m-d h:i A'),
             'updated_at' => $this->updated_at->format('Y-m-d h:i A'),
         ];
+
+        if (isset($this->is_attend)) {
+            $data['is_attend'] = $this->is_attend == 0 ? 0 : 1;
+        }
+
+        return $data;
     }
 }

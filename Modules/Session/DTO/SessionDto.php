@@ -28,8 +28,15 @@ class SessionDto
             $this->class_id = $request->get('class_id');
         if ($request->get('subject_id'))
             $this->subject_id = $request->get('subject_id');
-        if ($request->get('school_id'))
-            $this->school_id = $request->get('school_id');
+        if (auth('user')->user()->hasRole('Super Admin')) {
+            if ($request->get('school_id')) {
+                $this->school_id = $request->get('school_id');
+            }
+        } else if (auth('user')->user()->hasRole('School Manager')) {
+            if ($request->isMethod('POST')) {
+                $this->school_id = auth('user')->user()->school_id;
+            }
+        }
         if ($request->get('teacher_id'))
             $this->teacher_id = $request->get('teacher_id');
     }

@@ -15,7 +15,15 @@ class ClassDto
     public function __construct($request) {
         if($request->get('name')) $this->name = $request->get('name');
         if($request->get('grade_id')) $this->grade_id = $request->get('grade_id');
-        if($request->get('school_id')) $this->school_id = $request->get('school_id');
+        if (auth('user')->user()->hasRole('Super Admin')) {
+            if ($request->get('school_id')) {
+                $this->school_id = $request->get('school_id');
+            }
+        } else if (auth('user')->user()->hasRole('School Manager')) {
+            if ($request->isMethod('POST')) {
+                $this->school_id = auth('user')->user()->school_id;
+            }
+        }
         if($request->get('max_students')) $this->max_students = $request->get('max_students');
         if($request->get('session_number')) $this->session_number = $request->get('session_number');
     }

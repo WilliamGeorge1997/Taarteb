@@ -4,30 +4,12 @@ namespace Modules\Teacher\App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Modules\Subject\App\Rules\GradeBelongToSchool;
+use Modules\Subject\App\Rules\SubjectBelongToSchool;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class TeacherRequest extends FormRequest
 {
-    /**
-     * Get the credentials for authentication.
-     *
-     * @return array<string, mixed>
-     */
-    public function credentials(): array
-    {
-        $user = auth('user')->user();
-        $baseFields = ['name', 'email', 'phone', 'password', 'gender', 'image', 'subject_id', 'grade_id'];
-
-        if ($this->isMethod('POST') || $this->isMethod('PUT')) {
-            if ($user->hasRole('Super Admin')) {
-                $baseFields[] = 'school_id';
-            }
-            return $this->only($baseFields);
-        }
-
-        return [];
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -43,11 +25,17 @@ class TeacherRequest extends FormRequest
                 'password' => ['required', 'string', 'min:6'],
                 'gender' => ['required', 'in:m,f'],
                 'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
-                'grade_id' => ['required', 'exists:grades,id'],
-                'subject_id' => ['required', 'exists:subjects,id'],
+                'grade_id' => auth('user')->user()->hasRole('School Manager') ?
+                    ['required', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), auth('user')->user()->school_id)] :
+                    ['required', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), $this->input('school_id'))],
+                'subject_id' => auth('user')->user()->hasRole('School Manager') ?
+                    ['required', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), auth('user')->user()->school_id)] :
+                    ['required', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), $this->input('school_id'))],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['required', 'exists:schools,id'];
+            } else {
+                $rules['school_id'] = ['prohibited'];
             }
             return $rules;
         }
@@ -64,6 +52,8 @@ class TeacherRequest extends FormRequest
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['nullable', 'exists:schools,id'];
+            } else {
+                $rules['school_id'] = ['prohibited'];
             }
             return $rules;
         }

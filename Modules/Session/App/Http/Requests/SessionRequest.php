@@ -5,30 +5,12 @@ namespace Modules\Session\App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Modules\Session\App\Rules\SessionLimit;
 use Illuminate\Contracts\Validation\Validator;
+use Modules\Class\App\Rules\ClassBelongToSchool;
+use Modules\Subject\App\Rules\SubjectBelongToSchool;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class SessionRequest extends FormRequest
 {
-    /**
-     * Get the credentials for authentication.
-     *
-     * @return array<string, mixed>
-     */
-    public function credentials(): array
-    {
-        $user = auth('user')->user();
-        $baseFields = ['day', 'session_number', 'semester', 'year', 'class_id', 'subject_id', 'teacher_id'];
-
-        if ($this->isMethod('POST') || $this->isMethod('PUT')) {
-            if ($user->hasRole('Super Admin')) {
-                $baseFields[] = 'school_id';
-            }
-            return $this->only($baseFields);
-        }
-
-        return [];
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -39,30 +21,42 @@ class SessionRequest extends FormRequest
         if ($this->isMethod('POST')) {
             $rules = [
                 'day' => ['required', 'in:saturday,sunday,monday,tuesday,wednesday,thursday,friday'],
-                'session_number' => ['required', 'integer'],
+                'session_number' => ['required', 'integer', 'max:15'],
                 'semester' => ['required', 'in:first,second'],
                 'year' => ['required', 'string'],
-                'class_id' => ['required', 'exists:classes,id', new SessionLimit($this->input('class_id'))],
-                'subject_id' => ['required', 'exists:subjects,id'],
+                'class_id' => auth('user')->user()->hasRole('School Manager') ?
+                    ['required', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), auth('user')->user()->school_id), new SessionLimit($this->input('class_id'))] :
+                    ['required', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), $this->input('school_id')), new SessionLimit($this->input('class_id'))],
+                'subject_id' => auth('user')->user()->hasRole('School Manager') ?
+                    ['required', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), auth('user')->user()->school_id)] :
+                    ['required', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), $this->input('school_id'))],
                 'teacher_id' => ['required', 'exists:teacher_profiles,id'],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['required', 'exists:schools,id'];
+            } else {
+                $rules['school_id'] = ['prohibited'];
             }
             return $rules;
         }
         if ($this->isMethod('PUT')) {
             $rules = [
                 'day' => ['nullable', 'in:saturday,sunday,monday,tuesday,wednesday,thursday,friday'],
-                'session_number' => ['nullable', 'integer'],
+                'session_number' => ['nullable', 'integer', 'max:15'],
                 'semester' => ['nullable', 'in:first,second'],
                 'year' => ['nullable', 'string'],
-                'class_id' => ['nullable', 'exists:classes,id'],
-                'subject_id' => ['nullable', 'exists:subjects,id'],
+                'class_id' => auth('user')->user()->hasRole('School Manager') ?
+                    ['nullable', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), auth('user')->user()->school_id), new SessionLimit($this->input('class_id'))] :
+                    ['nullable', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), $this->input('school_id')), new SessionLimit($this->input('class_id'))],
+                'subject_id' => auth('user')->user()->hasRole('School Manager') ?
+                    ['nullable', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), auth('user')->user()->school_id)] :
+                    ['nullable', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), $this->input('school_id'))],
                 'teacher_id' => ['nullable', 'exists:teacher_profiles,id'],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['nullable', 'exists:schools,id'];
+            } else {
+                $rules['school_id'] = ['prohibited'];
             }
             return $rules;
         }

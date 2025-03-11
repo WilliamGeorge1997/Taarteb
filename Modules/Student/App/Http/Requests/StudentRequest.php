@@ -9,25 +9,6 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StudentRequest extends FormRequest
 {
-    /**
-     * Get the credentials for authentication.
-     *
-     * @return array<string, mixed>
-     */
-    public function credentials(): array
-    {
-        $user = auth('user')->user();
-        $baseFields = ['name', 'email', 'identity_number', 'parent_email', 'gender', 'grade_id', 'class_id'];
-
-        if ($this->isMethod('POST') || $this->isMethod('PUT')) {
-            if ($user->hasRole('Super Admin')) {
-                $baseFields[] = 'school_id';
-            }
-            return $this->only($baseFields);
-        }
-
-        return [];
-    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -48,6 +29,8 @@ class StudentRequest extends FormRequest
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['required', 'exists:schools,id'];
+            } else {
+                $rules['school_id'] = ['prohibited'];
             }
             return $rules;
         }
@@ -63,6 +46,8 @@ class StudentRequest extends FormRequest
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['nullable', 'exists:schools,id'];
+            } else {
+                $rules['school_id'] = ['prohibited'];
             }
             return $rules;
         }

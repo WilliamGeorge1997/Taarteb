@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Modules\Session\DTO\AttendanceDto;
 use Modules\Session\Service\AttendanceService;
 use Modules\Session\App\Http\Requests\AttendanceRequest;
+use Modules\Session\App\resources\StudentAttendanceResource;
 
 
 class AttendanceController extends Controller
@@ -24,24 +25,22 @@ class AttendanceController extends Controller
       $this->attendanceService = $attendanceService;
    }
 
-   public function index(Request $request){
+   public function index(AttendanceRequest $request){
     $data = $request->all();
-    $students = $this->attendanceService->getStudentsForAttendance($data);
-    return returnMessage(true, 'Students Fetched Successfully', $students);
+    $session = $this->attendanceService->getSessionWithStudents($data);
+    return returnMessage(true, 'Students Fetched Successfully', new StudentAttendanceResource($session));
  }
 
    public function store(AttendanceRequest $request){
       try{
          DB::beginTransaction();
          $data = (new AttendanceDto($request))->dataFromRequest();
-         $attendance = $this->attendanceService->create($data);
+         $this->attendanceService->create($data);
          DB::commit();
-         return returnMessage(true, 'Attendance Created Successfully', $attendance);
+         return returnMessage(true, 'Attendance Created Successfully', null);
       }catch(Exception $e){
          DB::rollBack();
          return returnMessage(false, $e->getMessage(), null, 500);
       }
    }
-
-
 }

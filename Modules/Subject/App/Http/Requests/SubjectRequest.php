@@ -20,8 +20,8 @@ class SubjectRequest extends FormRequest
             $rules = [
                 'name' => ['required', 'string', 'max:255'],
                 'grade_id' => auth('user')->user()->hasRole('School Manager') ?
-                    ['required', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'))] :
-                    ['required', 'exists:grades,id'],
+                    ['required', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), auth('user')->user()->school_id)] :
+                    ['required', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), $this->input('school_id'))],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['required', 'exists:schools,id'];
@@ -34,8 +34,8 @@ class SubjectRequest extends FormRequest
             $rules = [
                 'name' => ['nullable', 'string', 'max:255'],
                 'grade_id' => auth('user')->user()->hasRole('School Manager') ?
-                    ['nullable', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'))] :
-                    ['nullable', 'exists:grades,id'],
+                    ['nullable', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), auth('user')->user()->school_id)] :
+                    ['nullable', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), $this->input('school_id'))],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['nullable', 'exists:schools,id'];

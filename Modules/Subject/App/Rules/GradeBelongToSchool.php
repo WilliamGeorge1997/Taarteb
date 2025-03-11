@@ -9,9 +9,11 @@ use Illuminate\Contracts\Validation\ValidationRule;
 class GradeBelongToSchool implements ValidationRule
 {
     private $gradeId;
-    public function __construct($gradeId)
+    private $schoolId;
+    public function __construct($gradeId, $schoolId)
     {
         $this->gradeId = $gradeId;
+        $this->schoolId = $schoolId;
     }
     /**
      * Run the validation rule.
@@ -19,7 +21,7 @@ class GradeBelongToSchool implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $grade = Grade::find($this->gradeId);
-        if ($grade->school_id != auth('user')->user()->school_id) {
+        if ($grade->school_id != $this->schoolId) {
             $fail('The grade does not belong to your school.');
         }
     }
