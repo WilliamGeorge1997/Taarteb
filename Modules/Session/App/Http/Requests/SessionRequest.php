@@ -7,6 +7,7 @@ use Modules\Session\App\Rules\SessionLimit;
 use Illuminate\Contracts\Validation\Validator;
 use Modules\Class\App\Rules\ClassBelongToSchool;
 use Modules\Subject\App\Rules\SubjectBelongToSchool;
+use Modules\Teacher\App\Rules\TeacherBelongToSchool;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class SessionRequest extends FormRequest
@@ -30,7 +31,9 @@ class SessionRequest extends FormRequest
                 'subject_id' => auth('user')->user()->hasRole('School Manager') ?
                     ['required', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), auth('user')->user()->school_id)] :
                     ['required', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), $this->input('school_id'))],
-                'teacher_id' => ['required', 'exists:teacher_profiles,id'],
+                'teacher_id' => auth('user')->user()->hasRole('School Manager') ?
+                    ['required', 'exists:teacher_profiles,id', new TeacherBelongToSchool($this->input('teacher_id'), auth('user')->user()->school_id)] :
+                    ['required', 'exists:teacher_profiles,id', new TeacherBelongToSchool($this->input('teacher_id'), $this->input('school_id'))],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['required', 'exists:schools,id'];
@@ -51,7 +54,9 @@ class SessionRequest extends FormRequest
                 'subject_id' => auth('user')->user()->hasRole('School Manager') ?
                     ['nullable', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), auth('user')->user()->school_id)] :
                     ['nullable', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), $this->input('school_id'))],
-                'teacher_id' => ['nullable', 'exists:teacher_profiles,id'],
+                'teacher_id' => auth('user')->user()->hasRole('School Manager') ?
+                    ['nullable', 'exists:teacher_profiles,id', new TeacherBelongToSchool($this->input('teacher_id'), auth('user')->user()->school_id)] :
+                    ['nullable', 'exists:teacher_profiles,id', new TeacherBelongToSchool($this->input('teacher_id'), $this->input('school_id'))],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['nullable', 'exists:schools,id'];

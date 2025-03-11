@@ -57,4 +57,20 @@ class StudentService
         $student->is_active = !$student->is_active;
         $student->save();
     }
+
+    function getStudentsToGraduate($data = [])
+    {
+        $students = Student::available()->where('is_graduated', 0)->whereHas('grade', function ($query) {
+            $query->where('is_final', 1);
+        })->get();
+        return getCaseCollection($students, $data);
+    }
+
+    function graduate($students)
+    {
+        foreach ($students as $student) {
+            $student->update(['is_graduated' => 1]);
+        }
+    }
+
 }

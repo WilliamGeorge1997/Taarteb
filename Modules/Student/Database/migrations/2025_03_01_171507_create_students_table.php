@@ -24,6 +24,7 @@ return new class extends Migration
             $table->foreignIdFor(Grade::class)->index()->constrained()->restrictOnDelete();
             $table->foreignIdFor(Classroom::class, 'class_id')->index()->constrained()->restrictOnDelete();
             $table->foreignIdFor(School::class)->index()->constrained()->restrictOnDelete();
+            $table->boolean("is_graduated")->default(0);
             $table->boolean('is_active')->default(1);
             $table->timestamps();
         });

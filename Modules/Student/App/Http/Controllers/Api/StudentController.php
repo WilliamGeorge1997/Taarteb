@@ -11,6 +11,7 @@ use Modules\Student\App\Models\Student;
 use Modules\Student\Service\StudentService;
 use Modules\Student\App\resources\StudentResource;
 use Modules\Student\App\Http\Requests\StudentRequest;
+use Modules\Student\App\Http\Requests\GraduateRequest;
 
 class StudentController extends Controller
 {
@@ -22,6 +23,7 @@ class StudentController extends Controller
       $this->middleware('permission:Create-student', ['only' => ['store']]);
       $this->middleware('permission:Edit-student', ['only' => ['update', 'activate']]);
       $this->middleware('permission:Delete-student', ['only' => ['destroy']]);
+      $this->middleware('permission:Index-student-graduation|Create-student-graduation|Edit-student-graduation|Delete-student-graduation', ['only' => ['graduate']]);
       $this->studentService = $studentService;
    }
    public function index(Request $request){
@@ -50,6 +52,24 @@ class StudentController extends Controller
          $student = $this->studentService->update($student, $data);
          DB::commit();
          return returnMessage(true, 'Student Updated Successfully', $student);
+      }catch(Exception $e){
+         DB::rollBack();
+         return returnMessage(false, $e->getMessage(), null, 500);
+      }
+   }
+
+   public function getStudentsToGraduate(Request $request){
+      $data = $request->all();
+      $students = $this->studentService->getStudentsToGraduate($data);
+      return returnMessage(true, 'Students Fetched Successfully', $students);
+   }
+
+   public function graduate(GraduateRequest $request){
+      try{
+         DB::beginTransaction();
+         $this->studentService->graduate($request->validated());
+         DB::commit();
+         return returnMessage(true, 'Students Graduated Successfully');
       }catch(Exception $e){
          DB::rollBack();
          return returnMessage(false, $e->getMessage(), null, 500);

@@ -32,11 +32,12 @@ class GradeService
 
     function create($data)
     {
-        foreach ($data['name'] as $name) {
-            $grade = Grade::create([
-                'name' => $name,
-                'grade_category_id' => $data['grade_category_id'],
-                'school_id' => $data['school_id']
+        foreach ($data['grades'] as $grade) {
+            Grade::create([
+                'name' => $grade['name'],
+                'grade_category_id' => $grade['grade_category_id'],
+                'school_id' => $grade['school_id'],
+                'is_final' => $grade['is_final'] ?? 0
             ]);
         }
     }

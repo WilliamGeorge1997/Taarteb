@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->foreignIdFor(GradeCategory::class)->index()->constrained()->restrictOnDelete();
             $table->foreignIdFor(School::class)->constrained()->cascadeOnDelete();
+            $table->boolean('is_final')->default(0);
             $table->timestamps();
         });
     }

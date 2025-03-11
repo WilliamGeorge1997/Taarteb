@@ -15,7 +15,7 @@ class Grade extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['name', 'grade_category_id', 'school_id'];
+    protected $fillable = ['name', 'grade_category_id', 'school_id', 'is_final'];
 
     protected $hidden = ['created_at', 'updated_at'];
 
