@@ -48,8 +48,8 @@ class SchoolsImport implements ToCollection, WithHeadingRow
                 ]);
 
                 $schoolManager->assignRole('School Manager');
-                $gradesArray = explode(',', $row['grades']);
-                $school->grades()->sync(array_filter($gradesArray));
+                // $gradesArray = explode(',', $row['grades']);
+                // $school->grades()->sync(array_filter($gradesArray));
             }
             DB::commit();
             return true;

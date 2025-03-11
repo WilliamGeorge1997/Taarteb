@@ -6,6 +6,7 @@ use Spatie\Activitylog\LogOptions;
 use Modules\Grade\App\Models\Grade;
 use Modules\School\App\Models\School;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Session\App\Models\Session;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -39,6 +40,11 @@ class Classroom extends Model
     public function school()
     {
         return $this->belongsTo(School::class);
+    }
+
+    public function sessions()
+    {
+        return $this->hasMany(Session::class, 'class_id');
     }
 
     //Helper

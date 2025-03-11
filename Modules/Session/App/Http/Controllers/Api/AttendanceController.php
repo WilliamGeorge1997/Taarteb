@@ -3,6 +3,7 @@
 namespace Modules\Session\App\Http\Controllers\Api;
 
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Modules\Session\DTO\AttendanceDto;
@@ -22,11 +23,12 @@ class AttendanceController extends Controller
       $this->middleware('permission:Delete-attendance', ['only' => ['destroy']]);
       $this->attendanceService = $attendanceService;
    }
-//    public function index(Request $request){
-//       $data = $request->all();
-//       $sessions = $this->sessionService->findAll($data);
-//       return returnMessage(true, 'Sessions Fetched Successfully', SessionResource::collection($sessions)->response()->getData(true));
-//    }
+
+   public function index(Request $request){
+    $data = $request->all();
+    $students = $this->attendanceService->getStudentsForAttendance($data);
+    return returnMessage(true, 'Students Fetched Successfully', $students);
+ }
 
    public function store(AttendanceRequest $request){
       try{
@@ -41,16 +43,5 @@ class AttendanceController extends Controller
       }
    }
 
-//    public function update(AttendanceRequest $request, Attendance $attendance){
-//       try{
-//          DB::beginTransaction();
-//          $data = (new AttendanceDto($request))->dataFromRequest();
-//          $attendance = $this->attendanceService->update($attendance, $data);
-//          DB::commit();
-//          return returnMessage(true, 'Attendance Updated Successfully', $attendance);
-//       }catch(Exception $e){
-//          DB::rollBack();
-//          return returnMessage(false, $e->getMessage(), null, 500);
-//       }
-//    }
+
 }

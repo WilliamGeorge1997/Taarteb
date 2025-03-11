@@ -12,13 +12,13 @@ class StudentService
     function findAll($data = [])
     {
         $students = Student::query()
-        ->when($data['name'] ?? null, function($query) use ($data){
-            $query->where('name', 'like', '%'.$data['name'].'%');
-        })
-        ->when($data['email'] ?? null, function($query) use ($data){
-            $query->where('email', 'like', '%'.$data['email'].'%');
-        })
-        ->available()->orderByDesc('created_at');
+            ->when($data['name'] ?? null, function ($query) use ($data) {
+                $query->where('name', 'like', '%' . $data['name'] . '%');
+            })
+            ->when($data['email'] ?? null, function ($query) use ($data) {
+                $query->where('email', 'like', '%' . $data['email'] . '%');
+            })
+            ->available()->orderByDesc('created_at');
         return getCaseCollection($students, $data);
     }
 
@@ -36,7 +36,8 @@ class StudentService
 
     function create($data)
     {
-        if(auth('user')->user()->hasRole('School Manager')) $data['school_id'] = auth('user')->user()->school_id;
+        if (auth('user')->user()->hasRole('School Manager'))
+            $data['school_id'] = auth('user')->user()->school_id;
         $student = Student::create($data);
         return $student;
     }

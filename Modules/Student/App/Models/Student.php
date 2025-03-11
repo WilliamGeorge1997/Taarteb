@@ -7,6 +7,7 @@ use Modules\Grade\App\Models\Grade;
 use Modules\School\App\Models\School;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Class\App\Models\Classroom;
+use Modules\Session\App\Models\Attendance;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -49,6 +50,10 @@ class Student extends Model
         return $this->belongsTo(School::class);
     }
 
+    public function attendance()
+    {
+        return $this->hasMany(Attendance::class);
+    }
 
     //Helper
     protected function scopeAvailable($query)
