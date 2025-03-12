@@ -21,7 +21,7 @@ class GradeController extends Controller
     {
         $this->middleware('auth:user');
         $this->middleware('role:Super Admin|School Manager');
-        $this->middleware('permission:Index-grade|Create-grade|Edit-grade|Delete-grade', ['only' => ['index', 'store']]);
+        $this->middleware('permission:Index-grade|Create-grade|Edit-grade|Delete-grade', ['only' => ['index', 'store', 'getGradesByGradeCategory']]);
         $this->middleware('permission:Create-grade', ['only' => ['store']]);
         $this->middleware('permission:Edit-grade', ['only' => ['update', 'activate']]);
         $this->middleware('permission:Delete-grade', ['only' => ['destroy']]);
@@ -62,9 +62,9 @@ class GradeController extends Controller
         }
     }
 
-    public function getGradesByGradeCategory(Request $request, GradeCategory $gradeCategory){
+    public function getGradesByGradeCategory(Request $request, GradeCategory $grade_category){
         $data = $request->all();
-        $grades = $this->gradeService->getGradesByGradeCategory($data, $gradeCategory->id);
+        $grades = $this->gradeService->getGradesByGradeCategory($data, $grade_category->id);
         return returnMessage(true, 'Grades Fetched Successfully', GradeResource::collection($grades)->response()->getData(true));
     }
 

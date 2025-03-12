@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Modules\Student\App\Rules\StudentBelongToSchool;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Modules\Student\App\Http\Rules\StudentInFinalGrade;
 
 class GraduateRequest extends FormRequest
 {
@@ -18,8 +19,10 @@ class GraduateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "students" => ['required', 'array'],
-            'students.*' => ['required', 'exists:students,id', new StudentBelongToSchool($this->input('students.*'), auth('user')->user()->school_id)]
+            "student_ids" => ['required', 'array'],
+            'student_ids.*' => ['required', 'exists:students,id',
+             new StudentBelongToSchool($this->input('student_ids.*'), auth('user')->user()->school_id),
+             new StudentInFinalGrade($this->input('student_ids.*'))]
         ];
     }
 

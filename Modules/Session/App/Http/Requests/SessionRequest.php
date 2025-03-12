@@ -26,8 +26,8 @@ class SessionRequest extends FormRequest
                 'semester' => ['required', 'in:first,second', 'exists:subjects,semester,id,' . $this->input('subject_id')],
                 'year' => ['required', 'string'],
                 'class_id' => auth('user')->user()->hasRole('School Manager') ?
-                    ['required', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), auth('user')->user()->school_id), new SessionLimit($this->input('class_id'))] :
-                    ['required', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), $this->input('school_id')), new SessionLimit($this->input('class_id'))],
+                    ['required', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), auth('user')->user()->school_id), new SessionLimit($this->input('class_id'), $this->input('semester'), $this->input('year'))] :
+                    ['required', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), $this->input('school_id')), new SessionLimit($this->input('class_id'), $this->input('semester'), $this->input('year'))],
                 'subject_id' => auth('user')->user()->hasRole('School Manager') ?
                     ['required', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), auth('user')->user()->school_id)] :
                     ['required', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), $this->input('school_id'))],
@@ -49,8 +49,8 @@ class SessionRequest extends FormRequest
                 'semester' => ['nullable', 'in:first,second', 'exists:subjects,semester,id,' . $this->input('subject_id')],
                 'year' => ['nullable', 'string'],
                 'class_id' => auth('user')->user()->hasRole('School Manager') ?
-                    ['nullable', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), auth('user')->user()->school_id), new SessionLimit($this->input('class_id'))] :
-                    ['nullable', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), $this->input('school_id')), new SessionLimit($this->input('class_id'))],
+                    ['nullable', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), auth('user')->user()->school_id), new SessionLimit($this->input('class_id'), $this->input('semester'), $this->input('year'))] :
+                    ['nullable', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), $this->input('school_id')), new SessionLimit($this->input('class_id'), $this->input('semester'), $this->input('year'))],
                 'subject_id' => auth('user')->user()->hasRole('School Manager') ?
                     ['nullable', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), auth('user')->user()->school_id)] :
                     ['nullable', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), $this->input('school_id'))],

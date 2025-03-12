@@ -63,7 +63,7 @@ class StudentService
     {
         $students = Student::available()->where('is_graduated', 0)->whereHas('grade', function ($query) {
             $query->where('is_final', 1);
-        })->get();
+        });
         return getCaseCollection($students, $data);
     }
 
@@ -72,22 +72,21 @@ class StudentService
         Student::whereIn('id', $studentsIds)->update(['is_graduated' => 1]);
     }
 
-    function getStudentsToUpgrade($data = [])
+    function getStudentsToUpgrade($data = [], $class_id)
     {
         $students = Student::query()
+            ->available()
             ->where('is_graduated', 0)
-            ->where('class_id', $data['class_id'])
-            ->get();
+            ->where('class_id', $class_id);
         return getCaseCollection($students, $data);
     }
     function upgrade($data)
     {
-        dd($data);
         $class = Classroom::where('id', $data['class_id'])->first();
-        Student::whereIn('id', $data['students'])
-        ->update([
-            'class_id' => $class->id,
-            'grade_id' => $class->grade_id
-        ]);
+        Student::whereIn('id', $data['student_ids'])
+            ->update([
+                'class_id' => $class->id,
+                'grade_id' => $class->grade_id
+            ]);
     }
 }

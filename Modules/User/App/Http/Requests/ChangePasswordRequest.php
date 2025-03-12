@@ -8,15 +8,6 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ChangePasswordRequest extends FormRequest
 {
-    /**
-     * Get the credentials for authentication.
-     *
-     * @return array<string, mixed>
-     */
-    public function credentials(): array
-    {
-        return $this->only(['old_password', 'new_password', 'new_password_confirmation']);
-    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -26,7 +17,7 @@ class ChangePasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'old_password' => ['required', 'current_password'],
+            'current_password' => ['required', 'current_password'],
             'new_password' => ['required', 'string', 'min:6' ,'confirmed']
         ];
     }
@@ -37,7 +28,7 @@ class ChangePasswordRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'old_password' => 'Old Password',
+            'current_password' => 'Old Password',
             'new_password' => 'New Password',
             'new_password_confirmation' => 'New Password Confirmation',
         ];

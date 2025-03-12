@@ -12,6 +12,9 @@ class SubjectService
             ->when($data['name'] ?? null, function ($query) use ($data) {
                 $query->where('name', 'like', '%' . $data['name'] . '%');
             })
+            ->when($data['semester'] ?? null, function ($query) use ($data) {
+                $query->where('semester', $data['semester']);
+            })
             ->with('grade', 'school')
             ->available()
             ->orderByDesc('created_at');

@@ -63,7 +63,7 @@ class TeacherService
             $teacherData['image'] = $imageName;
         }
         if ($teacherData)
-            $teacherProfile->user()->update($teacherData);
+            $teacherProfile->teacher()->update($teacherData);
         if ($teacherProfileData)
             $teacherProfile->update($teacherProfileData);
         return $teacherProfile;

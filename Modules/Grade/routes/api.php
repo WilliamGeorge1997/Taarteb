@@ -17,4 +17,4 @@ use Modules\Grade\App\Http\Controllers\Api\GradeCategoryController;
 
 Route::apiResource('grade-categories', GradeCategoryController::class);
 Route::apiResource('grades', GradeController::class);
-Route::get('grades/grade-categories/{grade_category_id}', [GradeController::class, 'getGradesByGradeCategory']);
+Route::get('grade-categories/{grade_category}/grades', [GradeController::class, 'getGradesByGradeCategory']);

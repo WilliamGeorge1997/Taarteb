@@ -24,7 +24,8 @@ class StudentController extends Controller
       $this->middleware('permission:Create-student', ['only' => ['store']]);
       $this->middleware('permission:Edit-student', ['only' => ['update', 'activate']]);
       $this->middleware('permission:Delete-student', ['only' => ['destroy']]);
-      $this->middleware('permission:Index-student-graduation|Create-student-graduation|Edit-student-graduation|Delete-student-graduation', ['only' => ['graduate']]);
+      $this->middleware('permission:Index-student-upgrade|Create-student-upgrade|Edit-student-upgrade|Delete-student-upgrade', ['only' => ['getStudentsToUpgrade','upgrade']]);
+      $this->middleware('permission:Index-student-graduation|Create-student-graduation|Edit-student-graduation|Delete-student-graduation', ['only' => ['getStudentsToGraduate','graduate']]);
       $this->studentService = $studentService;
    }
    public function index(Request $request){
@@ -62,7 +63,7 @@ class StudentController extends Controller
    public function getStudentsToGraduate(Request $request){
       $data = $request->all();
       $students = $this->studentService->getStudentsToGraduate($data);
-      return returnMessage(true, 'Students Fetched Successfully', $students);
+      return returnMessage(true, 'Students Fetched Successfully', StudentResource::collection($students)->response()->getData(true));
    }
 
    public function graduate(GraduateRequest $request){
@@ -76,11 +77,11 @@ class StudentController extends Controller
          return returnMessage(false, $e->getMessage(), null, 500);
       }
    }
-    public function getStudentsToUpgrade(Request $request)
+    public function getStudentsToUpgrade(Request $request, $class_id)
     {
         $data = $request->all();
-        $students = $this->studentService->getStudentsToUpgrade($data);
-        return returnMessage(true, 'Students Fetched Successfully', $students);
+        $students = $this->studentService->getStudentsToUpgrade($data, $class_id);
+        return returnMessage(true, 'Students Fetched Successfully', StudentResource::collection($students)->response()->getData(true));
     }
     public function upgrade(UpgradeRequest $request)
     {

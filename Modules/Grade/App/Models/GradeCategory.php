@@ -16,8 +16,6 @@ class GradeCategory extends Model
      */
     protected $fillable = ['name', 'school_id'];
     protected $hidden = ['created_at', 'updated_at'];
-
-
     //Relations
     public function grades()
     {

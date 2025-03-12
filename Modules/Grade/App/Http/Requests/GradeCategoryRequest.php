@@ -17,8 +17,8 @@ class GradeCategoryRequest extends FormRequest
     {
         if ($this->isMethod('POST')) {
             $rules = [
-                'name' => ['required', 'array'],
-                'name.*' => ['required', 'string', 'max:255'],
+                'names' => ['required', 'array'],
+                'names.*' => ['required', 'string', 'max:255'],
             ];
 
             if (auth('user')->user()->hasRole('Super Admin')) {

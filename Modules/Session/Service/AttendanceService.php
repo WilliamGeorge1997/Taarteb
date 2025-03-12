@@ -41,8 +41,8 @@ class AttendanceService
                     'student_id' => $attendance['student_id'],
                     'is_present' => $attendance['is_present'],
                 ]);
-                saveHistory($data);
             }
+            saveHistory($data['session_id'], $attendance);
         }
     }
 

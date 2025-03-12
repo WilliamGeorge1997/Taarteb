@@ -8,7 +8,7 @@ class HistoryService
 {
     public function findAll($data = [])
     {
-        $histories = History::query()->with(['student', 'teacher', 'grade', 'class', 'subject', 'school'])->available()->get();
+        $histories = History::query()->available()->with(['student', 'teacher', 'grade', 'class', 'subject', 'school']);
 
         return getCaseCollection($histories, $data);
     }

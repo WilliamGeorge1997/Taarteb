@@ -5,7 +5,7 @@ namespace Modules\Grade\DTO;
 
 class GradeCategoryDto
 {
-    public array $names;
+    public array $names = [];
     public $school_id;
     public $name;
 
@@ -34,7 +34,7 @@ class GradeCategoryDto
     public function dataFromRequest()
     {
         $data = json_decode(json_encode($this), true);
-        if ($this->names == null)
+        if ($this->names == null || count($this->names) == 0)
             unset($data['names']);
         if ($this->school_id == null)
             unset($data['school_id']);

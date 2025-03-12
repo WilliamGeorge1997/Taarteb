@@ -35,8 +35,8 @@ class GradeService
         foreach ($data['grades'] as $grade) {
             Grade::create([
                 'name' => $grade['name'],
-                'grade_category_id' => $grade['grade_category_id'],
-                'school_id' => $grade['school_id'],
+                'grade_category_id' => $data['grade_category_id'],
+                'school_id' => $data['school_id'],
                 'is_final' => $grade['is_final'] ?? 0
             ]);
         }
@@ -55,7 +55,7 @@ class GradeService
 
     function getGradesByGradeCategory($data, $gradeCategoryId)
     {
-        $grades = Grade::available()->with('gradeCategory')->where('grade_category_id', $gradeCategoryId)->get();
+        $grades = Grade::available()->with('gradeCategory')->where('grade_category_id', 1);
         return getCaseCollection($grades, $data);
     }
 }

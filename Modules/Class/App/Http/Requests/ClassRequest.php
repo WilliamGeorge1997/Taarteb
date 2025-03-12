@@ -24,7 +24,7 @@ class ClassRequest extends FormRequest
                     ['required', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), auth('user')->user()->school_id)] :
                     ['required', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), $this->input('school_id'))],
                 'max_students' => ['required', 'integer'],
-                'session_number' => ['nullable', 'integer'],
+                'session_number' => ['required', 'integer'],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['required', 'exists:schools,id'];

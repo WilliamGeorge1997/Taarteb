@@ -47,8 +47,12 @@ class TeacherRequest extends FormRequest
                 'password' => ['nullable', 'string', 'min:6'],
                 'gender' => ['nullable', 'in:m,f'],
                 'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
-                'subject_id' => ['nullable', 'exists:subjects,id'],
-                'grade_id' => ['nullable', 'exists:grades,id'],
+                'subject_id' => auth('user')->user()->hasRole('School Manager') ?
+                    ['nullable', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), auth('user')->user()->school_id)] :
+                    ['nullable', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), $this->input('school_id'))],
+                'grade_id' => auth('user')->user()->hasRole('School Manager') ?
+                    ['nullable', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), auth('user')->user()->school_id)] :
+                    ['nullable', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), $this->input('school_id'))],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['nullable', 'exists:schools,id'];
@@ -83,7 +87,7 @@ class TeacherRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        if($this->isMethod('PUT')){
+        if ($this->isMethod('PUT')) {
             $admin = auth('user')->user();
             if ($admin->hasRole('School Manager')) {
                 // Check if the teacher's school ID matches the authenticated user's school ID

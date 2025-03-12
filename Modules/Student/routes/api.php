@@ -15,10 +15,10 @@ use Modules\Student\App\Http\Controllers\Api\StudentController;
     |
 */
 
-Route::apiResource('students', StudentController::class);
+Route::apiResource('students', StudentController::class)->only(['index', 'store', 'update']);
 Route::group(['prefix' => 'students'], function () {
     Route::get('graduate', [StudentController::class, 'getStudentsToGraduate']);
     Route::post('graduate', [StudentController::class, 'graduate']);
-    Route::get('upgrade', [StudentController::class, 'getStudentsToUpgrade']);
     Route::post('upgrade', [StudentController::class, 'upgrade']);
 });
+Route::get('classes/{class}/students/upgrade', [StudentController::class, 'getStudentsToUpgrade']);

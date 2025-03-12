@@ -22,6 +22,7 @@ class StudentResource extends JsonResource
             'class' => $this->class->name,
             'school' => $this->school->name,
             'is_active' => $this->is_active,
+            'is_graduated' => $this->is_graduated,
             'created_at' => $this->created_at->format('Y-m-d h:i A'),
             'updated_at' => $this->updated_at->format('Y-m-d h:i A'),
         ];

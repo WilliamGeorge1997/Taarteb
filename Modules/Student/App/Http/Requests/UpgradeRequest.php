@@ -19,8 +19,8 @@ class UpgradeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "students" => ['required', 'array'],
-            'students.*' => ['required', 'exists:students,id', new StudentBelongToSchool($this->input('students.*'), auth('user')->user()->school_id)],
+            "student_ids" => ['required', 'array'],
+            'student_ids.*' => ['required', 'exists:students,id', new StudentBelongToSchool($this->input('student_ids.*'), auth('user')->user()->school_id)],
             'class_id' => ['required', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), auth('user')->user()->school_id)]
         ];
     }
