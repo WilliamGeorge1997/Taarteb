@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->foreignIdFor(Grade::class)->index()->constrained()->restrictOnDelete();
             $table->foreignIdFor(School::class)->index()->constrained()->restrictOnDelete();
+            $table->enum('semester', ['first', 'second']);
             $table->timestamps();
         });
     }

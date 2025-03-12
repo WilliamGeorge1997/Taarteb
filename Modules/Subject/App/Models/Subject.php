@@ -16,7 +16,7 @@ class Subject extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['name' , 'grade_id', 'school_id'];
+    protected $fillable = ['name' , 'grade_id', 'school_id', 'semester'];
 
     protected $hidden = ['created_at', 'updated_at'];
 

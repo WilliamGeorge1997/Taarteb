@@ -4,10 +4,11 @@ namespace Modules\Student\App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Modules\Class\App\Rules\ClassBelongToSchool;
 use Modules\Student\App\Rules\StudentBelongToSchool;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class GraduateRequest extends FormRequest
+class UpgradeRequest extends FormRequest
 {
 
     /**
@@ -19,7 +20,8 @@ class GraduateRequest extends FormRequest
     {
         return [
             "students" => ['required', 'array'],
-            'students.*' => ['required', 'exists:students,id', new StudentBelongToSchool($this->input('students.*'), auth('user')->user()->school_id)]
+            'students.*' => ['required', 'exists:students,id', new StudentBelongToSchool($this->input('students.*'), auth('user')->user()->school_id)],
+            'class_id' => ['required', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), auth('user')->user()->school_id)]
         ];
     }
 
@@ -30,6 +32,7 @@ class GraduateRequest extends FormRequest
     {
         return [
             'students' => 'Students',
+            'class_id' => 'Class'
         ];
     }
 

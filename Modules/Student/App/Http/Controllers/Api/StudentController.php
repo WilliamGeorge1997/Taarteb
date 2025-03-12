@@ -11,6 +11,7 @@ use Modules\Student\App\Models\Student;
 use Modules\Student\Service\StudentService;
 use Modules\Student\App\resources\StudentResource;
 use Modules\Student\App\Http\Requests\StudentRequest;
+use Modules\Student\App\Http\Requests\UpgradeRequest;
 use Modules\Student\App\Http\Requests\GraduateRequest;
 
 class StudentController extends Controller
@@ -75,4 +76,22 @@ class StudentController extends Controller
          return returnMessage(false, $e->getMessage(), null, 500);
       }
    }
+    public function getStudentsToUpgrade(Request $request)
+    {
+        $data = $request->all();
+        $students = $this->studentService->getStudentsToUpgrade($data);
+        return returnMessage(true, 'Students Fetched Successfully', $students);
+    }
+    public function upgrade(UpgradeRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+            $this->studentService->upgrade($request->validated());
+            DB::commit();
+            return returnMessage(true, 'Students Upgraded Successfully');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return returnMessage(false, $e->getMessage(), null, 500);
+        }
+    }
 }

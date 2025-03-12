@@ -23,7 +23,7 @@ class SessionRequest extends FormRequest
             $rules = [
                 'day' => ['required', 'in:saturday,sunday,monday,tuesday,wednesday,thursday,friday'],
                 'session_number' => ['required', 'integer', 'max:15'],
-                'semester' => ['required', 'in:first,second'],
+                'semester' => ['required', 'in:first,second', 'exists:subjects,semester,id,' . $this->input('subject_id')],
                 'year' => ['required', 'string'],
                 'class_id' => auth('user')->user()->hasRole('School Manager') ?
                     ['required', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), auth('user')->user()->school_id), new SessionLimit($this->input('class_id'))] :
@@ -46,7 +46,7 @@ class SessionRequest extends FormRequest
             $rules = [
                 'day' => ['nullable', 'in:saturday,sunday,monday,tuesday,wednesday,thursday,friday'],
                 'session_number' => ['nullable', 'integer', 'max:15'],
-                'semester' => ['nullable', 'in:first,second'],
+                'semester' => ['nullable', 'in:first,second', 'exists:subjects,semester,id,' . $this->input('subject_id')],
                 'year' => ['nullable', 'string'],
                 'class_id' => auth('user')->user()->hasRole('School Manager') ?
                     ['nullable', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), auth('user')->user()->school_id), new SessionLimit($this->input('class_id'))] :

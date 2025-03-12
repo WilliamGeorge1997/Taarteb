@@ -33,7 +33,7 @@ class GradeCategoryService
 
     function create($data)
     {
-        foreach ($data['name'] as $name) {
+        foreach ($data['names'] as $name) {
             GradeCategory::create([
                 'name' => $name,
                 'school_id' => $data['school_id']

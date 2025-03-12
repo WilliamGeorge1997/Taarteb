@@ -31,8 +31,7 @@ class GradeCategoryRequest extends FormRequest
         }
         if ($this->isMethod('PUT')) {
             $rules = [
-                'name' => ['nullable', 'array'],
-                'name.*' => ['nullable', 'string', 'max:255'],
+                'name' => ['nullable', 'string', 'max:255'],
             ];
 
             if (auth('user')->user()->hasRole('Super Admin')) {

@@ -52,4 +52,10 @@ class GradeService
     {
         $grade->delete();
     }
+
+    function getGradesByGradeCategory($data, $gradeCategoryId)
+    {
+        $grades = Grade::available()->with('gradeCategory')->where('grade_category_id', $gradeCategoryId)->get();
+        return getCaseCollection($grades, $data);
+    }
 }

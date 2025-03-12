@@ -3,14 +3,15 @@
 namespace Modules\Grade\App\Http\Controllers\Api;
 
 use Exception;
+use Illuminate\Http\Request;
 use Modules\Grade\DTO\GradeDto;
 use Illuminate\Support\Facades\DB;
 use Modules\Grade\App\Models\Grade;
 use App\Http\Controllers\Controller;
 use Modules\Grade\Service\GradeService;
+use Modules\Grade\App\Models\GradeCategory;
 use Modules\Grade\App\resources\GradeResource;
 use Modules\Grade\App\Http\Requests\GradeRequest;
-use Illuminate\Http\Request;
 
 
 class GradeController extends Controller
@@ -59,6 +60,12 @@ class GradeController extends Controller
             DB::rollBack();
             return returnMessage(false, $e->getMessage(), null, 500);
         }
+    }
+
+    public function getGradesByGradeCategory(Request $request, GradeCategory $gradeCategory){
+        $data = $request->all();
+        $grades = $this->gradeService->getGradesByGradeCategory($data, $gradeCategory->id);
+        return returnMessage(true, 'Grades Fetched Successfully', GradeResource::collection($grades)->response()->getData(true));
     }
 
 }

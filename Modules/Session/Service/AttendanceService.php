@@ -68,7 +68,8 @@ class AttendanceService
             ->where('session_number', $data['session_number'])
             ->with([
                 'class.students' => function ($query) use ($data) {
-                    $query->withCount([
+                    $query->where('is_graduated', 0)
+                        ->withCount([
                         'attendance as is_attend' => function ($q) use ($data) {
                             $q->whereHas('session', function ($sq) use ($data) {
                                 $sq->where('class_id', $data['class_id'])

@@ -3,6 +3,7 @@
 namespace Modules\Student\Service;
 
 use Illuminate\Support\Facades\File;
+use Modules\Class\App\Models\Classroom;
 use Modules\Student\App\Models\Student;
 use Modules\Common\Helpers\UploadHelper;
 
@@ -66,11 +67,27 @@ class StudentService
         return getCaseCollection($students, $data);
     }
 
-    function graduate($students)
+    function graduate($studentsIds)
     {
-        foreach ($students as $student) {
-            $student->update(['is_graduated' => 1]);
-        }
+        Student::whereIn('id', $studentsIds)->update(['is_graduated' => 1]);
     }
 
+    function getStudentsToUpgrade($data = [])
+    {
+        $students = Student::query()
+            ->where('is_graduated', 0)
+            ->where('class_id', $data['class_id'])
+            ->get();
+        return getCaseCollection($students, $data);
+    }
+    function upgrade($data)
+    {
+        dd($data);
+        $class = Classroom::where('id', $data['class_id'])->first();
+        Student::whereIn('id', $data['students'])
+        ->update([
+            'class_id' => $class->id,
+            'grade_id' => $class->grade_id
+        ]);
+    }
 }

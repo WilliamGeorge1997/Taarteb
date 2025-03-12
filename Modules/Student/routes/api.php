@@ -19,4 +19,6 @@ Route::apiResource('students', StudentController::class);
 Route::group(['prefix' => 'students'], function () {
     Route::get('graduate', [StudentController::class, 'getStudentsToGraduate']);
     Route::post('graduate', [StudentController::class, 'graduate']);
+    Route::get('upgrade', [StudentController::class, 'getStudentsToUpgrade']);
+    Route::post('upgrade', [StudentController::class, 'upgrade']);
 });
