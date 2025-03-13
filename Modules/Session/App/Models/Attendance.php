@@ -43,4 +43,23 @@ class Attendance extends Model
     {
         return $this->belongsTo(Session::class);
     }
+
+    //Helper
+    public function scopeAvailable($query)
+    {
+        if (auth('user')->check()) {
+            $user = auth('user')->user();
+            if ($user->hasRole('Super Admin')) {
+            }
+            if ($user->hasRole('School Manager')) {
+                return $query->whereHas('session', function ($query) use ($user) {
+                    $query->where('school_id', $user->school_id);
+                });
+            } elseif ($user->hasRole('Teacher')) {
+                return $query->whereHas('session', function ($query) use ($user) {
+                    $query->where('teacher_id', $user->teacherProfile->id);
+                });
+            }
+        }
+    }
 }

@@ -12,15 +12,17 @@ class SessionLimit implements ValidationRule
     private $classId;
     private $semester;
     private $year;
+    private $day;
     /**
      * Run the validation rule.
      */
 
-    public function __construct($classId, $semester, $year)
+    public function __construct($classId, $semester, $year, $day)
     {
         $this->classId = $classId;
         $this->semester = $semester;
         $this->year = $year;
+        $this->day = $day;
     }
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
@@ -31,10 +33,11 @@ class SessionLimit implements ValidationRule
         $currentSessionCount = Session::where('class_id', $this->classId)
             ->where('semester', $this->semester)
             ->where('year', $this->year)
+            ->where('day', $this->day)
             ->count();
 
         if ($currentSessionCount >= $sessionMaxNumber) {
-                $fail("The session limit ({$sessionMaxNumber}) for this class in {$this->semester} semester {$this->year} has been exceeded.");
+            $fail("The session limit ({$sessionMaxNumber}) for this class on {$this->day} in {$this->semester} semester {$this->year} has been exceeded.");
         }
     }
 }
