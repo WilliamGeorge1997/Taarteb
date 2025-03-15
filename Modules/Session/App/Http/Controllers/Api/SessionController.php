@@ -4,6 +4,7 @@ namespace Modules\Session\App\Http\Controllers\Api;
 
 use Exception;
 use Illuminate\Http\Request;
+use App\Imports\SessionsImport;
 use Illuminate\Support\Facades\DB;
 use Modules\Session\DTO\SessionDto;
 use App\Http\Controllers\Controller;
@@ -11,7 +12,8 @@ use Modules\Session\App\Models\Session;
 use Modules\Session\Service\SessionService;
 use Modules\Session\App\resources\SessionResource;
 use Modules\Session\App\Http\Requests\SessionRequest;
-
+use Modules\School\App\Http\Requests\SchoolImportRequest;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SessionController extends Controller
 {
@@ -60,4 +62,10 @@ class SessionController extends Controller
          return returnMessage(false, $e->getMessage(), null, 500);
       }
    }
+
+   public function importSessions(SchoolImportRequest $request)
+    {
+        $response = Excel::import(new SessionsImport, $request->file('file'));
+        $response == true ? returnMessage(true, 'Sessions Imported Successfully', null) : returnMessage(false, 'Sessions Imported Failed', null, 500);
+    }
 }

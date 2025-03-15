@@ -8,18 +8,6 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class SchoolImportRequest extends FormRequest
 {
-    /**
-     * Get the credentials for authentication.
-     *
-     * @return array<string, mixed>
-     */
-    public function credentials(): array
-    {
-        if ($this->isMethod('POST')) {
-            return $this->only(['file']);
-        }
-        return [];
-    }
 
     /**
      * Get the validation rules that apply to the request.

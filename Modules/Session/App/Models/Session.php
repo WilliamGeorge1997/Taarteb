@@ -18,7 +18,7 @@ class Session extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['day', 'class_id', 'subject_id', 'session_number', 'semester', 'year', 'school_id', 'teacher_id'];
+    protected $fillable = ['day', 'class_id', 'subject_id', 'session_number', 'semester', 'year', 'school_id', 'teacher_id', 'is_final'];
 
     public function getActivitylogOptions(): LogOptions
     {

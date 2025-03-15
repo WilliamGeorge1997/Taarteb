@@ -5,6 +5,7 @@ namespace Modules\Session\Service;
 use Modules\Session\App\Models\Session;
 use Modules\Student\App\Models\Student;
 use Modules\Session\App\Models\Attendance;
+use Modules\Session\App\Jobs\ParentNotificationMailJob;
 
 class AttendanceService
 {
@@ -29,20 +30,57 @@ class AttendanceService
 
     function create($data)
     {
-        foreach ($data['attendance'] as $attendance) {
-            $existingAttendance = Attendance::where('session_id', $data['session_id'])
-                ->where('student_id', $attendance['student_id'])
-                ->whereDate('created_at', now()->toDateString())
-                ->first();
+        $session = Session::find($data['session_id']);
+        if ($session->is_final == 1) {
+            foreach ($data['attendance'] as $attendance) {
+                $existingAttendance = Attendance::where('session_id', $data['session_id'])
+                    ->where('student_id', $attendance['student_id'])
+                    ->whereDate('created_at', now()->toDateString())
+                    ->first();
 
-            if (!$existingAttendance) {
-                Attendance::create([
-                    'session_id' => $data['session_id'],
-                    'student_id' => $attendance['student_id'],
-                    'is_present' => $attendance['is_present'],
-                ]);
+                if (!$existingAttendance) {
+                    Attendance::create([
+                        'session_id' => $data['session_id'],
+                        'student_id' => $attendance['student_id'],
+                        'is_present' => $attendance['is_present'],
+                    ]);
+                    saveHistory($data['session_id'], $attendance);
+                    $this->parentNotificationMail($attendance['student_id']);
+                }
             }
-            saveHistory($data['session_id'], $attendance);
+        } else {
+            foreach ($data['attendance'] as $attendance) {
+                $existingAttendance = Attendance::where('session_id', $data['session_id'])
+                    ->where('student_id', $attendance['student_id'])
+                    ->whereDate('created_at', now()->toDateString())
+                    ->first();
+
+                if (!$existingAttendance) {
+                    Attendance::create([
+                        'session_id' => $data['session_id'],
+                        'student_id' => $attendance['student_id'],
+                        'is_present' => $attendance['is_present'],
+                    ]);
+                    saveHistory($data['session_id'], $attendance);
+                }
+            }
+        }
+    }
+
+    function parentNotificationMail($studentId)
+    {
+        $student = Student::find($studentId);
+        if ($student->parent_email) {
+            $studentTodayAbsences = Attendance::query()
+                ->with(['session.class', 'session.subject', 'session.teacher'])
+                ->where('student_id', $studentId)
+                ->where('is_present', 0)
+                ->whereDate('created_at', now()->toDateString())
+                ->get();
+
+            if ($studentTodayAbsences->count() > 0) {
+                ParentNotificationMailJob::dispatch($student, $studentTodayAbsences)->onConnection('database');
+            }
         }
     }
 
@@ -70,17 +108,17 @@ class AttendanceService
                 'class.students' => function ($query) use ($data) {
                     $query->where('is_graduated', 0)
                         ->withCount([
-                        'attendance as is_attend' => function ($q) use ($data) {
-                            $q->whereHas('session', function ($sq) use ($data) {
-                                $sq->where('class_id', $data['class_id'])
-                                    ->where('day', $data['day'])
-                                    ->where('semester', $data['semester'])
-                                    ->where('session_number', $data['session_number'])
-                                    ->where('year', $data['year']);
-                            })
-                                ->whereDate('created_at', now()->toDateString());
-                        }
-                    ]);
+                            'attendance as is_attend' => function ($q) use ($data) {
+                                $q->whereHas('session', function ($sq) use ($data) {
+                                    $sq->where('class_id', $data['class_id'])
+                                        ->where('day', $data['day'])
+                                        ->where('semester', $data['semester'])
+                                        ->where('session_number', $data['session_number'])
+                                        ->where('year', $data['year']);
+                                })
+                                    ->whereDate('created_at', now()->toDateString());
+                            }
+                        ]);
                 }
             ])
             ->first();

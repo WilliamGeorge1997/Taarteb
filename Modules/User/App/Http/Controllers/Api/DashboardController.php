@@ -23,7 +23,7 @@ class DashboardController extends Controller
     public function index()
     {
         $data = [];
-        if (auth('user')->user()) {
+        if (auth('user')->check()) {
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $data['schools'] = School::count();
             }
@@ -40,20 +40,14 @@ class DashboardController extends Controller
         $startDate = \Carbon\Carbon::createFromDate($request->validated()['year'], $request->validated()['month'], 1);
         $endDate = $startDate->copy()->endOfMonth();
 
-        // Use the scopeAvailable method to filter attendance records based on the user's role
-
-        // Get total attendance records for the month
         $totalAttendance = Attendance::available()->whereBetween('created_at', [$startDate, $endDate])->count();
 
-        // Get total absences for the month
         $totalAbsences = Attendance::available()->where('is_present', false)
             ->whereBetween('created_at', [$startDate, $endDate])
             ->count();
 
-        // Calculate absence rate
         $absenceRate = $totalAttendance > 0 ? number_format(($totalAbsences / $totalAttendance) * 100, 2) : 0;
 
-        // Find the class with the highest absence rate
         $mostAbsentClass = Attendance::available()->with('session')
             ->selectRaw('session_id, COUNT(*) as absence_count')
             ->where('is_present', 0)
@@ -74,7 +68,6 @@ class DashboardController extends Controller
             $classAbsenceRate = $classTotalAttendance > 0 ? number_format(($mostAbsentClass->absence_count / $classTotalAttendance) * 100, 2) : 0;
         }
 
-        // Calculate attendance rate per weekday based on session day
         $attendanceRatePerWeekday = Attendance::available()->join('sessions', 'attendances.session_id', '=', 'sessions.id')
             ->selectRaw('sessions.day as session_day, COUNT(attendances.id) as attendance_count')
             ->where('attendances.is_present', true)
@@ -222,5 +215,4 @@ class DashboardController extends Controller
             'female_percentage' => $femalePercentage,
         ]);
     }
-
 }

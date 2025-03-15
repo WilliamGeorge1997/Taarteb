@@ -34,6 +34,7 @@ class SessionRequest extends FormRequest
                 'teacher_id' => auth('user')->user()->hasRole('School Manager') ?
                     ['required', 'exists:teacher_profiles,id', new TeacherBelongToSchool($this->input('teacher_id'), auth('user')->user()->school_id)] :
                     ['required', 'exists:teacher_profiles,id', new TeacherBelongToSchool($this->input('teacher_id'), $this->input('school_id'))],
+                'is_final' => ['required', 'boolean'],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['required', 'exists:schools,id'];
@@ -57,6 +58,7 @@ class SessionRequest extends FormRequest
                 'teacher_id' => auth('user')->user()->hasRole('School Manager') ?
                     ['nullable', 'exists:teacher_profiles,id', new TeacherBelongToSchool($this->input('teacher_id'), auth('user')->user()->school_id)] :
                     ['nullable', 'exists:teacher_profiles,id', new TeacherBelongToSchool($this->input('teacher_id'), $this->input('school_id'))],
+                'is_final' => ['nullable', 'boolean'],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['nullable', 'exists:schools,id'];
@@ -82,6 +84,7 @@ class SessionRequest extends FormRequest
             'subject_id' => 'Subject',
             'teacher_id' => 'Teacher',
             'school_id' => 'School',
+            'is_final' => 'Is Final',
         ];
     }
 

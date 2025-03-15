@@ -25,6 +25,7 @@ return new class extends Migration
             $table->foreignIdFor(Subject::class)->index()->constrained()->restrictOnDelete();
             $table->foreignIdFor(School::class)->index()->constrained()->restrictOnDelete();
             $table->foreignIdFor(TeacherProfile::class, 'teacher_id')->index()->constrained('teacher_profiles')->restrictOnDelete();
+            $table->boolean('is_final')->default(0);
             $table->timestamps();
         });
     }

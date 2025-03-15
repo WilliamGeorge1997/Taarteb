@@ -13,6 +13,7 @@ class SessionDto
     public $subject_id;
     public $school_id;
     public $teacher_id;
+    public $is_final;
 
     public function __construct($request)
     {
@@ -39,6 +40,8 @@ class SessionDto
         }
         if ($request->get('teacher_id'))
             $this->teacher_id = $request->get('teacher_id');
+        if ($request->get('is_final'))
+            $this->is_final = $request->get('is_final');
     }
 
     public function dataFromRequest()
@@ -60,6 +63,8 @@ class SessionDto
             unset($data['school_id']);
         if ($this->teacher_id == null)
             unset($data['teacher_id']);
+        if ($this->is_final == null)
+            unset($data['is_final']);
         return $data;
     }
 }

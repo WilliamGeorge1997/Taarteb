@@ -18,3 +18,4 @@ use Modules\Session\App\Http\Controllers\Api\AttendanceController;
 
 Route::apiResource('sessions', SessionController::class);
 Route::apiResource('attendances', AttendanceController::class);
+Route::post('sessions/import', [SessionController::class, 'importSessions']);
