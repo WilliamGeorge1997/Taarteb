@@ -18,3 +18,4 @@ use Modules\Teacher\App\Http\Controllers\Api\TeacherController;
 
 Route::apiResource('teachers',TeacherController::class);
 Route::get('subjects/{subject}/teachers', [TeacherController::class, 'getTeachersBySubjectId']);
+Route::post('teachers/import', [TeacherController::class, 'importTeachers']);

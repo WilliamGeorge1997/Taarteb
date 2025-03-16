@@ -14,7 +14,6 @@ use Modules\Class\App\Rules\ClassBelongToSchool;
 use Modules\Subject\App\Rules\SubjectBelongToSchool;
 use Modules\Teacher\App\Rules\TeacherBelongToSchool;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\Response;
 
 class SessionsImport implements ToCollection, WithHeadingRow
 {
@@ -22,7 +21,7 @@ class SessionsImport implements ToCollection, WithHeadingRow
     {
         DB::beginTransaction();
         try {
-            foreach ($rows as $row) {
+            foreach ($rows as $index => $row) {
                 // Base validation rules
                 $rules = [
                     'day' => ['required', 'in:saturday,sunday,monday,tuesday,wednesday,thursday,friday'],
@@ -73,7 +72,7 @@ class SessionsImport implements ToCollection, WithHeadingRow
                         returnValidationMessage(
                             false,
                             trans('validation.rules_failed'),
-                            $errors,
+                            ['row' => $index + 1, 'errors' => $errors],
                             'unprocessable_entity'
                         )
                     );
@@ -97,7 +96,7 @@ class SessionsImport implements ToCollection, WithHeadingRow
                     $data['school_id'] = auth('user')->user()->school_id;
                 }
                 // Create session if validation passes
-                $session = Session::create($data);
+                Session::create($data);
             }
             DB::commit();
             return true;

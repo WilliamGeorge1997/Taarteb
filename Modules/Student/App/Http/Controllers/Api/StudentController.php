@@ -4,15 +4,18 @@ namespace Modules\Student\App\Http\Controllers\Api;
 
 use Exception;
 use Illuminate\Http\Request;
+use App\Imports\StudentsImport;
 use Illuminate\Support\Facades\DB;
 use Modules\Student\DTO\StudentDto;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use Modules\Student\App\Models\Student;
 use Modules\Student\Service\StudentService;
 use Modules\Student\App\resources\StudentResource;
 use Modules\Student\App\Http\Requests\StudentRequest;
 use Modules\Student\App\Http\Requests\UpgradeRequest;
 use Modules\Student\App\Http\Requests\GraduateRequest;
+use Modules\School\App\Http\Requests\SchoolImportRequest;
 
 class StudentController extends Controller
 {
@@ -21,7 +24,7 @@ class StudentController extends Controller
       $this->middleware('auth:user');
       $this->middleware('role:Super Admin|School Manager');
       $this->middleware('permission:Index-student|Create-student|Edit-student|Delete-student', ['only' => ['index', 'store']]);
-      $this->middleware('permission:Create-student', ['only' => ['store']]);
+      $this->middleware('permission:Create-student', ['only' => ['store', 'importStudents']]);
       $this->middleware('permission:Edit-student', ['only' => ['update', 'activate']]);
       $this->middleware('permission:Delete-student', ['only' => ['destroy']]);
       $this->middleware('permission:Index-student-upgrade|Create-student-upgrade|Edit-student-upgrade|Delete-student-upgrade', ['only' => ['getStudentsToUpgrade','upgrade']]);
@@ -94,5 +97,11 @@ class StudentController extends Controller
             DB::rollBack();
             return returnMessage(false, $e->getMessage(), null, 500);
         }
+    }
+
+    public function importStudents(SchoolImportRequest $request)
+    {
+        $response = Excel::import(new StudentsImport, $request->file('file'));
+        $response == true ? returnMessage(true, 'Students Imported Successfully', null) : returnMessage(false, 'Students Imported Failed', null, 500);
     }
 }

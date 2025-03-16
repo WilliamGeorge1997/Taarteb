@@ -4,14 +4,17 @@ namespace Modules\Teacher\App\Http\Controllers\Api;
 
 use Exception;
 use Illuminate\Http\Request;
+use App\Imports\TeachersImport;
 use Modules\User\DTO\TeacherDto;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use Modules\Teacher\DTO\TeacherProfileDto;
 use Modules\Teacher\Service\TeacherService;
 use Modules\Teacher\App\Models\TeacherProfile;
 use Modules\Teacher\App\resources\TeacherResource;
 use Modules\Teacher\App\Http\Requests\TeacherRequest;
+use Modules\School\App\Http\Requests\SchoolImportRequest;
 
 class TeacherController extends Controller
 {
@@ -20,7 +23,7 @@ class TeacherController extends Controller
       $this->middleware('auth:user');
       $this->middleware('role:Super Admin|School Manager');
       $this->middleware('permission:Index-teacher|Create-teacher|Edit-teacher|Delete-teacher', ['only' => ['index', 'store', 'getTeachersBySubjectId']]);
-      $this->middleware('permission:Create-teacher', ['only' => ['store']]);
+      $this->middleware('permission:Create-teacher', ['only' => ['store', 'importTeachers']]);
       $this->middleware('permission:Edit-teacher', ['only' => ['update', 'activate']]);
       $this->middleware('permission:Delete-teacher', ['only' => ['destroy']]);
       $this->teacherService = $teacherService;
@@ -63,4 +66,10 @@ class TeacherController extends Controller
    {
       return returnMessage(true, 'Teachers fetched successfully', TeacherResource::collection($this->teacherService->getTeachersBySubjectId($subjectId))->response()->getData(true));
    }
+
+    public function importTeachers(SchoolImportRequest $request)
+    {
+        $response = Excel::import(new TeachersImport, $request->file('file'));
+        $response == true ? returnMessage(true, 'Teachers Imported Successfully', null) : returnMessage(false, 'Teachers Imported Failed', null, 500);
+    }
 }

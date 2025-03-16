@@ -3,13 +3,15 @@
 namespace App\Imports;
 
 use Exception;
-use Modules\User\App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Modules\User\App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Modules\School\App\Models\School;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Illuminate\Support\Collection;
 
 class SchoolsImport implements ToCollection, WithHeadingRow
 {
@@ -17,15 +19,32 @@ class SchoolsImport implements ToCollection, WithHeadingRow
     {
         DB::beginTransaction();
         try {
-            foreach ($rows as $row) {
-                $existingSchoolByPhone = User::where('phone', $row['phone'])->first();
-                if ($existingSchoolByPhone) {
-                    continue;
-                }
+            foreach ($rows as $index => $row) {
+                // Validation rules
+                $rules = [
+                    'name' => ['required', 'max:255'],
+                    'email' => ['required', 'email', 'unique:users,email'],
+                    'phone' => ['required', 'unique:users,phone'],
+                    'password' => ['required', 'min:6'],
+                ];
 
-                $existingSchoolByEmail = User::where('email', $row['email'])->first();
-                if ($existingSchoolByEmail) {
-                    continue;
+                // Validate each row
+                $validator = Validator::make($row->toArray(), $rules);
+
+                if ($validator->fails()) {
+                    $errors = [];
+                    foreach ($validator->errors()->toArray() as $field => $messages) {
+                        $errors[$field] = array_map(fn(string $message) => __($message), $messages);
+                    }
+
+                    throw new HttpResponseException(
+                        returnValidationMessage(
+                            false,
+                            trans('validation.rules_failed'),
+                            ['row' => $index + 1, 'errors' => $errors],
+                            'unprocessable_entity'
+                        )
+                    );
                 }
 
                 $school = School::create([
@@ -55,7 +74,7 @@ class SchoolsImport implements ToCollection, WithHeadingRow
             return true;
         } catch (Exception $e) {
             DB::rollBack();
-            return false;
+            throw $e;
         }
     }
 }

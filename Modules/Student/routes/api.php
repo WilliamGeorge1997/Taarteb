@@ -22,3 +22,4 @@ Route::group(['prefix' => 'students'], function () {
     Route::post('upgrade', [StudentController::class, 'upgrade']);
 });
 Route::get('classes/{class}/students/upgrade', [StudentController::class, 'getStudentsToUpgrade']);
+Route::post('students/import', [StudentController::class, 'importStudents']);

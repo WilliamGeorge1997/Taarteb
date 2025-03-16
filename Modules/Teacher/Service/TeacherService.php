@@ -30,13 +30,13 @@ class TeacherService
 
     function findById($id)
     {
-        $teacher = Teacher::available()->findOrFail($id);
+        $teacher = TeacherProfile::available()->findOrFail($id);
         return $teacher;
     }
 
     function findBy($key, $value)
     {
-        $teacher = Teacher::available()->where($key, $value)->get();
+        $teacher = TeacherProfile::available()->where($key, $value)->get();
         return $teacher;
     }
 
