@@ -19,10 +19,10 @@ class StudentBelongToSchool implements ValidationRule
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $student = Student::find($value);
+        $student = Student::find($this->studentId);
 
         if (!$student || $student->school_id !== $this->schoolId) {
             $fail('The selected student does not belong to your school.');
         }
     }
-} 
+}
