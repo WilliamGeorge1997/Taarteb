@@ -3,6 +3,7 @@
 namespace Modules\Common\App\Models;
 
 use Modules\Grade\App\Models\Grade;
+use Modules\School\App\Models\School;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Class\App\Models\Classroom;
 use Modules\Student\App\Models\Student;
@@ -43,6 +44,11 @@ class History extends Model
     public function subject()
     {
         return $this->belongsTo(Subject::class);
+    }
+
+    public function school()
+    {
+        return $this->belongsTo(School::class);
     }
 
     //Helper

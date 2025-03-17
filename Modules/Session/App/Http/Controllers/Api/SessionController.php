@@ -20,8 +20,8 @@ class SessionController extends Controller
    private $sessionService;
    public function __construct(SessionService $sessionService){
       $this->middleware('auth:user');
-      $this->middleware('role:Super Admin|School Manager');
-      $this->middleware('permission:Index-session|Create-session|Edit-session|Delete-session', ['only' => ['index', 'store']]);
+      $this->middleware('role:Super Admin|School Manager|Teacher');
+      $this->middleware('permission:Index-session', ['only' => ['index']]);
       $this->middleware('permission:Create-session', ['only' => ['store', 'importSessions']]);
       $this->middleware('permission:Edit-session', ['only' => ['update', 'activate']]);
       $this->middleware('permission:Delete-session', ['only' => ['destroy']]);

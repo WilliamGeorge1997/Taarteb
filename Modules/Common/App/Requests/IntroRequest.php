@@ -1,13 +1,14 @@
 <?php
 
-namespace Modules\User\App\Http\Requests;
+namespace Modules\Common\App\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UpdateProfileRequest extends FormRequest
+class IntroRequest extends FormRequest
 {
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -15,14 +16,21 @@ class UpdateProfileRequest extends FormRequest
      */
     public function rules(): array
     {
-        $userId = auth('user')->id();
-        return [
-            'name' => ['nullable', 'string', 'max:255'],
-            'phone' => ['nullable', 'string', 'max:15', 'unique:users,phone,' . $userId],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
-            'gender' => [auth('user')->user()->hasRole('Teacher') ? 'nullable' : 'prohibited', 'string', 'in:m,f'],
-            'email' => ['nullable', 'email', 'unique:users,email,' . $userId],
-        ];
+        if ($this->isMethod('POST')) {
+            return[
+                'title' => ['required', 'string', 'max:255'],
+                'description' => ['required', 'string'],
+                'image' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
+            ];
+        }
+        if ($this->isMethod('PUT')) {
+            return[
+                'title' => ['nullable', 'string', 'max:255'],
+                'description' => ['nullable', 'string'],
+                'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
+            ];
+        }
+        return [];
     }
 
     /**
@@ -31,11 +39,9 @@ class UpdateProfileRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'name' => 'Name',
-            'phone' => 'Phone',
+            'title' => 'Title',
+            'description' => 'Description',
             'image' => 'Image',
-            'gender' => 'Gender',
-            'email' => 'Email',
         ];
     }
 

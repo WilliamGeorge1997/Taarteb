@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Modules\Common\App\Http\Controllers\Api\IntroController;
 use Modules\Common\App\Http\Controllers\Api\HistoryController;
 
 /*
@@ -16,3 +16,4 @@ use Modules\Common\App\Http\Controllers\Api\HistoryController;
 */
 
 Route::apiResource('history', HistoryController::class)->only(['index']);
+Route::apiResource('intros', IntroController::class);

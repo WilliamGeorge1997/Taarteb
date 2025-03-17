@@ -9,8 +9,11 @@ class SessionService
     function findAll($data = [])
     {
         $sessions = Session::query()
-            ->with(['class', 'subject', 'teacher.teacher', 'school'])
-            ->available()->orderByDesc('created_at');
+        ->when($data['class_id'], function($q) use ($data) {
+            return $q->where('class_id', $data['class_id']);
+        })
+        ->with(['class', 'subject', 'teacher.teacher', 'school'])
+        ->available()->orderByDesc('created_at');
         return getCaseCollection($sessions, $data);
     }
 

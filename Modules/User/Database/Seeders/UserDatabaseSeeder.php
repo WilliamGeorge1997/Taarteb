@@ -101,6 +101,11 @@ class UserDatabaseSeeder extends Seeder
             ['Create-attendance', 'Attendance', 'Create'],
             ['Edit-attendance', 'Attendance', 'Edit'],
             ['Delete-attendance', 'Attendance', 'Delete'],
+
+            ['Index-intro', 'Intro', 'Index'],
+            ['Create-intro', 'Intro', 'Create'],
+            ['Edit-intro', 'Intro', 'Edit'],
+            ['Delete-intro', 'Intro', 'Delete'],
         ];
 
         foreach ($permissions as $permission) {
@@ -128,7 +133,7 @@ class UserDatabaseSeeder extends Seeder
         $role = Role::create(['name' => 'Teacher', 'guard_name' => 'user']);
         $permissions = Permission::where(function ($query) {
             $query->whereIn('category', ['Attendance'])
-                ->orWhere('name', 'Index-class');
+                ->orWhereIn('name', ['Index-class', 'Index-session']);
         })->get();
         $role->syncPermissions($permissions);
         return $role;
