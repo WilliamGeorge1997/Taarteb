@@ -17,8 +17,8 @@ class ClassController extends Controller
    private $classService;
    public function __construct(ClassService $classService){
       $this->middleware('auth:user');
-      $this->middleware('role:Super Admin|School Manager');
-      $this->middleware('permission:Index-class|Create-class|Edit-class|Delete-class', ['only' => ['index', 'store']]);
+      $this->middleware('role:Super Admin|School Manager|Teacher');
+      $this->middleware('permission:Index-class', ['only' => ['index']]);
       $this->middleware('permission:Create-class', ['only' => ['store']]);
       $this->middleware('permission:Edit-class', ['only' => ['update', 'activate']]);
       $this->middleware('permission:Delete-class', ['only' => ['destroy']]);

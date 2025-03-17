@@ -20,7 +20,7 @@ class Classroom extends Model
             ->logAll()
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
-            ->useLogName('Teacher')
+            ->useLogName('Class')
             ->dontLogIfAttributesChangedOnly(['updated_at']);
     }
     /**
@@ -61,6 +61,9 @@ class Classroom extends Model
                 // Show All Teachers
             } else if ($admin->hasRole('School Manager')) {
                 // Show Teachers Related To Current School
+                $query->where('school_id', $admin->school_id);
+            } else if ($admin->hasRole('Teacher')) {
+                // Show Classes Related To Current Teacher
                 $query->where('school_id', $admin->school_id);
             }
         }
