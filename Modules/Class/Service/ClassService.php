@@ -9,7 +9,11 @@ class ClassService
 {
     function findAll($data = [])
     {
-        $classes = Classroom::query()->available()->with(['school:id,name', 'grade:id,name'])->orderByDesc('created_at');
+        $classes = Classroom::query()
+        ->when($data['grade_id'] ?? null, function ($query) use ($data) {
+            return $query->where('grade_id', $data['grade_id']);
+        })
+        ->available()->with(['school:id,name', 'grade:id,name'])->orderByDesc('created_at');
         return getCaseCollection($classes, $data);
     }
 
