@@ -11,7 +11,7 @@ class Intro extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['title', 'description', 'image'];
+    protected $fillable = ['title_ar', 'title_en', 'description_ar', 'description_en', 'image'];
 
     protected function serializeDate(\DateTimeInterface $date)
     {

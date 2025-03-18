@@ -18,7 +18,17 @@ class SchoolService
             ->when($data['email'] ?? null, function ($query) use ($data) {
                 $query->where('email', 'like', '%' . $data['email'] . '%');
             })
-            ->with('manager')
+            ->with([
+                'manager',
+                'grades',
+                'teachers' => function ($query) {
+                    $query->with('teacherProfile');
+                },
+                'students',
+                'classes',
+                'subjects',
+                'sessions'
+            ])
             ->orderByDesc('created_at');
 
         return getCaseCollection($schools, $data);

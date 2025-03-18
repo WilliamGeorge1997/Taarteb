@@ -6,7 +6,12 @@ use Modules\User\App\Models\User;
 use Spatie\Activitylog\LogOptions;
 use Modules\Grade\App\Models\Grade;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Class\App\Models\Classroom;
+use Modules\Session\App\Models\Session;
+use Modules\Student\App\Models\Student;
+use Modules\Subject\App\Models\Subject;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Modules\Teacher\App\Models\TeacherProfile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class School extends Model
@@ -42,6 +47,32 @@ class School extends Model
 
     public function grades()
     {
-        return $this->belongsToMany(Grade::class, 'school_grades');
+        return $this->hasMany(Grade::class);
+    }
+
+    public function teachers()
+    {
+        return $this->hasMany(User::class);
+    }
+
+    public function students()
+    {
+        return $this->hasMany(Student::class);
+    }
+
+    public function classes()
+    {
+        return $this->hasMany(Classroom::class);
+    }
+
+    public function subjects()
+    {
+        return $this->hasMany(Subject::class);
+    }
+
+    public function sessions()
+    {
+        return $this->hasMany(Session::class);
     }
 }
+

@@ -18,15 +18,19 @@ class IntroRequest extends FormRequest
     {
         if ($this->isMethod('POST')) {
             return[
-                'title' => ['required', 'string', 'max:255'],
-                'description' => ['required', 'string'],
+                'title_ar' => ['required', 'string', 'max:255'],
+                'title_en' => ['required', 'string', 'max:255'],
+                'description_ar' => ['required', 'string'],
+                'description_en' => ['required', 'string'],
                 'image' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
             ];
         }
         if ($this->isMethod('PUT')) {
             return[
-                'title' => ['nullable', 'string', 'max:255'],
-                'description' => ['nullable', 'string'],
+                'title_ar' => ['nullable', 'string', 'max:255'],
+                'title_en' => ['nullable', 'string', 'max:255'],
+                'description_ar' => ['nullable', 'string'],
+                'description_en' => ['nullable', 'string'],
                 'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
             ];
         }
@@ -39,8 +43,10 @@ class IntroRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'title' => 'Title',
-            'description' => 'Description',
+            'title_ar' => 'Arabic Title',
+            'title_en' => 'English Title',
+            'description_ar' => 'Arabic Description',
+            'description_en' => 'English Description',
             'image' => 'Image',
         ];
     }
