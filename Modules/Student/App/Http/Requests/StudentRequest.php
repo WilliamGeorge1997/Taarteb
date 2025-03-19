@@ -5,9 +5,9 @@ namespace Modules\Student\App\Http\Requests;
 use Modules\Student\App\Rules\MaxStudents;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Modules\Class\App\Rules\ClassBelongToSchool;
 use Modules\Subject\App\Rules\GradeBelongToSchool;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Modules\Class\App\Rules\ClassBelongToSchool;
 
 class StudentRequest extends FormRequest
 {
@@ -120,16 +120,11 @@ class StudentRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator): void
     {
-        $errors = [];
-        foreach ($validator->errors()->toArray() as $field => $messages) {
-            $errors[$field] = array_map(fn(string $message) => __($message), $messages);
-        }
-
         throw new HttpResponseException(
             returnValidationMessage(
                 false,
                 trans('validation.rules_failed'),
-                $errors,
+                $validator->errors()->messages(),
                 'unprocessable_entity'
             )
         );

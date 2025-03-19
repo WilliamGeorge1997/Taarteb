@@ -14,6 +14,6 @@ use Modules\Common\App\Http\Controllers\CommonController;
 |
 */
 
-Route::group([], function () {
-    Route::resource('common', CommonController::class)->names('common');
-});
+// Route::group([], function () {
+//     Route::resource('common', CommonController::class)->names('common');
+// });

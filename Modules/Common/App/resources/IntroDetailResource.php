@@ -4,7 +4,7 @@ namespace Modules\Common\App\resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class IntroResource extends JsonResource
+class IntroDetailResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,7 +19,7 @@ class IntroResource extends JsonResource
             'description_en' => $this->description_en,
             'image' => $this->image,
             'section' => $this->section,
-            'details' => IntroDetailResource::collection($this->details),
+            'parent_id' => $this->parent_id,
             'created_at' => $this->created_at->format('Y-m-d h:i A'),
             'updated_at' => $this->updated_at->format('Y-m-d h:i A')
         ];

@@ -4,13 +4,13 @@ namespace Modules\Common\App\Http\Controllers\Api;
 
 use Exception;
 use Illuminate\Http\Request;
+use Modules\Common\DTO\IntroDto;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Modules\Common\App\Models\Intro;
 use Modules\Common\Service\IntroService;
-use Modules\Common\App\Requests\IntroRequest;
 use Modules\Common\App\resources\IntroResource;
-use Modules\Common\DTO\IntroDto;
+use Modules\Common\App\Http\Requests\IntroRequest;
 
 class IntroController extends Controller
 {

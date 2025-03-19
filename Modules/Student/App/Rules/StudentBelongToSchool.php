@@ -3,26 +3,28 @@
 namespace Modules\Student\App\Rules;
 
 use Closure;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Modules\Student\App\Models\Student;
+use Illuminate\Contracts\Validation\ValidationRule;
 
 class StudentBelongToSchool implements ValidationRule
 {
-    protected $studentId;
-    protected $schoolId;
-
-    public function __construct($studentId, $schoolId)
+    private $studentIds;
+    private $schoolId;
+    public function __construct($studentIds, $schoolId)
     {
-        $this->studentId = $studentId;
+        $this->studentIds = $studentIds;
         $this->schoolId = $schoolId;
     }
-
+    /**
+     * Run the validation rule.
+     */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $student = Student::find($this->studentId);
-
-        if (!$student || $student->school_id !== $this->schoolId) {
-            $fail('The selected student does not belong to your school.');
+        foreach ($this->studentIds as $studentId) {
+            $student = Student::find($studentId);
+            if ($student->school_id != $this->schoolId) {
+                $fail('The student does not belong to your school.');
+            }
         }
     }
 }

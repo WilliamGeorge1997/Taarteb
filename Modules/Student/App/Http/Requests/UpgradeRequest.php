@@ -52,16 +52,11 @@ class UpgradeRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator): void
     {
-        $errors = [];
-        foreach ($validator->errors()->toArray() as $field => $messages) {
-            $errors[$field] = array_map(fn(string $message) => __($message), $messages);
-        }
-
         throw new HttpResponseException(
             returnValidationMessage(
                 false,
                 trans('validation.rules_failed'),
-                $errors,
+                $validator->errors()->messages(),
                 'unprocessable_entity'
             )
         );

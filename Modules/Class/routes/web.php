@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Class\App\Http\Controllers\ClassController;
+// use Modules\Class\App\Http\Controllers\ClassController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +14,6 @@ use Modules\Class\App\Http\Controllers\ClassController;
 |
 */
 
-Route::group([], function () {
-    Route::resource('class', ClassController::class)->names('class');
-});
+// Route::group([], function () {
+//     Route::resource('class', ClassController::class)->names('class');
+// });

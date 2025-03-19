@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Common\App\Requests;
+namespace Modules\Common\App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
@@ -17,21 +17,29 @@ class IntroRequest extends FormRequest
     public function rules(): array
     {
         if ($this->isMethod('POST')) {
-            return[
+            return [
                 'title_ar' => ['required', 'string', 'max:255'],
                 'title_en' => ['required', 'string', 'max:255'],
                 'description_ar' => ['required', 'string'],
                 'description_en' => ['required', 'string'],
-                'image' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
+                'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
+                'section' => ['required', 'string'],
+                'details' => ['nullable', 'array'],
+                'details.*.title_ar' => ['nullable', 'string', 'max:255'],
+                'details.*.title_en' => ['nullable', 'string', 'max:255'],
+                'details.*.description_ar' => ['nullable', 'string'],
+                'details.*.description_en' => ['nullable', 'string'],
+                'details.*.image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
             ];
         }
         if ($this->isMethod('PUT')) {
-            return[
+            return [
                 'title_ar' => ['nullable', 'string', 'max:255'],
                 'title_en' => ['nullable', 'string', 'max:255'],
                 'description_ar' => ['nullable', 'string'],
                 'description_en' => ['nullable', 'string'],
                 'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
+                'section' => ['nullable', 'string'],
             ];
         }
         return [];
@@ -48,6 +56,14 @@ class IntroRequest extends FormRequest
             'description_ar' => 'Arabic Description',
             'description_en' => 'English Description',
             'image' => 'Image',
+            'section' => 'Section',
+            'parent_id' => 'Parent',
+            'details' => 'Details',
+            'details.*.title_ar' => 'Details Arabic Title',
+            'details.*.title_en' => 'Details English Title',
+            'details.*.description_ar' => 'Details Arabic Description',
+            'details.*.description_en' => 'Details English Description',
+            'details.*.image' => 'Details Image',
         ];
     }
 
@@ -67,16 +83,11 @@ class IntroRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator): void
     {
-        $errors = [];
-        foreach ($validator->errors()->toArray() as $field => $messages) {
-            $errors[$field] = array_map(fn(string $message) => __($message), $messages);
-        }
-
         throw new HttpResponseException(
             returnValidationMessage(
                 false,
                 trans('validation.rules_failed'),
-                $errors,
+                $validator->errors()->messages(),
                 'unprocessable_entity'
             )
         );

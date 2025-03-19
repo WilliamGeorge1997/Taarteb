@@ -14,6 +14,6 @@ use Modules\Teacher\App\Http\Controllers\TeacherController;
 |
 */
 
-Route::group([], function () {
-    Route::resource('teacher', TeacherController::class)->names('teacher');
-});
+// Route::group([], function () {
+//     Route::resource('teacher', TeacherController::class)->names('teacher');
+// });

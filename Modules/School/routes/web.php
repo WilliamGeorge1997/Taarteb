@@ -14,6 +14,6 @@ use Modules\School\App\Http\Controllers\SchoolController;
 |
 */
 
-Route::group([], function () {
-    Route::resource('school', SchoolController::class)->names('school');
-});
+// Route::group([], function () {
+//     Route::resource('school', SchoolController::class)->names('school');
+// });

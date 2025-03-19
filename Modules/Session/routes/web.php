@@ -14,6 +14,6 @@ use Modules\Session\App\Http\Controllers\SessionController;
 |
 */
 
-Route::group([], function () {
-    Route::resource('session', SessionController::class)->names('session');
-});
+// Route::group([], function () {
+//     Route::resource('session', SessionController::class)->names('session');
+// });

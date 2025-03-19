@@ -1,36 +1,35 @@
 <?php
 
-namespace Modules\User\App\Http\Requests;
+namespace Modules\Common\App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
-class ChangePasswordRequest extends FormRequest
+class ContactRequest extends FormRequest
 {
-
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array<string, mixed>
      */
     public function rules(): array
     {
         return [
-            'current_password' => ['required', 'current_password'],
-            'new_password' => ['required', 'string', 'min:6' ,'confirmed']
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:15',
+            'message' => 'required|string',
         ];
     }
 
-    /**
-     * Get custom attributes for validator errors.
-     */
     public function attributes(): array
     {
         return [
-            'current_password' => 'Old Password',
-            'new_password' => 'New Password',
-            'new_password_confirmation' => 'New Password Confirmation',
+            'first_name' => 'First Name',
+            'last_name' => 'Last Name',
+            'email' => 'Email',
+            'phone' => 'Phone',
+            'message' => 'Message',
         ];
     }
 
@@ -42,10 +41,14 @@ class ChangePasswordRequest extends FormRequest
         return true;
     }
 
+
+    
     /**
-     * Handle a failed validation attempt.
+     * Handle a failed validation attempt for API requests.
      *
-     * @param \Illuminate\Contracts\Validation\Validator $validator
+     * @param  \Illuminate\Contracts\Validation\Validator  $validator
+     * @return void
+     *
      * @throws \Illuminate\Http\Exceptions\HttpResponseException
      */
     protected function failedValidation(Validator $validator): void

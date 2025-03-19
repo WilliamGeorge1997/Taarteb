@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Common\App\Http\Controllers\Api\IntroController;
+use Modules\Common\App\Http\Controllers\Api\CommonController;
 use Modules\Common\App\Http\Controllers\Api\HistoryController;
 
 /*
@@ -15,5 +16,7 @@ use Modules\Common\App\Http\Controllers\Api\HistoryController;
     |
 */
 
+
+Route::post('contact', [CommonController::class, 'contact']);
 Route::apiResource('history', HistoryController::class)->only(['index']);
 Route::apiResource('intros', IntroController::class);

@@ -3,17 +3,16 @@
 namespace Modules\Student\App\Rules;
 
 use Closure;
+use Modules\Grade\App\Models\Grade;
 use Modules\Student\App\Models\Student;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class StudentBelongToSchool implements ValidationRule
+class StudentInFinalGrade implements ValidationRule
 {
     private $studentIds;
-    private $schoolId;
-    public function __construct($studentIds, $schoolId)
+    public function __construct($studentIds)
     {
         $this->studentIds = $studentIds;
-        $this->schoolId = $schoolId;
     }
     /**
      * Run the validation rule.
@@ -22,8 +21,9 @@ class StudentBelongToSchool implements ValidationRule
     {
         foreach ($this->studentIds as $studentId) {
             $student = Student::find($studentId);
-            if ($student->school_id != $this->schoolId) {
-                $fail('The student does not belong to your school.');
+            $grade = Grade::find($student->grade_id);
+            if ($grade->is_final == 0) {
+                $fail('The student is not in a final grade.');
             }
         }
     }

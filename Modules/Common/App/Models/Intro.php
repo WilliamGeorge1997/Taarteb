@@ -11,7 +11,7 @@ class Intro extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['title_ar', 'title_en', 'description_ar', 'description_en', 'image'];
+    protected $fillable = ['title_ar', 'title_en', 'description_ar', 'description_en', 'image', 'section', 'parent_id'];
 
     protected function serializeDate(\DateTimeInterface $date)
     {
@@ -27,5 +27,15 @@ class Intro extends Model
                 return asset('uploads/intro/' . $value);
             }
         }
+    }
+
+    //Relations
+
+    public function details(){
+        return $this->hasMany(Intro::class, 'parent_id');
+    }
+
+    public function parent(){
+        return $this->belongsTo(Intro::class, 'parent_id');
     }
 }

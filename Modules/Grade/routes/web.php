@@ -14,6 +14,6 @@ use Modules\Grade\App\Http\Controllers\GradeController;
 |
 */
 
-Route::group([], function () {
-    Route::resource('grade', GradeController::class)->names('grade');
-});
+// Route::group([], function () {
+//     Route::resource('grade', GradeController::class)->names('grade');
+// });

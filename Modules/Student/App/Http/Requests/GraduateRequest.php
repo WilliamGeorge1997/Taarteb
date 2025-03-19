@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Modules\Student\App\Rules\StudentBelongToSchool;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Modules\Student\App\Http\Rules\StudentInFinalGrade;
+use Modules\Student\App\Rules\StudentInFinalGrade;
 
 class GraduateRequest extends FormRequest
 {
@@ -52,16 +52,11 @@ class GraduateRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator): void
     {
-        $errors = [];
-        foreach ($validator->errors()->toArray() as $field => $messages) {
-            $errors[$field] = array_map(fn(string $message) => __($message), $messages);
-        }
-
         throw new HttpResponseException(
             returnValidationMessage(
                 false,
                 trans('validation.rules_failed'),
-                $errors,
+                $validator->errors()->messages(),
                 'unprocessable_entity'
             )
         );

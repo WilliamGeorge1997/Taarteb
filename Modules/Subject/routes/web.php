@@ -14,6 +14,6 @@ use Modules\Subject\App\Http\Controllers\SubjectController;
 |
 */
 
-Route::group([], function () {
-    Route::resource('subject', SubjectController::class)->names('subject');
-});
+// Route::group([], function () {
+//     Route::resource('subject', SubjectController::class)->names('subject');
+// });
