@@ -28,6 +28,10 @@ class SessionLimit implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $classroom = Classroom::find($this->classId);
+        if (!$classroom) {
+            $fail('The class does not exist.');
+            return;
+        }
         $sessionMaxNumber = $classroom->session_number;
 
         $currentSessionCount = Session::where('class_id', $this->classId)

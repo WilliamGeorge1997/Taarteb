@@ -65,7 +65,7 @@ class SessionController extends Controller
 
    public function importSessions(SchoolImportRequest $request)
     {
-        $response = Excel::import(new SessionsImport, $request->file('file'));
-        $response == true ? returnMessage(true, 'Sessions Imported Successfully', null) : returnMessage(false, 'Sessions Imported Failed', null, 500);
+         Excel::import(new SessionsImport, $request->file('file'));
+        return returnMessage(true, 'Sessions Imported Successfully', null);
     }
 }

@@ -19,8 +19,13 @@ class MaxStudents implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $maxStudents = Classroom::find($this->classId)->max_students;
-        $studentsCount = Student::where('class_id', $this->classId)->count();
+        $class = Classroom::find($this->classId);
+        if (!$class) {
+            $fail('The class does not exist.');
+            return;
+        }
+        $maxStudents = $class->max_students;
+        $studentsCount = Student::where('class_id', $this->classId)->where('is_graduated', 0)->count();
         if ($studentsCount >= $maxStudents) {
             $fail('The class has reached its maximum number of students.');
         }

@@ -69,7 +69,7 @@ class TeacherController extends Controller
 
     public function importTeachers(SchoolImportRequest $request)
     {
-        $response = Excel::import(new TeachersImport, $request->file('file'));
-        $response == true ? returnMessage(true, 'Teachers Imported Successfully', null) : returnMessage(false, 'Teachers Imported Failed', null, 500);
+        Excel::import(new TeachersImport, $request->file('file'));
+        return returnMessage(true, 'Teachers Imported Successfully', null);
     }
 }

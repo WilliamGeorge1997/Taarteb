@@ -101,7 +101,7 @@ class StudentController extends Controller
 
     public function importStudents(SchoolImportRequest $request)
     {
-        $response = Excel::import(new StudentsImport, $request->file('file'));
-        $response == true ? returnMessage(true, 'Students Imported Successfully', null) : returnMessage(false, 'Students Imported Failed', null, 500);
+        Excel::import(new StudentsImport, $request->file('file'));
+        return returnMessage(true, 'Students Imported Successfully', null);
     }
 }

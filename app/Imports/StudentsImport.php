@@ -32,6 +32,7 @@ class StudentsImport implements ToCollection, WithHeadingRow
 
                 // Add rules based on user role
                 if (auth('user')->user()->hasRole('Super Admin')) {
+                    dd('super');
                     $rules['school_id'] = ['required', 'exists:schools,id'];
                     $rules['grade_id'] = ['required', 'exists:grades,id', new GradeBelongToSchool($row['grade_id'], $row['school_id'])];
                     $rules['class_id'] = ['required', 'exists:classes,id', new ClassBelongToSchool($row['class_id'], $row['school_id']), new MaxStudents($row['class_id'])];
@@ -46,16 +47,11 @@ class StudentsImport implements ToCollection, WithHeadingRow
                 $validator = Validator::make($row->toArray(), $rules);
 
                 if ($validator->fails()) {
-                    $errors = [];
-                    foreach ($validator->errors()->toArray() as $field => $messages) {
-                        $errors[$field] = array_map(fn(string $message) => __($message), $messages);
-                    }
-
                     throw new HttpResponseException(
                         returnValidationMessage(
                             false,
                             trans('validation.rules_failed'),
-                            ['row' => $index + 1, 'errors' => $errors],
+                            ['row' => $index + 1, 'errors' => $validator->errors()->messages()],
                             'unprocessable_entity'
                         )
                     );
@@ -80,6 +76,7 @@ class StudentsImport implements ToCollection, WithHeadingRow
                     $data['school_id'] = auth('user')->user()->school_id;
                 }
                 // Create student if validation passes
+
                 Student::create($data);
             }
             DB::commit();

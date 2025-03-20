@@ -21,6 +21,10 @@ class TeacherBelongToSchool implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $teacher = TeacherProfile::find($this->teacherId);
+        if (!$teacher) {
+            $fail('The teacher does not exist.');
+            return;
+        }
         if ($teacher->teacher->school_id != $this->schoolId) {
             $fail('The teacher does not belong to your school.');
         }

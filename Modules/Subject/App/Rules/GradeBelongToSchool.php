@@ -21,7 +21,9 @@ class GradeBelongToSchool implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $grade = Grade::find($this->gradeId);
-        if (!$grade || $grade->school_id != $this->schoolId) {
+        if (!$grade) {
+            $fail('The grade does not exist.');
+        } else if ($grade->school_id != $this->schoolId) {
             $fail('The grade does not belong to your school.');
         }
     }

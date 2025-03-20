@@ -21,7 +21,11 @@ class SubjectBelongToSchool implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $subject = Subject::find($this->subjectId);
-        if (!$subject || $subject->school_id != $this->schoolId) {
+        if (!$subject) {
+            $fail('The subject does not exist.');
+            return;
+        }
+        if ($subject->school_id != $this->schoolId) {
             $fail('The subject does not belong to your school.');
         }
     }

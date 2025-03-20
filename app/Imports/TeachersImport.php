@@ -46,16 +46,11 @@ class TeachersImport implements ToCollection, WithHeadingRow
                 $validator = Validator::make($row->toArray(), $rules);
 
                 if ($validator->fails()) {
-                    $errors = [];
-                    foreach ($validator->errors()->toArray() as $field => $messages) {
-                        $errors[$field] = array_map(fn(string $message) => __($message), $messages);
-                    }
-
                     throw new HttpResponseException(
                         returnValidationMessage(
-                            false,
+                            false,  
                             trans('validation.rules_failed'),
-                            ['row' => $index + 1, 'errors' => $errors],
+                            ['row' => $index + 1, 'errors' => $validator->errors()->messages()],
                             'unprocessable_entity'
                         )
                     );

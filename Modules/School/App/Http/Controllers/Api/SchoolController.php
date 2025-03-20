@@ -72,7 +72,7 @@ class SchoolController extends Controller
 
     public function importSchools(SchoolImportRequest $request)
     {
-        $response = Excel::import(new SchoolsImport, $request->file('file'));
-        $response == true ? returnMessage(true, 'Schools Imported Successfully', null) : returnMessage(false, 'Schools Imported Failed', null, 500);
+        Excel::import(new SchoolsImport, $request->file('file'));
+        return returnMessage(true, 'Schools Imported Successfully', null);
     }
 }
