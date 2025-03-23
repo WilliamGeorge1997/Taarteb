@@ -52,7 +52,7 @@ class School extends Model
 
     public function teachers()
     {
-        return $this->hasMany(User::class);
+        return $this->hasManyThrough(TeacherProfile::class, User::class);
     }
 
     public function students()
@@ -75,4 +75,3 @@ class School extends Model
         return $this->hasMany(Session::class);
     }
 }
-

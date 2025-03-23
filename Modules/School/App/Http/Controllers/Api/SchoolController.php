@@ -60,8 +60,8 @@ class SchoolController extends Controller
             DB::beginTransaction();
             $schoolData = (new SchoolDto($request))->dataFromRequest();
             $managerData = (new SchoolManagerDto($request))->dataFromRequest();
-            $schoolGradesData = (new SchoolGradeDto($request))->dataFromRequest();
-            $school = $this->schoolService->update($school, $schoolData, $managerData, $schoolGradesData);
+            // $schoolGradesData = (new SchoolGradeDto($request))->dataFromRequest();
+            $school = $this->schoolService->update($school, $schoolData, $managerData);
             DB::commit();
             return returnMessage(true, 'School Updated Successfully', $school);
         } catch (Exception $e) {

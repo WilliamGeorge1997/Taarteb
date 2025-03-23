@@ -28,6 +28,7 @@ class StudentsImport implements ToCollection, WithHeadingRow
                     'identity_number' => ['required', 'unique:students,identity_number'],
                     'gender' => ['required', 'in:m,f'],
                     'parent_email' => ['required', 'email', 'unique:students,parent_email', 'unique:students,email', 'different:email'],
+                    'parent_phone' => ['required', 'unique:students,parent_phone'],
                 ];
 
                 // Add rules based on user role
@@ -62,6 +63,7 @@ class StudentsImport implements ToCollection, WithHeadingRow
                     'email' => $row['email'],
                     'identity_number' => $row['identity_number'],
                     'parent_email' => $row['parent_email'],
+                    'parent_phone' => $row['parent_phone'],
                     'grade_id' => $row['grade_id'],
                     'class_id' => $row['class_id'],
                     'is_graduated' => 0,

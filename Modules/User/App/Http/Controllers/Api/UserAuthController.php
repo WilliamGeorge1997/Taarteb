@@ -29,7 +29,7 @@ class UserAuthController extends Controller
             $credentials = $request->validated();
 
             if (! $token = auth('user')->attempt($credentials)) {
-                return returnMessage(false,'Unauthorized',null,'unauthorized');
+                return returnValidationMessage(false,'Unauthorized',['password'=>'wrong credentials'],'unauthorized');
             }
 
             if (auth('user')->user()['is_active'] == 0) {

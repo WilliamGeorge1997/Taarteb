@@ -22,7 +22,7 @@ class SchoolService
                 'manager',
                 'grades',
                 'teachers' => function ($query) {
-                    $query->with('teacherProfile');
+                    $query->with('teacher');
                 },
                 'students',
                 'classes',
@@ -30,7 +30,6 @@ class SchoolService
                 'sessions'
             ])
             ->orderByDesc('created_at');
-
         return getCaseCollection($schools, $data);
     }
 
@@ -62,7 +61,7 @@ class SchoolService
         return $school;
     }
 
-    function update($school, $schoolData, $managerData, $schoolGradesData)
+    function update($school, $schoolData, $managerData)
     {
         if (request()->hasFile('image')) {
             File::delete(public_path('uploads/user/' . $this->getImageName('user', $school->manager->image)));
@@ -75,9 +74,9 @@ class SchoolService
         if ($managerData) {
             $school->manager()->update($managerData);
         }
-        if ($schoolGradesData) {
-            $school->grades()->sync($schoolGradesData['grades']);
-        }
+        // if ($schoolGradesData) {
+        //     $school->grades()->sync($schoolGradesData['grades']);
+        // }
         return $school->fresh()->load('manager');
     }
 
