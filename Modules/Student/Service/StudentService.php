@@ -19,7 +19,7 @@ class StudentService
             ->when($data['email'] ?? null, function ($query) use ($data) {
                 $query->where('email', 'like', '%' . $data['email'] . '%');
             })
-            ->available()->orderByDesc('created_at');
+            ->availableAll()->orderByDesc('created_at');
         return getCaseCollection($students, $data);
     }
 

@@ -13,10 +13,3 @@ use Modules\Common\App\Http\Controllers\CommonController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('privacy', function(){
-    return view('common::privacy.privacy');
-});
-Route::get('terms', function(){
-    return view('common::terms.terms');
-});
