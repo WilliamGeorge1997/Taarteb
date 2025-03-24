@@ -15,7 +15,8 @@
         "nwidart/laravel-modules": "^10",
         "spatie/laravel-activitylog": "^4.10",
         "spatie/laravel-permission": "^6.15",
-        "tymon/jwt-auth": "^2.1"
+        "tymon/jwt-auth": "^2.1",
+        "ultramsg/whatsapp-php-sdk": "^2.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

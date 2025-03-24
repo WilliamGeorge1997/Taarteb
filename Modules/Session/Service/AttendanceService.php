@@ -6,6 +6,7 @@ use Modules\Session\App\Models\Session;
 use Modules\Student\App\Models\Student;
 use Modules\Session\App\Models\Attendance;
 use Modules\Session\App\Jobs\ParentNotificationMailJob;
+use Modules\Session\App\Jobs\ParentNotificationWhatsAppJob;
 
 class AttendanceService
 {
@@ -45,7 +46,7 @@ class AttendanceService
                         'is_present' => $attendance['is_present'],
                     ]);
                     saveHistory($data['session_id'], $attendance);
-                    $this->parentNotificationMail($attendance['student_id']);
+                    $this->parentNotificationWhatsApp($attendance['student_id']);
                 }
             }
         } else {
@@ -66,23 +67,39 @@ class AttendanceService
             }
         }
     }
-
-    function parentNotificationMail($studentId)
+    function parentNotificationWhatsApp($studentId)
     {
         $student = Student::find($studentId);
-        if ($student->parent_email) {
+        if ($student->parent_phone) {
             $studentTodayAbsences = Attendance::query()
-                ->with(['session.class', 'session.subject', 'session.teacher'])
+                // ->with(['session.class', 'session.subject', 'session.teacher'])
                 ->where('student_id', $studentId)
                 ->where('is_present', 0)
                 ->whereDate('created_at', now()->toDateString())
                 ->get();
 
             if ($studentTodayAbsences->count() > 0) {
-                ParentNotificationMailJob::dispatch($student, $studentTodayAbsences)->onConnection('database');
+                ParentNotificationWhatsAppJob::dispatch($student)->onConnection('database');
             }
         }
     }
+
+    // function parentNotificationMail($studentId)
+    // {
+    //     $student = Student::find($studentId);
+    //     if ($student->parent_email) {
+    //         $studentTodayAbsences = Attendance::query()
+    //             ->with(['session.class', 'session.subject', 'session.teacher'])
+    //             ->where('student_id', $studentId)
+    //             ->where('is_present', 0)
+    //             ->whereDate('created_at', now()->toDateString())
+    //             ->get();
+
+    //         if ($studentTodayAbsences->count() > 0) {
+    //             ParentNotificationMailJob::dispatch($student, $studentTodayAbsences)->onConnection('database');
+    //         }
+    //     }
+    // }
 
     function update($attendance, $data)
     {
