@@ -133,7 +133,7 @@ class UserDatabaseSeeder extends Seeder
         $role = Role::create(['name' => 'Teacher', 'guard_name' => 'user']);
         $permissions = Permission::where(function ($query) {
             $query->whereIn('category', ['Attendance'])
-                ->orWhereIn('name', ['Index-class', 'Index-session']);
+                ->orWhereIn('name', ['Index-class', 'Index-session', 'Index-student']);
         })->get();
         $role->syncPermissions($permissions);
         return $role;

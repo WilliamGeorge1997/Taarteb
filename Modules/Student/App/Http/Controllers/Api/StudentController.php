@@ -22,8 +22,8 @@ class StudentController extends Controller
    private $studentService;
    public function __construct(StudentService $studentService){
       $this->middleware('auth:user');
-      $this->middleware('role:Super Admin|School Manager');
-      $this->middleware('permission:Index-student|Create-student|Edit-student|Delete-student', ['only' => ['index', 'store']]);
+      $this->middleware('role:Super Admin|School Manager|Teacher');
+      $this->middleware('permission:Index-student', ['only' => ['index']]);
       $this->middleware('permission:Create-student', ['only' => ['store', 'importStudents']]);
       $this->middleware('permission:Edit-student', ['only' => ['update', 'activate']]);
       $this->middleware('permission:Delete-student', ['only' => ['destroy']]);

@@ -14,6 +14,9 @@ use Modules\Common\App\Http\Controllers\CommonController;
 |
 */
 
-// Route::group([], function () {
-//     Route::resource('common', CommonController::class)->names('common');
-// });
+Route::get('privacy', function(){
+    return view('common::privacy.privacy');
+});
+Route::get('terms', function(){
+    return view('common::terms.terms');
+});
