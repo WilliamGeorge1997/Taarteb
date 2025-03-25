@@ -25,11 +25,11 @@ class IntroService
         }
         return $intro->fresh()->load('details');
     }
-    
+
     private function processDetailsData($details, $section)
     {
         $processedDetails = [];
-        
+
         foreach ($details as $index => $detail) {
             if (request()->hasFile("details.{$index}.image")) {
                 $detail['image'] = $this->upload(request()->file("details.{$index}.image"), 'intro');
@@ -46,7 +46,8 @@ class IntroService
             File::delete(public_path('uploads/intro/' . $this->getImageName('intro', $intro->image)));
             $data['image'] = $this->upload(request()->file('image'), 'intro');
         }
-        return $intro->update($data);
+         $intro->update($data);
+         return $intro->fresh()->load('details');
     }
 
     public function delete($intro)

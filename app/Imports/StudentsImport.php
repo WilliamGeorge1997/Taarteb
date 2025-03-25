@@ -28,7 +28,7 @@ class StudentsImport implements ToCollection, WithHeadingRow
                     'identity_number' => ['required', 'unique:students,identity_number'],
                     'gender' => ['required', 'in:m,f'],
                     'parent_email' => ['required', 'email', 'unique:students,parent_email', 'unique:students,email', 'different:email'],
-                    'parent_phone' => ['required', 'unique:students,parent_phone'],
+                    'parent_phone' => ['required'],
                 ];
 
                 // Add rules based on user role
