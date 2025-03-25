@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('identity_number')->unique();
             $table->string('parent_email')->unique();
-            $table->string('parent_phone')->unique();
+            $table->string('parent_phone');
             $table->foreignIdFor(Grade::class)->index()->constrained()->restrictOnDelete();
             $table->foreignIdFor(Classroom::class, 'class_id')->index()->constrained()->restrictOnDelete();
             $table->foreignIdFor(School::class)->index()->constrained()->restrictOnDelete();
