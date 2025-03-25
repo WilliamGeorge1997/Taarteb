@@ -23,7 +23,7 @@ class StudentRequest extends FormRequest
             $rules = [
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'email', 'unique:students,email', 'unique:students,parent_email', 'different:parent_email'],
-                'identity_number' => ['required', 'string', 'unique:students,identity_number'],
+                'identity_number' => ['required', 'string'],
                 'gender' => ['required', 'in:m,f'],
                 'grade_id' => auth('user')->user()->hasRole('School Manager') ?
                     ['required', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), auth('user')->user()->school_id)] :
@@ -53,8 +53,7 @@ class StudentRequest extends FormRequest
                 ],
                 'identity_number' => [
                     'nullable',
-                    'string',
-                    'unique:students,identity_number,' . $this->student->id . ',id'
+                    'string'
                 ],
                 'gender' => ['nullable', 'in:m,f'],
                 'grade_id' => auth('user')->user()->hasRole('School Manager') ?

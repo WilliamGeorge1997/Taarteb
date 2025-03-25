@@ -9,8 +9,11 @@ use Modules\Common\App\resources\HistoryResource;
 class HistoryController extends Controller
 {
     private $historyService;
+
     public function __construct(HistoryService $historyService)
     {
+        $this->middleware('auth:user');
+        $this->middleware('role:Super Admin|School Manager|Teacher');
         $this->historyService = $historyService;
     }
     public function index(Request $request)

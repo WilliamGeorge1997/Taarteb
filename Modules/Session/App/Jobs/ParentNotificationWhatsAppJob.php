@@ -31,6 +31,6 @@ class ParentNotificationWhatsAppJob implements ShouldQueue
     {
         $parent_phone = $this->student->parent_phone;
         $whatsAppService = new WhatsAppService();
-        $whatsAppService->sendMessage($parent_phone, "نحيطكم علماً ان الطالب قد تغيب اليوم بتاريخ " . now()->toDateString() . " عسى المانع خيراً\n\nWe inform you that the student was absent today on " . now()->toDateString() . ", hoping there is good reason");
+        $whatsAppService->sendMessage($parent_phone, "عزيزنا ولي أمر الطالب: " . $this->student->name . "\nنحيطكم علماً بأنه لم يحضر اليوم إلى المدرسة.\nنتمنى أن يكونَ المانع خيراً.\n\nمع التأكيد على إحضار سبب الغياب عند الحضور إلى المدرسة.\n\nDear parent of student: " . $this->student->name . "\nWe inform you that your child did not attend school today.\nWe hope there is a good reason.\n\nPlease ensure to provide the reason for absence when returning to school.");
     }
 }
