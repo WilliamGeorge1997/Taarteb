@@ -46,8 +46,27 @@ class IntroService
             File::delete(public_path('uploads/intro/' . $this->getImageName('intro', $intro->image)));
             $data['image'] = $this->upload(request()->file('image'), 'intro');
         }
-         $intro->update($data);
-         return $intro->fresh()->load('details');
+        $intro->update($data);
+
+        if(isset($data['details'])) {
+            foreach ($data['details'] as $index => $detail) {
+                if (!isset($detail['id'])) {
+                    continue; 
+                }
+
+                if (request()->hasFile("details.{$index}.image")) {
+                    if ($existingDetail = $intro->details()->find($detail['id'])) {
+                        File::delete(public_path('uploads/intro/' . $this->getImageName('intro', $existingDetail->image)));
+                        $detail['image'] = $this->upload(request()->file("details.{$index}.image"), 'intro');
+                    }
+                }
+                $detail['section'] = $data['section'];
+
+                $intro->details()->where('id', $detail['id'])->update($detail);
+            }
+        }
+
+        return $intro->fresh()->load('details');
     }
 
     public function delete($intro)

@@ -8,12 +8,13 @@ use App\Imports\SessionsImport;
 use Illuminate\Support\Facades\DB;
 use Modules\Session\DTO\SessionDto;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use Modules\Session\App\Models\Session;
 use Modules\Session\Service\SessionService;
 use Modules\Session\App\resources\SessionResource;
-use Modules\Session\App\Http\Requests\SessionRequest;
 use Modules\School\App\Http\Requests\SchoolImportRequest;
-use Maatwebsite\Excel\Facades\Excel;
+use Modules\Session\App\Http\Requests\SessionStoreRequest;
+use Modules\Session\App\Http\Requests\SessionUpdateRequest;
 
 class SessionController extends Controller
 {
@@ -33,7 +34,7 @@ class SessionController extends Controller
       return returnMessage(true, 'Sessions Fetched Successfully', SessionResource::collection($sessions)->response()->getData(true));
    }
 
-   public function store(SessionRequest $request){
+   public function store(SessionStoreRequest $request){
         $session = $this->sessionService->getSession($request->all());
         if($session){
             return returnMessage(false, 'Session Already Exists', null, 'bad_request');
@@ -50,7 +51,7 @@ class SessionController extends Controller
       }
    }
 
-   public function update(SessionRequest $request, Session $session){
+   public function update(SessionUpdateRequest $request, Session $session){
       try{
          DB::beginTransaction();
          $data = (new SessionDto($request))->dataFromRequest();

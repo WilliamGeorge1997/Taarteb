@@ -28,6 +28,9 @@ class AttendanceController extends Controller
    public function index(AttendanceRequest $request){
     $data = $request->all();
     $session = $this->attendanceService->getSessionWithStudents($data);
+    if(!$session){
+        return returnMessage(false, 'Session Not Found', null, 'not_found');
+    }
     return returnMessage(true, 'Students Fetched Successfully', new StudentAttendanceResource($session));
  }
 

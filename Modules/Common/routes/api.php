@@ -19,4 +19,5 @@ use Modules\Common\App\Http\Controllers\Api\HistoryController;
 
 Route::post('contact', [CommonController::class, 'contact']);
 Route::apiResource('history', HistoryController::class)->only(['index']);
-Route::apiResource('intros', IntroController::class);
+Route::apiResource('intros', IntroController::class)->only(['index', 'store', 'destroy']);
+Route::post('intros/{intro}', [IntroController::class, 'update']);

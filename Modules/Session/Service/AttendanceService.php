@@ -129,20 +129,19 @@ class AttendanceService
                     $query->where('is_graduated', 0)
                         ->withCount([
                             'attendance as is_attend' => function ($q) use ($data) {
-                                $q->whereHas('session', function ($sq) use ($data) {
-                                    $sq->where('class_id', $data['class_id'])
-                                        ->where('day', $data['day'])
-                                        ->where('semester', $data['semester'])
-                                        ->where('session_number', $data['session_number'])
-                                        ->where('year', $data['year']);
-                                })
-                                    ->whereDate('created_at', now()->toDateString());
+                                $q->whereDate('created_at', now()->toDateString());
                             }
                         ]);
                 }
             ])
             ->first();
-
+            // , function ($sq) use ($data) {
+            //     $sq->where('class_id', $data['class_id'])
+            //         ->where('day', $data['day'])
+            //         ->where('semester', $data['semester'])
+            //         ->where('session_number', $data['session_number'])
+            //         ->where('year', $data['year']);
+            // });
         // $students = Student::query()
         //     ->where('class_id', $data['class_id'])
         //     ->whereHas('class.sessions', function ($q) use ($data) {

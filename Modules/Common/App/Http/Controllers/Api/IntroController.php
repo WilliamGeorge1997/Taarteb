@@ -10,7 +10,8 @@ use App\Http\Controllers\Controller;
 use Modules\Common\App\Models\Intro;
 use Modules\Common\Service\IntroService;
 use Modules\Common\App\resources\IntroResource;
-use Modules\Common\App\Http\Requests\IntroRequest;
+use Modules\Common\App\Http\Requests\IntroStoreRequest;
+use Modules\Common\App\Http\Requests\IntroUpdateRequest;
 
 class IntroController extends Controller
 {
@@ -31,7 +32,7 @@ class IntroController extends Controller
         return returnMessage(true, 'Intros fetched successfully', IntroResource::collection($intros)->response()->getData(true));
     }
 
-    public function store(IntroRequest $request)
+    public function store(IntroStoreRequest $request)
     {
         try {
             DB::beginTransaction();
@@ -44,7 +45,7 @@ class IntroController extends Controller
             return returnMessage(false, $e->getMessage(), null, 500);
         }
     }
-    public function update(IntroRequest $request, Intro $intro)
+    public function update(IntroUpdateRequest $request, Intro $intro)
     {
         try {
             DB::beginTransaction();

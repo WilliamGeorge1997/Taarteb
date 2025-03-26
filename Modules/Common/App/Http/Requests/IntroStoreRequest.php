@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class IntroRequest extends FormRequest
+class IntroStoreRequest extends FormRequest
 {
 
     /**
@@ -16,7 +16,6 @@ class IntroRequest extends FormRequest
      */
     public function rules(): array
     {
-        if ($this->isMethod('POST')) {
             return [
                 'title_ar' => ['required', 'string', 'max:255'],
                 'title_en' => ['required', 'string', 'max:255'],
@@ -31,18 +30,7 @@ class IntroRequest extends FormRequest
                 'details.*.description_en' => ['nullable', 'string'],
                 'details.*.image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
             ];
-        }
-        if ($this->isMethod('PUT')) {
-            return [
-                'title_ar' => ['nullable', 'string', 'max:255'],
-                'title_en' => ['nullable', 'string', 'max:255'],
-                'description_ar' => ['nullable', 'string'],
-                'description_en' => ['nullable', 'string'],
-                'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
-                'section' => ['nullable', 'string'],
-            ];
-        }
-        return [];
+
     }
 
     /**

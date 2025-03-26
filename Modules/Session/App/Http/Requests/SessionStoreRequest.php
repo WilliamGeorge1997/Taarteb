@@ -10,7 +10,7 @@ use Modules\Subject\App\Rules\SubjectBelongToSchool;
 use Modules\Teacher\App\Rules\TeacherBelongToSchool;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class SessionRequest extends FormRequest
+class SessionStoreRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -19,7 +19,7 @@ class SessionRequest extends FormRequest
      */
     public function rules(): array
     {
-        if ($this->isMethod('POST')) {
+
             $rules = [
                 'day' => ['required', 'in:saturday,sunday,monday,tuesday,wednesday,thursday,friday'],
                 'session_number' => ['required', 'integer', 'max:15'],
@@ -42,32 +42,6 @@ class SessionRequest extends FormRequest
                 $rules['school_id'] = ['prohibited'];
             }
             return $rules;
-        }
-        if ($this->isMethod('PUT')) {
-            $rules = [
-                'day' => ['nullable', 'in:saturday,sunday,monday,tuesday,wednesday,thursday,friday'],
-                'session_number' => ['nullable', 'integer', 'max:15'],
-                'semester' => ['nullable', 'in:first,second', 'exists:subjects,semester,id,' . $this->input('subject_id')],
-                'year' => ['nullable', 'string'],
-                'class_id' => auth('user')->user()->hasRole('School Manager') ?
-                    ['nullable', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), auth('user')->user()->school_id), new SessionLimit($this->input('class_id'), $this->input('semester'), $this->input('year'), $this->input('day'))] :
-                    ['nullable', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), $this->input('school_id')), new SessionLimit($this->input('class_id'), $this->input('semester'), $this->input('year'), $this->input('day'))],
-                'subject_id' => auth('user')->user()->hasRole('School Manager') ?
-                    ['nullable', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), auth('user')->user()->school_id)] :
-                    ['nullable', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), $this->input('school_id'))],
-                'teacher_id' => auth('user')->user()->hasRole('School Manager') ?
-                    ['nullable', 'exists:teacher_profiles,id', new TeacherBelongToSchool($this->input('teacher_id'), auth('user')->user()->school_id)] :
-                    ['nullable', 'exists:teacher_profiles,id', new TeacherBelongToSchool($this->input('teacher_id'), $this->input('school_id'))],
-                'is_final' => ['nullable', 'boolean'],
-            ];
-            if (auth('user')->user()->hasRole('Super Admin')) {
-                $rules['school_id'] = ['nullable', 'exists:schools,id'];
-            } else {
-                $rules['school_id'] = ['prohibited'];
-            }
-            return $rules;
-        }
-        return [];
     }
 
     /**
@@ -93,12 +67,6 @@ class SessionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        if ($this->isMethod('PUT')) {
-            $admin = auth('user')->user();
-            if ($admin->hasRole('School Manager')) {
-                return $admin->school_id == $this->session->school_id;
-            }
-        }
         return true;
     }
 
