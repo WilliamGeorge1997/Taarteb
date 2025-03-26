@@ -24,6 +24,7 @@ return new class extends Migration
             $table->enum('semester', ['first', 'second']);
             $table->integer('year');
             $table->foreignIdFor(TeacherProfile::class, 'teacher_id')->index()->constrained('teacher_profiles')->restrictOnDelete();
+            $table->foreignIdFor(TeacherProfile::class, 'attendance_taken_by')->nullable()->index()->constrained('teacher_profiles')->restrictOnDelete();
             $table->foreignIdFor(Student::class)->index()->constrained()->restrictOnDelete();
             $table->foreignIdFor(Subject::class)->index()->constrained()->restrictOnDelete();
             $table->foreignIdFor(Session::class)->index()->constrained()->restrictOnDelete();

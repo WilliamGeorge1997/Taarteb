@@ -16,7 +16,7 @@ class Attendance extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['student_id', 'session_id', 'is_present'];
+    protected $fillable = ['student_id', 'session_id', 'is_present', 'teacher_id'];
 
     public function getActivitylogOptions(): LogOptions
     {

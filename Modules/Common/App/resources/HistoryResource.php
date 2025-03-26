@@ -21,6 +21,7 @@ class HistoryResource extends JsonResource
             'subject' => $this->subject->name,
             'class' => $this->class->name,
             'teacher' => $this->teacher->teacher->name,
+            'attendance_taken_by' => $this->attendanceTakenBy->teacher->name,
             'school' => $this->school->name,
             'is_present' => $this->is_present,
             'created_at' => $this->created_at->format('Y-m-d h:i A'),

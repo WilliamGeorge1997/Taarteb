@@ -18,7 +18,7 @@ class History extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['day', 'session_number', 'semester', 'year', 'teacher_id', 'student_id', 'subject_id', 'session_id', 'class_id', 'school_id', 'is_present'];
+    protected $fillable = ['day', 'session_number', 'semester', 'year', 'teacher_id', 'attendance_taken_by', 'student_id', 'subject_id', 'session_id', 'class_id', 'school_id', 'is_present'];
 
     //Relations
     public function student()
@@ -29,6 +29,11 @@ class History extends Model
     public function teacher()
     {
         return $this->belongsTo(TeacherProfile::class, 'teacher_id');
+    }
+
+    public function attendanceTakenBy()
+    {
+        return $this->belongsTo(TeacherProfile::class, 'attendance_taken_by');
     }
 
     public function grade()
