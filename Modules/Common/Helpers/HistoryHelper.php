@@ -2,10 +2,11 @@
 
 use Modules\Common\App\Models\History;
 use Modules\Session\App\Models\Session;
+use Modules\Student\App\Models\Student;
 
 
 
-function saveHistory($session_id, $attendance, $teacherTakenAttendance)
+function saveHistory($session_id, $attendance, $teacherTakenAttendance, $teacherTakenAttendanceProfile)
 {
     $session = Session::findOrFail($session_id);
     History::create([
@@ -14,15 +15,20 @@ function saveHistory($session_id, $attendance, $teacherTakenAttendance)
         'semester' => $session->semester,
         'year' => $session->year,
         'teacher_id' => $session->teacher_id,
-        'attendance_taken_by' => $teacherTakenAttendance,
+        'attendance_taken_by' => $teacherTakenAttendanceProfile->id,
         'student_id' => $attendance['student_id'],
         'subject_id' => $session->subject_id,
         'session_id' => $session->id,
         'class_id' => $session->class_id,
         'school_id' => $session->school_id,
         'is_present' => $attendance['is_present'],
+        'teacher_name' => $session->teacher->teacher->name,
+        'attendance_taken_by_name' => $teacherTakenAttendance->name,
+        'student_name' => Student::find($attendance['student_id'])->name,
+        'subject_name' => $session->subject->name,
+        'class_name' => $session->class->name,
+        'school_name' => $session->school->name,
     ]);
-
 }
 
 

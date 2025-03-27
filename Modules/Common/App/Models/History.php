@@ -18,7 +18,7 @@ class History extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['day', 'session_number', 'semester', 'year', 'teacher_id', 'attendance_taken_by', 'student_id', 'subject_id', 'session_id', 'class_id', 'school_id', 'is_present'];
+    protected $fillable = ['day', 'session_number', 'semester', 'year', 'teacher_id', 'attendance_taken_by', 'student_id', 'subject_id', 'session_id', 'class_id', 'school_id', 'is_present', 'teacher_name', 'attendance_taken_by_name', 'student_name', 'subject_name', 'class_name', 'school_name'];
 
     //Relations
     public function student()

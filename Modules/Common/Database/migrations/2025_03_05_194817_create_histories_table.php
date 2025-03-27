@@ -30,6 +30,12 @@ return new class extends Migration
             $table->foreignIdFor(Session::class)->index()->constrained()->restrictOnDelete();
             $table->foreignIdFor(Classroom::class, 'class_id')->index()->constrained('classes')->restrictOnDelete();
             $table->foreignIdFor(School::class)->index()->constrained()->restrictOnDelete();
+            $table->string('teacher_name');
+            $table->string('attendance_taken_by_name');
+            $table->string('student_name');
+            $table->string('subject_name');
+            $table->string('class_name');
+            $table->string('school_name');
             $table->boolean('is_present')->default(0);
             $table->timestamps();
         });

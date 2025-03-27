@@ -37,7 +37,11 @@ class SessionService
 
     function update($session, $data)
     {
-        $session->update($data);
+        $updateData = [
+            'teacher_id' => $data['teacher_id'] ?? $session->teacher_id,
+            'subject_id' => $data['subject_id'] ?? $session->subject_id
+        ];
+        $session->update($updateData);
         return $session;
     }
 

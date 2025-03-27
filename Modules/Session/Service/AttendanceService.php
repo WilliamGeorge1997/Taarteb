@@ -32,7 +32,8 @@ class AttendanceService
     function create($data)
     {
         $session = Session::find($data['session_id']);
-        $teacherTakenAttendance = auth('user')->user()->teacherProfile->id;
+        $teacherTakenAttendance = auth('user')->user();
+        $teacherTakenAttendanceProfile = $teacherTakenAttendance->teacherProfile;
         if ($session->is_final == 1) {
             foreach ($data['attendance'] as $attendance) {
                 $existingAttendance = Attendance::where('session_id', $data['session_id'])
@@ -45,9 +46,9 @@ class AttendanceService
                         'session_id' => $data['session_id'],
                         'student_id' => $attendance['student_id'],
                         'is_present' => $attendance['is_present'],
-                        'teacher_id' => $teacherTakenAttendance,
+                        'teacher_id' => $teacherTakenAttendanceProfile->id,
                     ]);
-                    saveHistory($data['session_id'], $attendance, $teacherTakenAttendance);
+                    saveHistory($data['session_id'], $attendance, $teacherTakenAttendance, $teacherTakenAttendanceProfile);
                     $this->parentNotificationWhatsApp($attendance['student_id']);
                 }
             }
@@ -63,9 +64,9 @@ class AttendanceService
                         'session_id' => $data['session_id'],
                         'student_id' => $attendance['student_id'],
                         'is_present' => $attendance['is_present'],
-                        'teacher_id' => $teacherTakenAttendance,
+                        'teacher_id' => $teacherTakenAttendanceProfile->id,
                     ]);
-                    saveHistory($data['session_id'], $attendance, $teacherTakenAttendance);
+                    saveHistory($data['session_id'], $attendance, $teacherTakenAttendance, $teacherTakenAttendanceProfile);
                 }
             }
         }
@@ -135,13 +136,13 @@ class AttendanceService
                 }
             ])
             ->first();
-            // , function ($sq) use ($data) {
-            //     $sq->where('class_id', $data['class_id'])
-            //         ->where('day', $data['day'])
-            //         ->where('semester', $data['semester'])
-            //         ->where('session_number', $data['session_number'])
-            //         ->where('year', $data['year']);
-            // });
+        // , function ($sq) use ($data) {
+        //     $sq->where('class_id', $data['class_id'])
+        //         ->where('day', $data['day'])
+        //         ->where('semester', $data['semester'])
+        //         ->where('session_number', $data['session_number'])
+        //         ->where('year', $data['year']);
+        // });
         // $students = Student::query()
         //     ->where('class_id', $data['class_id'])
         //     ->whereHas('class.sessions', function ($q) use ($data) {
