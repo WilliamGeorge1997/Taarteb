@@ -17,6 +17,6 @@ use Modules\Session\App\Http\Controllers\Api\AttendanceController;
 */
 
 Route::apiResource('sessions', SessionController::class)->only(['index', 'store']);
+Route::post('sessions/import', [SessionController::class, 'importSessions']);
 Route::post('sessions/{session}', [SessionController::class, 'update']);
 Route::apiResource('attendances', AttendanceController::class);
-Route::post('sessions/import', [SessionController::class, 'importSessions']);
