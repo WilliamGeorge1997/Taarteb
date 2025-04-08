@@ -15,7 +15,7 @@ use Modules\Student\App\Http\Controllers\Api\StudentController;
     |
 */
 
-Route::apiResource('students', StudentController::class)->only(['index', 'store', 'update']);
+Route::apiResource('students', StudentController::class)->only(['index', 'store', 'update', 'destroy']);
 Route::group(['prefix' => 'students'], function () {
     Route::get('graduate', [StudentController::class, 'getStudentsToGraduate']);
     Route::post('graduate', [StudentController::class, 'graduate']);

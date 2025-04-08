@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('image')->nullable();
             $table->enum('role', ['Super Admin', 'School Manager', 'Teacher']);
-            $table->foreignIdFor(School::class)->nullable()->index()->constrained()->restrictOnDelete();
+            $table->foreignIdFor(School::class)->nullable()->index()->constrained()->cascadeOnDelete();
             $table->rememberToken();
             $table->boolean('is_active')->default(1);
             $table->timestamps();

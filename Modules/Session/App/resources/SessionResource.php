@@ -19,7 +19,7 @@ class SessionResource extends JsonResource
             'year' => $this->year,
             'class' => $this->class->name,
             'subject' => $this->subject->name,
-            'teacher' => $this->teacher->teacher->name,
+            'teacher' => $this->teacher ? $this->teacher->teacher->name : null,
             'school' => $this->school->name,
             "created_at" => $this->created_at->format('Y-m-d h:i A'),
             "updated_at" => $this->updated_at->format('Y-m-d h:i A'),

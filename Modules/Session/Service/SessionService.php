@@ -9,7 +9,7 @@ class SessionService
     function findAll($data = [])
     {
         $sessions = Session::query()
-        ->when($data['class_id'], function($q) use ($data) {
+        ->when($data['class_id'] ?? null , function($q) use ($data) {
             return $q->where('class_id', $data['class_id']);
         })
         ->with(['class', 'subject', 'teacher.teacher', 'school'])

@@ -18,54 +18,71 @@ use Modules\School\App\Http\Requests\SchoolImportRequest;
 
 class TeacherController extends Controller
 {
-   private $teacherService;
-   public function __construct(TeacherService $teacherService){
-      $this->middleware('auth:user');
-      $this->middleware('role:Super Admin|School Manager');
-      $this->middleware('permission:Index-teacher|Create-teacher|Edit-teacher|Delete-teacher', ['only' => ['index', 'store', 'getTeachersBySubjectId']]);
-      $this->middleware('permission:Create-teacher', ['only' => ['store', 'importTeachers']]);
-      $this->middleware('permission:Edit-teacher', ['only' => ['update', 'activate']]);
-      $this->middleware('permission:Delete-teacher', ['only' => ['destroy']]);
-      $this->teacherService = $teacherService;
-   }
-   public function index(Request $request){
-      $data = $request->all();
-      $teachers = $this->teacherService->findAll($data);
-      return returnMessage(true, 'Teachers Fetched Successfully', TeacherResource::collection($teachers)->response()->getData(true));
-   }
+    private $teacherService;
+    public function __construct(TeacherService $teacherService)
+    {
+        $this->middleware('auth:user');
+        $this->middleware('role:Super Admin|School Manager');
+        $this->middleware('permission:Index-teacher|Create-teacher|Edit-teacher|Delete-teacher', ['only' => ['index', 'store', 'getTeachersBySubjectId']]);
+        $this->middleware('permission:Create-teacher', ['only' => ['store', 'importTeachers']]);
+        $this->middleware('permission:Edit-teacher', ['only' => ['update', 'activate']]);
+        $this->middleware('permission:Delete-teacher', ['only' => ['destroy']]);
+        $this->teacherService = $teacherService;
+    }
+    public function index(Request $request)
+    {
+        $data = $request->all();
+        $teachers = $this->teacherService->findAll($data);
+        return returnMessage(true, 'Teachers Fetched Successfully', TeacherResource::collection($teachers)->response()->getData(true));
+    }
 
-   public function store(TeacherRequest $request){
-        try{
-         DB::beginTransaction();
-         $teacherData = (new TeacherDto($request))->dataFromRequest();
-         $teacherProfileData = (new TeacherProfileDto($request))->dataFromRequest();
-         $teacher = $this->teacherService->create($teacherData, $teacherProfileData);
-         DB::commit();
-         return returnMessage(true, 'Teacher Created Successfully', $teacher);
-      }catch(Exception $e){
-         DB::rollBack();
-         return returnMessage(false, $e->getMessage(), null, 500);
-      }
-   }
+    public function store(TeacherRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+            $teacherData = (new TeacherDto($request))->dataFromRequest();
+            $teacherProfileData = (new TeacherProfileDto($request))->dataFromRequest();
+            $teacher = $this->teacherService->create($teacherData, $teacherProfileData);
+            DB::commit();
+            return returnMessage(true, 'Teacher Created Successfully', null);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return returnMessage(false, $e->getMessage(), null, 500);
+        }
+    }
 
-   public function update(TeacherRequest $request, TeacherProfile $teacher){
-      try{
-         DB::beginTransaction();
-         $teacherData = (new TeacherDto($request))->dataFromRequest();
-         $teacherProfileData = (new TeacherProfileDto($request))->dataFromRequest();
-         $teacher = $this->teacherService->update($teacher, $teacherData, $teacherProfileData);
-         DB::commit();
-         return returnMessage(true, 'Teacher Updated Successfully', $teacher);
-      }catch(Exception $e){
-         DB::rollBack();
-         return returnMessage(false, $e->getMessage(), null, 500);
-      }
-   }
+    public function update(TeacherRequest $request, TeacherProfile $teacher)
+    {
+        try {
+            DB::beginTransaction();
+            $teacherData = (new TeacherDto($request))->dataFromRequest();
+            $teacherProfileData = (new TeacherProfileDto($request))->dataFromRequest();
+            $teacher = $this->teacherService->update($teacher, $teacherData, $teacherProfileData);
+            DB::commit();
+            return returnMessage(true, 'Teacher Updated Successfully', $teacher);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return returnMessage(false, $e->getMessage(), null, 500);
+        }
+    }
 
-   public function getTeachersBySubjectId(Request $request, $subjectId)
-   {
-      return returnMessage(true, 'Teachers fetched successfully', TeacherResource::collection($this->teacherService->getTeachersBySubjectId($subjectId))->response()->getData(true));
-   }
+    public function destroy(TeacherProfile $teacher)
+    {
+        try {
+            DB::beginTransaction();
+            $this->teacherService->delete($teacher);
+            DB::commit();
+            return returnMessage(true, 'Teacher Deleted Successfully', null);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return returnMessage(false, $e->getMessage(), null, 500);
+        }
+    }
+
+    public function getTeachersBySubjectId(Request $request, $subjectId)
+    {
+        return returnMessage(true, 'Teachers fetched successfully', TeacherResource::collection($this->teacherService->getTeachersBySubjectId($subjectId))->response()->getData(true));
+    }
 
     public function importTeachers(SchoolImportRequest $request)
     {

@@ -72,6 +72,7 @@ class TeacherService
     function delete($teacher)
     {
         File::delete(public_path('uploads/user/' . $this->getImageName('user', $teacher->image)));
+        $teacher->teacher()->delete();
         $teacher->delete();
     }
 

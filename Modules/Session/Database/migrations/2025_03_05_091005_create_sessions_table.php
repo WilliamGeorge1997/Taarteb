@@ -21,10 +21,10 @@ return new class extends Migration
             $table->integer('session_number');
             $table->enum('semester', ['first', 'second'])->nullable();
             $table->string('year')->nullable();
-            $table->foreignIdFor(Classroom::class, 'class_id')->index()->constrained()->restrictOnDelete();
-            $table->foreignIdFor(Subject::class)->index()->constrained()->restrictOnDelete();
-            $table->foreignIdFor(School::class)->index()->constrained()->restrictOnDelete();
-            $table->foreignIdFor(TeacherProfile::class, 'teacher_id')->index()->constrained('teacher_profiles')->restrictOnDelete();
+            $table->foreignIdFor(Classroom::class, 'class_id')->index()->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Subject::class)->index()->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(School::class)->index()->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(TeacherProfile::class, 'teacher_id')->nullable()->index()->constrained('teacher_profiles')->nullOnDelete();
             $table->boolean('is_final')->default(0);
             $table->timestamps();
         });

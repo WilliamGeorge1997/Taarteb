@@ -63,6 +63,19 @@ class StudentController extends Controller
       }
    }
 
+    public function destroy(Student $student)
+    {
+        try {
+            DB::beginTransaction();
+            $this->studentService->delete($student);
+            DB::commit();
+            return returnMessage(true, 'Student Deleted Successfully', null);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return returnMessage(false, $e->getMessage(), null, 500);
+        }
+    }
+
    public function getStudentsToGraduate(Request $request){
       $data = $request->all();
       $students = $this->studentService->getStudentsToGraduate($data);

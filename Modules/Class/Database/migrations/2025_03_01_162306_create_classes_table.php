@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('classes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignIdFor(Grade::class)->index()->constrained()->restrictOnDelete();
-            $table->foreignIdFor(School::class)->index()->constrained()->restrictOnDelete();
+            $table->foreignIdFor(Grade::class)->index()->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(School::class)->index()->constrained()->cascadeOnDelete();
             $table->integer('max_students');
             $table->integer('session_number')->nullable();
             $table->timestamps();

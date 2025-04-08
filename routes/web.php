@@ -16,3 +16,8 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+
+// API Tester Route
+Route::get('/api-tester', function () {
+    return view('api-tester');
+})->name('api-tester');

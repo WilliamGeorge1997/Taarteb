@@ -23,7 +23,7 @@ class StudentAttendanceResource extends JsonResource
                 'grade' => $this->class->grade->name,
                 'school' => $this->class->school->name,
                 'subject' => $this->subject->name,
-                'teacher' => $this->teacher->teacher->name,
+                'teacher' => $this->teacher ? $this->teacher->teacher->name : null,
                 'created_at' => $this->created_at->format('Y-m-d h:i A'),
                 'updated_at' => $this->updated_at->format('Y-m-d h:i A'),
             ],

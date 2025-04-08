@@ -5,8 +5,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -15,7 +14,7 @@ return new class extends Migration
         Schema::create('grade_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignIdFor(School::class)->index()->constrained()->restrictOnDelete();
+            $table->foreignIdFor(School::class)->index()->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

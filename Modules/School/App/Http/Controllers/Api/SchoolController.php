@@ -70,6 +70,19 @@ class SchoolController extends Controller
         }
     }
 
+    public function destroy(School $school)
+    {
+        try {
+            DB::beginTransaction();
+            $this->schoolService->delete($school);
+            DB::commit();
+            return returnMessage(true, 'School Deleted Successfully', null);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return returnMessage(false, $e->getMessage(), null, 500);
+        }
+    }
+    
     public function importSchools(SchoolImportRequest $request)
     {
         Excel::import(new SchoolsImport, $request->file('file'));

@@ -22,9 +22,9 @@ return new class extends Migration
             $table->string('identity_number');
             $table->string('parent_email')->unique();
             $table->string('parent_phone');
-            $table->foreignIdFor(Grade::class)->index()->constrained()->restrictOnDelete();
-            $table->foreignIdFor(Classroom::class, 'class_id')->index()->constrained()->restrictOnDelete();
-            $table->foreignIdFor(School::class)->index()->constrained()->restrictOnDelete();
+            $table->foreignIdFor(Grade::class)->index()->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Classroom::class, 'class_id')->index()->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(School::class)->index()->constrained()->cascadeOnDelete();
             $table->boolean("is_graduated")->default(0);
             $table->boolean('is_active')->default(1);
             $table->timestamps();
