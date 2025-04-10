@@ -31,7 +31,7 @@ class StudentRequest extends FormRequest
                 'class_id' => auth('user')->user()->hasRole('School Manager') ?
                     ['required', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), auth('user')->user()->school_id), new MaxStudents($this->input('class_id'))] :
                     ['required', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), $this->input('school_id')), new MaxStudents($this->input('class_id'))],
-                'parent_email' => ['required', 'email', 'unique:students,parent_email', 'unique:students,email', 'different:email'],
+                'parent_email' => ['nullable', 'email', 'unique:students,parent_email', 'unique:students,email', 'different:email'],
                 'parent_phone' => ['required', 'string'],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {

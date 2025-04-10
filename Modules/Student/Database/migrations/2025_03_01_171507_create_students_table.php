@@ -20,7 +20,7 @@ return new class extends Migration
             $table->enum('gender', ['m', 'f']);
             $table->string('email')->unique();
             $table->string('identity_number');
-            $table->string('parent_email')->unique();
+            $table->string('parent_email')->nullable()->unique();
             $table->string('parent_phone');
             $table->foreignIdFor(Grade::class)->index()->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Classroom::class, 'class_id')->index()->constrained()->cascadeOnDelete();

@@ -47,7 +47,7 @@ class TeacherController extends Controller
             return returnMessage(true, 'Teacher Created Successfully', null);
         } catch (Exception $e) {
             DB::rollBack();
-            return returnMessage(false, $e->getMessage(), null, 500);
+            return returnMessage(false, $e->getMessage(), null, 'server_error');
         }
     }
 
@@ -62,7 +62,7 @@ class TeacherController extends Controller
             return returnMessage(true, 'Teacher Updated Successfully', $teacher);
         } catch (Exception $e) {
             DB::rollBack();
-            return returnMessage(false, $e->getMessage(), null, 500);
+            return returnMessage(false, $e->getMessage(), null, 'server_error');
         }
     }
 
@@ -75,7 +75,7 @@ class TeacherController extends Controller
             return returnMessage(true, 'Teacher Deleted Successfully', null);
         } catch (Exception $e) {
             DB::rollBack();
-            return returnMessage(false, $e->getMessage(), null, 500);
+            return returnMessage(false, $e->getMessage(), null, 'server_error');
         }
     }
 

@@ -21,7 +21,7 @@ class TeacherRequest extends FormRequest
             $rules = [
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'email', 'unique:users,email'],
-                'phone' => ['required', 'string', 'unique:users,phone'],
+                'phone' => ['nullable', 'string', 'unique:users,phone'],
                 'password' => ['required', 'string', 'min:6'],
                 'gender' => ['required', 'in:m,f'],
                 'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],

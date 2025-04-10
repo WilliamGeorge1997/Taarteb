@@ -34,7 +34,7 @@ class AttendanceService
         $session = Session::find($data['session_id']);
         $teacherTakenAttendance = auth('user')->user();
         $teacherTakenAttendanceProfile = $teacherTakenAttendance->teacherProfile;
-        if ($session->is_final == 1) {
+        if ($session->is_final == 1 || $session->session_number == 1) {
             foreach ($data['attendance'] as $attendance) {
                 $existingAttendance = Attendance::where('session_id', $data['session_id'])
                     ->where('student_id', $attendance['student_id'])

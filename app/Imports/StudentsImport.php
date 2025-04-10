@@ -27,13 +27,12 @@ class StudentsImport implements ToCollection, WithHeadingRow
                     'email' => ['required', 'email', 'unique:students,email', 'unique:students,parent_email', 'different:parent_email'],
                     'identity_number' => ['required'],
                     'gender' => ['required', 'in:m,f'],
-                    'parent_email' => ['required', 'email', 'unique:students,parent_email', 'unique:students,email', 'different:email'],
+                    'parent_email' => ['nullable', 'email', 'unique:students,parent_email', 'unique:students,email', 'different:email'],
                     'parent_phone' => ['required'],
                 ];
 
                 // Add rules based on user role
                 if (auth('user')->user()->hasRole('Super Admin')) {
-                    dd('super');
                     $rules['school_id'] = ['required', 'exists:schools,id'];
                     $rules['grade_id'] = ['required', 'exists:grades,id', new GradeBelongToSchool($row['grade_id'], $row['school_id'])];
                     $rules['class_id'] = ['required', 'exists:classes,id', new ClassBelongToSchool($row['class_id'], $row['school_id']), new MaxStudents($row['class_id'])];
@@ -62,7 +61,7 @@ class StudentsImport implements ToCollection, WithHeadingRow
                     'gender' => $row['gender'],
                     'email' => $row['email'],
                     'identity_number' => $row['identity_number'],
-                    'parent_email' => $row['parent_email'],
+                    'parent_email' => $row['parent_email'] ?? null,
                     'parent_phone' => $row['parent_phone'],
                     'grade_id' => $row['grade_id'],
                     'class_id' => $row['class_id'],
@@ -77,7 +76,6 @@ class StudentsImport implements ToCollection, WithHeadingRow
                 } elseif (auth('user')->user()->hasRole('School Manager')) {
                     $data['school_id'] = auth('user')->user()->school_id;
                 }
-                // Create student if validation passes
 
                 Student::create($data);
             }
