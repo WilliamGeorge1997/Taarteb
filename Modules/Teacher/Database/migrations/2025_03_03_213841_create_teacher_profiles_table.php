@@ -18,8 +18,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class)->unique()->constrained()->cascadeOnDelete();
             $table->enum('gender', ['m', 'f']);
-            $table->foreignIdFor(Grade::class)->nullable()->index()->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Subject::class)->nullable()->index()->constrained()->cascadeOnDelete();
+            // $table->foreignIdFor(Grade::class)->nullable()->index()->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

@@ -19,9 +19,10 @@ class SubjectRequest extends FormRequest
         if ($this->isMethod('POST')) {
             $rules = [
                 'name' => ['required', 'string', 'max:255'],
-                'grade_id' => auth('user')->user()->hasRole('School Manager') ?
-                    ['required', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), auth('user')->user()->school_id)] :
-                    ['required', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), $this->input('school_id'))],
+                'grade_ids' => ['required', 'array'],
+                'grade_ids.*' => auth('user')->user()->hasRole('School Manager') ?
+                    ['required', 'exists:grades,id', new GradeBelongToSchool(auth('user')->user()->school_id)] :
+                    ['required', 'exists:grades,id', new GradeBelongToSchool($this->input('school_id'))],
                 'semester' => ['required', 'in:first,second'],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
@@ -35,8 +36,8 @@ class SubjectRequest extends FormRequest
             $rules = [
                 'name' => ['nullable', 'string', 'max:255'],
                 'grade_id' => auth('user')->user()->hasRole('School Manager') ?
-                    ['nullable', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), auth('user')->user()->school_id)] :
-                    ['nullable', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), $this->input('school_id'))],
+                    ['nullable', 'exists:grades,id', new GradeBelongToSchool(auth('user')->user()->school_id)] :
+                    ['nullable', 'exists:grades,id', new GradeBelongToSchool($this->input('school_id'))],
                 'semester' => ['nullable', 'in:first,second'],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
@@ -57,8 +58,10 @@ class SubjectRequest extends FormRequest
         return [
             'name' => 'Name',
             'school_id' => 'School',
-            'grade_id' => 'Grade',
+            'grade_ids' => 'Grades',
+            'grade_ids.*' => 'Grade',
             'semester' => 'Semester',
+            'grade_id' => 'Grade',
         ];
     }
 

@@ -19,7 +19,7 @@ class TeacherResource extends JsonResource
             'image' => $this->teacher->image,
             'gender' => $this->gender,
             'grade' => $this->grade->name,
-            'subject' => $this->subject->name,
+            'subjects' => $this->subjects,
             'school' => $this->teacher->school->name,
             'created_at' => $this->created_at->format('Y-m-d h:i A'),
             'updated_at' => $this->updated_at->format('Y-m-d h:i A'),

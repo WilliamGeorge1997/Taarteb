@@ -8,19 +8,19 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class SubjectBelongToSchool implements ValidationRule
 {
-    private $subjectId;
     private $schoolId;
-    public function __construct($subjectId, $schoolId)
+
+    public function __construct($schoolId)
     {
-        $this->subjectId = $subjectId;
         $this->schoolId = $schoolId;
     }
+
     /**
      * Run the validation rule.
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $subject = Subject::find($this->subjectId);
+        $subject = Subject::find($value);
         if (!$subject) {
             $fail('The subject does not exist.');
             return;

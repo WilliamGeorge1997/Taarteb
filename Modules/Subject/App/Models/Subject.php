@@ -7,6 +7,7 @@ use Modules\Grade\App\Models\Grade;
 use Modules\School\App\Models\School;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Modules\Teacher\App\Models\TeacherProfile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Subject extends Model
@@ -16,7 +17,7 @@ class Subject extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['name' , 'grade_id', 'school_id', 'semester'];
+    protected $fillable = ['name', 'grade_id', 'school_id', 'semester'];
 
     protected $hidden = ['created_at', 'updated_at'];
 
@@ -41,13 +42,19 @@ class Subject extends Model
         return $this->belongsTo(School::class);
     }
 
+    public function teachers()
+    {
+        return $this->belongsToMany(TeacherProfile::class, 'teacher_subject', 'subject_id', 'teacher_id');
+    }
+
     //Helper
-    public function scopeAvailable($query){
-        if(auth('user')->check()){
+    public function scopeAvailable($query)
+    {
+        if (auth('user')->check()) {
             $admin = auth('user')->user();
-            if($admin->hasRole('Super Admin')){
+            if ($admin->hasRole('Super Admin')) {
             }
-            if($admin->hasRole('School Manager')){
+            if ($admin->hasRole('School Manager')) {
                 return $query->where('school_id', $admin->school_id);
             }
         }

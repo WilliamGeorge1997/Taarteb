@@ -35,8 +35,15 @@ class SubjectService
 
     function create($data)
     {
-        $subject = Subject::create($data);
-        return $subject;
+        $result = [];
+        if (isset($data['grade_ids']) && count($data['grade_ids']) > 0) {
+            foreach ($data['grade_ids'] as $gradeId) {
+                $data['grade_id'] = $gradeId;
+                $subject = Subject::create($data);
+                $result[] = $subject;
+            }
+        }
+        return $result;
     }
 
     function update($subject, $data)

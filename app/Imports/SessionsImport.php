@@ -39,7 +39,7 @@ class SessionsImport implements ToCollection, WithHeadingRow
                         new SessionLimit($row['class_id'], $row['semester'], $row['year'], $row['day'])
                     ];
                     $rules['subject_id'] = ['required', 'exists:subjects,id',
-                        new SubjectBelongToSchool($row['subject_id'], $row['school_id'])
+                        new SubjectBelongToSchool($row['school_id'])
                     ];
                     $rules['teacher_id'] = ['required', 'exists:teacher_profiles,id',
                         new TeacherBelongToSchool($row['teacher_id'], $row['school_id'])
@@ -52,7 +52,7 @@ class SessionsImport implements ToCollection, WithHeadingRow
                         new SessionLimit($row['class_id'], $row['semester'], $row['year'], $row['day'])
                     ];
                     $rules['subject_id'] = ['required', 'exists:subjects,id',
-                        new SubjectBelongToSchool($row['subject_id'], $schoolId)
+                        new SubjectBelongToSchool($schoolId)
                     ];
                     $rules['teacher_id'] = ['required', 'exists:teacher_profiles,id',
                         new TeacherBelongToSchool($row['teacher_id'], $schoolId)

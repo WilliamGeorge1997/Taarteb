@@ -29,8 +29,8 @@ class SessionStoreRequest extends FormRequest
                     ['required', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), auth('user')->user()->school_id), new SessionLimit($this->input('class_id'), $this->input('semester'), $this->input('year'), $this->input('day'))] :
                     ['required', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), $this->input('school_id')), new SessionLimit($this->input('class_id'), $this->input('semester'), $this->input('year'), $this->input('day'))],
                 'subject_id' => auth('user')->user()->hasRole('School Manager') ?
-                    ['required', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), auth('user')->user()->school_id)] :
-                    ['required', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), $this->input('school_id'))],
+                    ['required', 'exists:subjects,id', new SubjectBelongToSchool(auth('user')->user()->school_id)] :
+                    ['required', 'exists:subjects,id', new SubjectBelongToSchool($this->input('school_id'))],
                 'teacher_id' => auth('user')->user()->hasRole('School Manager') ?
                     ['required', 'exists:teacher_profiles,id', new TeacherBelongToSchool($this->input('teacher_id'), auth('user')->user()->school_id)] :
                     ['required', 'exists:teacher_profiles,id', new TeacherBelongToSchool($this->input('teacher_id'), $this->input('school_id'))],

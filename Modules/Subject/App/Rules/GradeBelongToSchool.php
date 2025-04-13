@@ -8,11 +8,9 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class GradeBelongToSchool implements ValidationRule
 {
-    private $gradeId;
     private $schoolId;
-    public function __construct($gradeId, $schoolId)
+    public function __construct($schoolId)
     {
-        $this->gradeId = $gradeId;
         $this->schoolId = $schoolId;
     }
     /**
@@ -20,7 +18,7 @@ class GradeBelongToSchool implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $grade = Grade::find($this->gradeId);
+        $grade = Grade::find($value);
         if (!$grade) {
             $fail('The grade does not exist.');
         } else if ($grade->school_id != $this->schoolId) {

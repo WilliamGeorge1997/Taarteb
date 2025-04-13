@@ -13,7 +13,7 @@ class TeacherService
     function findAll($data = [])
     {
         $teachers = TeacherProfile::query()
-            ->with('teacher')
+            ->with(['teacher', 'subjects'])
             ->when($data['name'] ?? null, function ($query) use ($data) {
                 $query->whereHas('teacher', function ($query) use ($data) {
                     $query->where('name', 'like', '%' . $data['name'] . '%');
@@ -51,6 +51,7 @@ class TeacherService
         $teacher = User::create($teacherData);
         $teacher->assignRole('Teacher');
         $teacher->teacherProfile()->create($teacherProfileData);
+        $teacher->teacherProfile->subjects()->attach($teacherProfileData['subjects']);
         return $teacher;
     }
 
@@ -66,6 +67,8 @@ class TeacherService
             $teacherProfile->teacher()->update($teacherData);
         if ($teacherProfileData)
             $teacherProfile->update($teacherProfileData);
+        if (isset($teacherProfileData['subjects']) && count($teacherProfileData['subjects']) > 0)
+            $teacherProfile->subjects()->sync($teacherProfileData['subjects']);
         return $teacherProfile;
     }
 
@@ -85,6 +88,12 @@ class TeacherService
 
     function getTeachersBySubjectId($subjectId)
     {
-        return TeacherProfile::with('teacher')->where('subject_id', $subjectId)->available()->orderByDesc('created_at')->get();
+        return TeacherProfile::with('teacher')
+            ->whereHas('subjects', function ($query) use ($subjectId) {
+                $query->where('subject_id', $subjectId);
+            })
+            ->available()
+            ->orderByDesc('created_at')
+            ->get();
     }
 }

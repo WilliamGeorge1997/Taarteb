@@ -28,9 +28,10 @@ class TeacherRequest extends FormRequest
                 'grade_id' => auth('user')->user()->hasRole('School Manager') ?
                     ['required', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), auth('user')->user()->school_id)] :
                     ['required', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), $this->input('school_id'))],
-                'subject_id' => auth('user')->user()->hasRole('School Manager') ?
-                    ['required', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), auth('user')->user()->school_id)] :
-                    ['required', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), $this->input('school_id'))],
+                'subjects' => ['required', 'array'],
+                'subjects.*' => auth('user')->user()->hasRole('School Manager') ?
+                    ['required', 'exists:subjects,id', new SubjectBelongToSchool(auth('user')->user()->school_id)] :
+                    ['required', 'exists:subjects,id', new SubjectBelongToSchool($this->input('school_id'))],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['required', 'exists:schools,id'];
@@ -47,9 +48,10 @@ class TeacherRequest extends FormRequest
                 'password' => ['nullable', 'string', 'min:6'],
                 'gender' => ['nullable', 'in:m,f'],
                 'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
-                'subject_id' => auth('user')->user()->hasRole('School Manager') ?
-                    ['nullable', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), auth('user')->user()->school_id)] :
-                    ['nullable', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), $this->input('school_id'))],
+                'subjects' => ['nullable', 'array'],
+                'subjects.*' => auth('user')->user()->hasRole('School Manager') ?
+                    ['nullable', 'exists:subjects,id', new SubjectBelongToSchool(auth('user')->user()->school_id)] :
+                    ['nullable', 'exists:subjects,id', new SubjectBelongToSchool($this->input('school_id'))],
                 'grade_id' => auth('user')->user()->hasRole('School Manager') ?
                     ['nullable', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), auth('user')->user()->school_id)] :
                     ['nullable', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), $this->input('school_id'))],
@@ -76,7 +78,8 @@ class TeacherRequest extends FormRequest
             'password' => 'Password',
             'gender' => 'Gender',
             'image' => 'Image',
-            'subject_id' => 'Subject',
+            'subjects' => 'Subjects',
+            'subjects.*' => 'Subject',
             'grade_id' => 'Grade',
             'school_id' => 'School',
         ];
