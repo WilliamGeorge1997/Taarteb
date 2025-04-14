@@ -81,7 +81,6 @@ class AttendanceService
                 ->where('is_present', 0)
                 ->whereDate('created_at', now()->toDateString())
                 ->get();
-
             if ($studentTodayAbsences->count() > 0) {
                 ParentNotificationWhatsAppJob::dispatch($student)->onConnection('database');
             }
