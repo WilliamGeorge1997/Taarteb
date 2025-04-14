@@ -36,13 +36,13 @@ class TeachersImport implements ToCollection, WithHeadingRow
 
                 if (auth('user')->user()->hasRole('Super Admin')) {
                     $rules['school_id'] = ['required', 'exists:schools,id'];
-                    $rules['grade_id'] = ['required', 'exists:grades,id', new GradeBelongToSchool($row['grade_id'], $row['school_id'])];
+                    // $rules['grade_id'] = ['required', 'exists:grades,id', new GradeBelongToSchool($row['grade_id'], $row['school_id'])];
                     $rules['subjects'] = ['required', 'array'];
                     $rules['subjects.*'] = ['required', 'exists:subjects,id', new SubjectBelongToSchool($row['school_id'])];
                 } elseif (auth('user')->user()->hasRole('School Manager')) {
                     $schoolId = auth('user')->user()->school_id;
                     $rules['school_id'] = ['prohibited'];
-                    $rules['grade_id'] = ['required', 'exists:grades,id', new GradeBelongToSchool($row['grade_id'], $schoolId)];
+                    // $rules['grade_id'] = ['required', 'exists:grades,id', new GradeBelongToSchool($row['grade_id'], $schoolId)];
                     $rules['subjects'] = ['required', 'array'];
                     $rules['subjects.*'] = ['required', 'exists:subjects,id', new SubjectBelongToSchool($schoolId)];
                 }
@@ -80,7 +80,7 @@ class TeachersImport implements ToCollection, WithHeadingRow
                 $teacher->assignRole('Teacher');
 
                 $teacherProfileData = [
-                    'grade_id' => $row['grade_id'],
+                    // 'grade_id' => $row['grade_id'],
                     'gender' => $row['gender'],
                     'created_at' => now(),
                     'updated_at' => now(),
