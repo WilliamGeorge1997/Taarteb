@@ -17,7 +17,7 @@ class TeacherProfile extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['user_id', 'gender', 'grade_id'];
+    protected $fillable = ['user_id', 'gender'];
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -38,10 +38,10 @@ class TeacherProfile extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-    public function grade()
-    {
-        return $this->belongsTo(Grade::class);
-    }
+    // public function grade()
+    // {
+    //     return $this->belongsTo(Grade::class);
+    // }
 
     public function subjects()
     {
