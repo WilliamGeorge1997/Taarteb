@@ -18,7 +18,7 @@ class TeacherResource extends JsonResource
             'phone' => $this->teacher->phone ?? null,
             'image' => $this->teacher->image,
             'gender' => $this->gender,
-            'grade' => $this->grade->name,
+            // 'grade' => $this->grade->name,
             'subjects' => $this->subjects,
             'school' => $this->teacher->school->name,
             'created_at' => $this->created_at->format('Y-m-d h:i A'),
