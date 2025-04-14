@@ -2,7 +2,9 @@
 /node_modules
 /public/build
 /public/hot
-/public/uploads
+/public/uploads/*
+!/public/uploads/intro/
+!/public/uploads/intro/**
 /public/storage
 /storage/*.key
 /vendor

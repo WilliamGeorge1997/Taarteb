@@ -41,7 +41,7 @@ class SessionsImport implements ToCollection, WithHeadingRow
                     ];
                     $rules['subject_id'] = ['required', 'exists:subjects,id',
                         new SubjectBelongToSchool($row['school_id']),
-                         new SubjectBelongToClassGrade($row['class_id'])
+                        new SubjectBelongToClassGrade($row['class_id'])
                     ];
                     $rules['teacher_id'] = ['required', 'exists:teacher_profiles,id',
                         new TeacherBelongToSchool($row['teacher_id'], $row['school_id'])
