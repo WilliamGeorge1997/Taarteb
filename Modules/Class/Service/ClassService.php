@@ -12,8 +12,10 @@ class ClassService
         $classes = Classroom::query()
         ->when($data['grade_id'] ?? null, function ($query) use ($data) {
             return $query->where('grade_id', $data['grade_id']);
-        })
-        ->available()->with(['school:id,name', 'grade:id,name'])->orderByDesc('created_at');
+            })
+            ->available()
+            ->with(['school:id,name', 'grade:id,name,grade_category_id', 'grade.gradeCategory:id,name'])
+            ->orderByDesc('created_at');
         return getCaseCollection($classes, $data);
     }
 

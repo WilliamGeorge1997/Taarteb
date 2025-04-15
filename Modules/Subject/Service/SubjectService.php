@@ -15,7 +15,7 @@ class SubjectService
             ->when($data['semester'] ?? null, function ($query) use ($data) {
                 $query->where('semester', $data['semester']);
             })
-            ->with('grade', 'school')
+            ->with('grade.gradeCategory', 'school')
             ->available()
             ->orderByDesc('created_at');
         return getCaseCollection($subjects, $data);

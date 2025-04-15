@@ -16,6 +16,7 @@ class ClassResource extends JsonResource
             'name' => $this->name,
             'school' => $this->school->name,
             'grade' => $this->grade->name,
+            'grade_category' => $this->grade->gradeCategory->name,
             'max_students' => $this->max_students,
             'session_number' => $this->session_number,
             "created_at" => $this->created_at->format('Y-m-d h:i A'),

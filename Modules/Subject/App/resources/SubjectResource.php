@@ -15,6 +15,7 @@ class SubjectResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'grade' => $this->grade->name,
+            'grade_category' => $this->grade->gradeCategory->name,
             'school' => $this->school->name,
             'semester' => $this->semester,
             "created_at" => $this->created_at->format('Y-m-d h:i A'),
