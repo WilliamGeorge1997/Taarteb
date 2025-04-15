@@ -34,12 +34,12 @@ class StudentsImport implements ToCollection, WithHeadingRow
                 // Add rules based on user role
                 if (auth('user')->user()->hasRole('Super Admin')) {
                     $rules['school_id'] = ['required', 'exists:schools,id'];
-                    $rules['grade_id'] = ['required', 'exists:grades,id', new GradeBelongToSchool($row['grade_id'], $row['school_id'])];
+                    $rules['grade_id'] = ['required', 'exists:grades,id', new GradeBelongToSchool( $row['school_id'])];
                     $rules['class_id'] = ['required', 'exists:classes,id', new ClassBelongToSchool($row['class_id'], $row['school_id']), new MaxStudents($row['class_id'])];
                 } elseif (auth('user')->user()->hasRole('School Manager')) {
                     $schoolId = auth('user')->user()->school_id;
                     $rules['school_id'] = ['prohibited'];
-                    $rules['grade_id'] = ['required', 'exists:grades,id', new GradeBelongToSchool($row['grade_id'], $schoolId)];
+                    $rules['grade_id'] = ['required', 'exists:grades,id', new GradeBelongToSchool( $schoolId)];
                     $rules['class_id'] = ['required', 'exists:classes,id', new ClassBelongToSchool($row['class_id'], $schoolId), new MaxStudents($row['class_id'])];
                 }
 

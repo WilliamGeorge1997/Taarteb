@@ -21,8 +21,8 @@ class ClassRequest extends FormRequest
             $rules = [
                 'name' => ['required', 'string', 'max:255'],
                 'grade_id' => auth('user')->user()->hasRole('School Manager') ?
-                    ['required', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), auth('user')->user()->school_id)] :
-                    ['required', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), $this->input('school_id'))],
+                    ['required', 'exists:grades,id', new GradeBelongToSchool(auth('user')->user()->school_id)] :
+                    ['required', 'exists:grades,id', new GradeBelongToSchool($this->input('school_id'))],
                 'max_students' => ['required', 'integer'],
                 'session_number' => ['required', 'integer'],
             ];
@@ -37,8 +37,8 @@ class ClassRequest extends FormRequest
             $rules = [
                 'name' => ['nullable', 'string', 'max:255'],
                 'grade_id' => auth('user')->user()->hasRole('School Manager') ?
-                    ['nullable', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), auth('user')->user()->school_id)] :
-                    ['nullable', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), $this->input('school_id'))],
+                    ['nullable', 'exists:grades,id', new GradeBelongToSchool(auth('user')->user()->school_id)] :
+                    ['nullable', 'exists:grades,id', new GradeBelongToSchool($this->input('school_id'))],
                 'max_students' => ['nullable', 'integer'],
                 'session_number' => ['nullable', 'integer'],
             ];

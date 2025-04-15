@@ -26,8 +26,8 @@ class StudentRequest extends FormRequest
                 'identity_number' => ['required', 'string'],
                 'gender' => ['required', 'in:m,f'],
                 'grade_id' => auth('user')->user()->hasRole('School Manager') ?
-                    ['required', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), auth('user')->user()->school_id)] :
-                    ['required', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), $this->input('school_id'))],
+                    ['required', 'exists:grades,id', new GradeBelongToSchool( auth('user')->user()->school_id)] :
+                    ['required', 'exists:grades,id', new GradeBelongToSchool( $this->input('school_id'))],
                 'class_id' => auth('user')->user()->hasRole('School Manager') ?
                     ['required', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), auth('user')->user()->school_id), new MaxStudents($this->input('class_id'))] :
                     ['required', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), $this->input('school_id')), new MaxStudents($this->input('class_id'))],
@@ -57,8 +57,8 @@ class StudentRequest extends FormRequest
                 ],
                 'gender' => ['nullable', 'in:m,f'],
                 'grade_id' => auth('user')->user()->hasRole('School Manager') ?
-                    ['nullable', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), auth('user')->user()->school_id)] :
-                    ['nullable', 'exists:grades,id', new GradeBelongToSchool($this->input('grade_id'), $this->input('school_id'))],
+                    ['nullable', 'exists:grades,id', new GradeBelongToSchool( auth('user')->user()->school_id)] :
+                    ['nullable', 'exists:grades,id', new GradeBelongToSchool( $this->input('school_id'))],
                 'class_id' => auth('user')->user()->hasRole('School Manager') ?
                     ['nullable', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), auth('user')->user()->school_id), new MaxStudents($this->input('class_id'))] :
                     ['nullable', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), $this->input('school_id')), new MaxStudents($this->input('class_id'))],
