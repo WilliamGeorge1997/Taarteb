@@ -21,7 +21,9 @@ class CommonDatabaseSeeder extends Seeder
                 'description_en' => 'Say goodbye to manual roll calls and paperwork. Our smart system helps schools track attendance, notify parents instantly, and generate insightful reports—all in one place',
                 'image' => 'first-section-intro-image.jpg',
                 'section' => 'first',
-                'parent_id' => null
+                'parent_id' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             // second section
             [
@@ -31,7 +33,9 @@ class CommonDatabaseSeeder extends Seeder
                 'description_en' => 'Our system is designed to simplify attendance management for schools, teachers',
                 'image' => 'second-section-intro-image.jpg',
                 'section' => 'second',
-                'parent_id' => null
+                'parent_id' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             // second section details
             [
@@ -41,7 +45,9 @@ class CommonDatabaseSeeder extends Seeder
                 'description_en' => 'Say goodbye to manual roll calls! Teachers can mark attendance with a single click, and absences are recorded instantly.',
                 'image' => 'rectangle.jpg',
                 'section' => 'second',
-                'parent_id' => 2
+                'parent_id' => 2,
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'title_ar' => 'الوصول المتعدد والأدوار المخصصة',
@@ -50,7 +56,9 @@ class CommonDatabaseSeeder extends Seeder
                 'description_en' => 'Designed for administrators and teachers, ensuring that everyone has the right level of access to the data they need.',
                 'image' => 'rectangle.jpg',
                 'section' => 'second',
-                'parent_id' => 2
+                'parent_id' => 2,
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'title_ar' => 'الوصول المتعدد والأدوار المخصصة',
@@ -59,7 +67,9 @@ class CommonDatabaseSeeder extends Seeder
                 'description_en' => 'Access the system from anywhere, on any device with full data encryption and secure cloud storage to protect student information.',
                 'image' => 'rectangle.jpg',
                 'section' => 'second',
-                'parent_id' => 2
+                'parent_id' => 2,
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'title_ar' => 'السياسات المتعددة للحضور',
@@ -68,7 +78,9 @@ class CommonDatabaseSeeder extends Seeder
                 'description_en' => 'Schools can define their own attendance rules, late policies, and absence thresholds, making the system adaptable to different educational institutions',
                 'image' => 'rectangle.jpg',
                 'section' => 'second',
-                'parent_id' => 2
+                'parent_id' => 2,
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             // third section
             [
@@ -78,7 +90,9 @@ class CommonDatabaseSeeder extends Seeder
                 'description_en' => 'Our system is simple and efficient—just 3 easy steps',
                 'image' => null,
                 'section' => 'third',
-                'parent_id' => null
+                'parent_id' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             // third section details
             [
@@ -88,7 +102,9 @@ class CommonDatabaseSeeder extends Seeder
                 'description_en' => 'Teachers & admins sign in securely from any device.',
                 'image' => null,
                 'section' => 'third',
-                'parent_id' => 7
+                'parent_id' => 7,
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'title_ar' => 'تسجيل الحضور',
@@ -97,7 +113,9 @@ class CommonDatabaseSeeder extends Seeder
                 'description_en' => 'Easily track student attendance with a single click.',
                 'image' => null,
                 'section' => 'third',
-                'parent_id' => 7
+                'parent_id' => 7,
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
             [
                 'title_ar' => 'إخطار الأولياء وإنشاء التقارير',
@@ -106,7 +124,9 @@ class CommonDatabaseSeeder extends Seeder
                 'description_en' => 'receive real-time updates, and schools get insightful attendance reports.',
                 'image' => null,
                 'section' => 'third',
-                'parent_id' => 7
+                'parent_id' => 7,
+                'created_at' => now(),
+                'updated_at' => now(),
             ],
         ];
         Intro::insert($intros);
