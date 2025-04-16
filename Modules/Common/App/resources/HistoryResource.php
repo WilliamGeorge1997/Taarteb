@@ -18,6 +18,7 @@ class HistoryResource extends JsonResource
             'semester' => $this->semester,
             'year' => $this->year,
             'student' => $this->student_name,
+            'identity_number' => $this->student->identity_number,
             'subject' => $this->subject_name,
             'class' => $this->class_name,
             'teacher' => $this->teacher_name,

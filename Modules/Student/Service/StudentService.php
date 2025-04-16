@@ -21,7 +21,7 @@ class StudentService
             })
             ->availableAll()
             ->with('grade.gradeCategory', 'school')
-            ->orderByDesc('created_at');
+            ->orderByDesc('id');
         return getCaseCollection($students, $data);
     }
 
