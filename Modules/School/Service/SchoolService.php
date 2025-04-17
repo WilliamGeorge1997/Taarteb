@@ -2,10 +2,12 @@
 
 namespace Modules\School\Service;
 
-use Modules\Common\Helpers\UploadHelper;
+use Exception;
 use Modules\User\App\Models\User;
-use Modules\School\App\Models\School;
 use Illuminate\Support\Facades\File;
+use Modules\School\App\Models\School;
+use Modules\Common\Helpers\UploadHelper;
+
 class SchoolService
 {
     use UploadHelper;
@@ -91,5 +93,17 @@ class SchoolService
         $school = $this->findById($id);
         $school->is_active = !$school->is_active;
         $school->save();
+    }
+
+    function updateSchoolSettings($data)
+    {
+        $school = $this->findById(auth('user')->user()->school_id);
+        if (!$school) {
+            throw new Exception('School not found');
+        }
+        $school->settings()->updateOrCreate(
+            ['school_id' => $school->id],
+            $data
+        );
     }
 }

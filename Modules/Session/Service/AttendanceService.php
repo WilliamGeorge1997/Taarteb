@@ -2,6 +2,7 @@
 
 namespace Modules\Session\Service;
 
+use Modules\School\App\Models\School;
 use Modules\Session\App\Models\Session;
 use Modules\Student\App\Models\Student;
 use Modules\Session\App\Models\Attendance;
@@ -33,6 +34,7 @@ class AttendanceService
     {
         $session = Session::find($data['session_id']);
         $teacherTakenAttendance = auth('user')->user();
+        $schoolSettings = School::find($teacherTakenAttendance->school_id)->settings;
         $teacherTakenAttendanceProfile = $teacherTakenAttendance->teacherProfile;
         if ($session->is_final == 1 || $session->session_number == 1) {
             foreach ($data['attendance'] as $attendance) {
@@ -49,7 +51,9 @@ class AttendanceService
                         'teacher_id' => $teacherTakenAttendanceProfile->id,
                     ]);
                     saveHistory($data['session_id'], $attendance, $teacherTakenAttendance, $teacherTakenAttendanceProfile);
-                    $this->parentNotificationWhatsApp($attendance['student_id']);
+                    if ($schoolSettings) {
+                        $this->parentNotificationWhatsApp($attendance['student_id'], $schoolSettings);
+                    }
                 }
             }
         } else {
@@ -71,7 +75,7 @@ class AttendanceService
             }
         }
     }
-    function parentNotificationWhatsApp($studentId)
+    function parentNotificationWhatsApp($studentId, $schoolSettings)
     {
         $student = Student::find($studentId);
         if ($student->parent_phone) {
@@ -82,7 +86,7 @@ class AttendanceService
                 ->whereDate('created_at', now()->toDateString())
                 ->get();
             if ($studentTodayAbsences->count() > 0) {
-                ParentNotificationWhatsAppJob::dispatch($student)->onConnection('database');
+                ParentNotificationWhatsAppJob::dispatch($student, $schoolSettings)->onConnection('database');
             }
         }
     }

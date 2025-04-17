@@ -11,6 +11,7 @@ use Modules\Session\App\Models\Session;
 use Modules\Student\App\Models\Student;
 use Modules\Subject\App\Models\Subject;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Modules\School\App\Models\SchoolSetting;
 use Modules\Teacher\App\Models\TeacherProfile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -73,5 +74,9 @@ class School extends Model
     public function sessions()
     {
         return $this->hasMany(Session::class);
+    }
+    public function settings()
+    {
+        return $this->hasOne(SchoolSetting::class);
     }
 }

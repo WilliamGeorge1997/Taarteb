@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Modules\School\App\Http\Controllers\Api\SchoolController;
+use Modules\School\App\Http\Controllers\Api\SchoolSettingController;
 
 /*
     |--------------------------------------------------------------------------
@@ -17,3 +18,4 @@ use Modules\School\App\Http\Controllers\Api\SchoolController;
 
 Route::apiResource('schools',SchoolController::class);
 Route::post('schools/import', [SchoolController::class, 'importSchools']);
+Route::post('schools/settings', [SchoolSettingController::class, 'updateSchoolSettings']);

@@ -8,12 +8,13 @@ use Illuminate\Support\Facades\Log;
 class WhatsAppService
 {
     protected $client;
-
-    public function __construct()
+    protected $schoolSettings;
+    public function __construct($schoolSettings)
     {
-        $token = env('ULTRAMSG_TOKEN');
-        $instanceId = env('ULTRAMSG_INSTANCE_ID');
-
+        // $token = env('ULTRAMSG_TOKEN');
+        // $instanceId = env('ULTRAMSG_INSTANCE_ID');
+        $token = $schoolSettings->ultramsg_token;
+        $instanceId = $schoolSettings->ultramsg_instance_id;
         $this->client = new WhatsAppApi($token, $instanceId);
     }
 
