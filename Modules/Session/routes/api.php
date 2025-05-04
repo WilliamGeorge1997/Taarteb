@@ -16,7 +16,8 @@ use Modules\Session\App\Http\Controllers\Api\AttendanceController;
     |
 */
 
-Route::apiResource('sessions', SessionController::class)->only(['index', 'store']);
+Route::delete('sessions/delete-multiple', [SessionController::class, 'deleteMultiple']);
+Route::apiResource('sessions', SessionController::class)->only(['index', 'store', 'destroy']);
 Route::post('sessions/import', [SessionController::class, 'importSessions']);
 Route::post('sessions/{session}', [SessionController::class, 'update']);
 Route::apiResource('attendances', AttendanceController::class);

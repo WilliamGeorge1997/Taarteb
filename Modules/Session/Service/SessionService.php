@@ -49,7 +49,11 @@ class SessionService
     {
         $session->delete();
     }
-
+    function deleteMultiple(array $ids)
+    {
+        Session::whereIn('id', $ids)->delete();
+    }
+    
     function getSession($data){
         $session = Session::where('class_id', $data['class_id'])
             ->where('day', $data['day'])

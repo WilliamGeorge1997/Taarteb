@@ -24,6 +24,26 @@ function returnMessage(bool $status = false, ?string $message = null, mixed $dat
         getStatusCode($statusCode)
     );
 }
+/**
+ * Returns a JSON response for unauthorized access
+ *
+ * @param bool $status Whether the operation was successful (typically false)
+ * @param string|null $message Response message
+ * @param mixed $data Response data
+ * @param string $statusCode HTTP status code identifier
+ * @return JsonResponse
+ */
+function returnUnauthorizeMessage(bool $status = false, ?string $message = null, mixed $data = null, string $statusCode = 'unauthorized'): JsonResponse
+{
+    return new JsonResponse(
+        [
+            'status' => $status,
+            'message' => $message ?? 'Unauthorized access',
+            'data' => $data
+        ],
+        getStatusCode($statusCode)
+    );
+}
 
 /**
  * Returns a JSON response with status, message, and errors

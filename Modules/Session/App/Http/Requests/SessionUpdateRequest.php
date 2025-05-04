@@ -28,8 +28,8 @@ class SessionUpdateRequest extends FormRequest
                 ['nullable', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), auth('user')->user()->school_id)] :
                 ['nullable', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), $this->input('school_id'))],
             'subject_id' => auth('user')->user()->hasRole('School Manager') ?
-                ['nullable', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), auth('user')->user()->school_id)] :
-                ['nullable', 'exists:subjects,id', new SubjectBelongToSchool($this->input('subject_id'), $this->input('school_id'))],
+                ['nullable', 'exists:subjects,id', new SubjectBelongToSchool(auth('user')->user()->school_id)] :
+                ['nullable', 'exists:subjects,id', new SubjectBelongToSchool($this->input('school_id'))],
             'teacher_id' => auth('user')->user()->hasRole('School Manager') ?
                 ['nullable', 'exists:teacher_profiles,id', new TeacherBelongToSchool($this->input('teacher_id'), auth('user')->user()->school_id)] :
                 ['nullable', 'exists:teacher_profiles,id', new TeacherBelongToSchool($this->input('teacher_id'), $this->input('school_id'))],
