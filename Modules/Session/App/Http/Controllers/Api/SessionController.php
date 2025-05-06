@@ -28,7 +28,7 @@ class SessionController extends Controller
         $this->middleware('permission:Index-session', ['only' => ['index']]);
         $this->middleware('permission:Create-session', ['only' => ['store', 'importSessions']]);
         $this->middleware('permission:Edit-session', ['only' => ['update', 'activate']]);
-        $this->middleware('permission:Delete-session', ['only' => ['destroy']]);
+        $this->middleware('permission:Delete-session', ['only' => ['destroy','deleteMultiple']]);
         $this->sessionService = $sessionService;
     }
     public function index(Request $request)
