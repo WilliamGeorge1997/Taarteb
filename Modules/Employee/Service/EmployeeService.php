@@ -1,0 +1,59 @@
+<?php
+
+namespace Modules\Employee\Service;
+
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
+use Modules\Common\Helpers\UploadHelper;
+use Modules\Employee\App\Models\Employee;
+
+class EmployeeService
+{
+    use UploadHelper;
+
+
+    public function create($data)
+    {
+        if (request()->hasFile('image')) {
+            $image = request()->file('image');
+            $imageName = $this->upload($image, 'employee');
+            $data['image'] = $imageName;
+        }
+        $employee = Employee::create($data);
+        $role = Role::where('name', ucwords($data['role']))->first();
+        $employee->assignRole($role);
+        return $employee;
+    }
+
+    public function changePassword($data){
+        $employee = auth('employee')->user();
+        $employee->update([
+            'password' => Hash::make($data['new_password'])
+        ]);
+    }
+
+
+    public function updateProfile($data)
+    {
+        $employee = auth('employee')->user();
+
+        if (request()->hasFile('image')) {
+            if ($employee->image) {
+                File::delete(public_path('uploads/employee/' . $this->getImageName('employee', $employee->image)));
+            }
+            $image = request()->file('image');
+            $imageName = $this->upload($image, 'employee');
+            $data['image'] = $imageName;
+        }
+
+        if ($employee->hasRole('School Manager')) {
+            $employee->update($data);
+            if ($data['name']) {
+                $employee->school()->update(['name' => $data['name']]);
+            }
+        } else {
+            $employee->update($data);
+        }
+    }
+}

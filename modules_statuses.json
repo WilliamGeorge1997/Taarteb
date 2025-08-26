@@ -8,5 +8,6 @@
     "Grade": true,
     "Classroom": true,
     "User": true,
-    "Session": true
+    "Session": true,
+    "Employee": true
 }

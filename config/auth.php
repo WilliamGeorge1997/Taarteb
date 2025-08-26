@@ -41,6 +41,11 @@ return [
             'driver' => 'jwt',
             'provider' => 'users',
         ],
+
+        'employee' => [
+            'driver' => 'jwt',
+            'provider' => 'employees',
+        ],
     ],
 
 
@@ -66,7 +71,10 @@ return [
             'driver' => 'eloquent',
             'model' => \Modules\User\App\Models\User::class,
         ],
-
+        'employees' => [
+            'driver' => 'eloquent',
+            'model' => \Modules\Employee\App\Models\Employee::class,
+        ],
     ],
 
     /*
@@ -91,6 +99,12 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'employees' => [
+            'provider' => 'employees',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
