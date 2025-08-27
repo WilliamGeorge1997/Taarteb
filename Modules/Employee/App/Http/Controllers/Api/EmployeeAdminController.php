@@ -3,6 +3,7 @@
 namespace Modules\Employee\App\Http\Controllers\Api;
 
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Modules\Employee\DTO\EmployeeDto;
 use Modules\Employee\Service\EmployeeService;
@@ -30,5 +31,12 @@ class EmployeeAdminController extends Controller
             DB::rollBack();
             return returnMessage(false, $e->getMessage(), null, 'error');
         }
+    }
+
+    public function employeeRoles()
+    {
+        $roles = ['Financial Director', 'Sales Employee', 'Purchasing Employee', 'Salaries Employee', 'Maintenance Employee'];
+        $employeeRoles = Role::select('id', 'name')->whereIn('name', $roles)->orderBy('id')->get();
+        return returnMessage(true, 'Employee Roles', $employeeRoles);
     }
 }

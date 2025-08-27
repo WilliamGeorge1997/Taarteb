@@ -6,9 +6,18 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-
-class EmployeeRequest extends FormRequest
+class EmployeeLoginRequest extends FormRequest
 {
+    /**
+     * Get the credentials for authentication.
+     *
+     * @return array<string, mixed>
+     */
+    public function credentials(): array
+    {
+        return $this->only(['email', 'password']);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -17,12 +26,8 @@ class EmployeeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:employees,email',
-            'phone' => 'sometimes|nullable|string|max:255|unique:employees,phone',
-            'password' => 'required|string|min:6',
-            'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'role_id' => 'required|exists:roles,id',
+            'email' => ['required', 'email', 'exists:employees,email'],
+            'password' => ['required'],
         ];
     }
 
@@ -32,12 +37,8 @@ class EmployeeRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'name' => 'Name',
             'email' => 'Email Address',
-            'phone' => 'Phone Number',
             'password' => 'Password',
-            'image' => 'Image',
-            'role_id' => 'Role',
         ];
     }
 

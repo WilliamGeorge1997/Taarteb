@@ -11,7 +11,7 @@ class EmployeeDto
     public $email;
     public $password;
     public $school_id;
-    public $role;
+    public $role_id;
 
     public function __construct($request)
     {
@@ -24,8 +24,8 @@ class EmployeeDto
         if ($request->get('password'))
             $this->password = Hash::make($request->get('password'));
         $this->school_id = auth('user')->user()->school_id;
-        if ($request->get('role'))
-            $this->role = $request->get('role');
+        if ($request->get('role_id'))
+            $this->role_id = $request->get('role_id');
     }
 
     public function dataFromRequest()
@@ -39,8 +39,8 @@ class EmployeeDto
             unset($data['email']);
         if ($this->password == null)
             unset($data['password']);
-        if ($this->role == null)
-            unset($data['role']);
+        if ($this->role_id == null)
+            unset($data['role_id']);
         return $data;
     }
 }

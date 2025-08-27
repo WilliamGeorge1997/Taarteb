@@ -17,7 +17,7 @@ class Employee extends Authenticatable implements JWTSubject
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['name', 'phone', 'email', 'image', 'password', 'school_id'];
+    protected $fillable = ['name', 'phone', 'email', 'image', 'password', 'school_id', 'is_active'];
     protected $hidden = ['password', 'remember_token'];
     public function getActivitylogOptions(): LogOptions
     {
@@ -44,6 +44,10 @@ class Employee extends Authenticatable implements JWTSubject
         }
     }
 
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', 1);
+    }
 
     public function school()
     {

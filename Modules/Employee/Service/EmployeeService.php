@@ -21,7 +21,7 @@ class EmployeeService
             $data['image'] = $imageName;
         }
         $employee = Employee::create($data);
-        $role = Role::where('name', ucwords($data['role']))->first();
+        $role = Role::findOrFail($data['role_id']);
         $employee->assignRole($role);
         return $employee;
     }

@@ -6,9 +6,9 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-
-class EmployeeRequest extends FormRequest
+class EmployeeChangePasswordRequest extends FormRequest
 {
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -17,12 +17,8 @@ class EmployeeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:employees,email',
-            'phone' => 'sometimes|nullable|string|max:255|unique:employees,phone',
-            'password' => 'required|string|min:6',
-            'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'role_id' => 'required|exists:roles,id',
+            'current_password' => ['required', 'current_password'],
+            'new_password' => ['required', 'string', 'min:6' ,'confirmed']
         ];
     }
 
@@ -32,12 +28,9 @@ class EmployeeRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'name' => 'Name',
-            'email' => 'Email Address',
-            'phone' => 'Phone Number',
-            'password' => 'Password',
-            'image' => 'Image',
-            'role_id' => 'Role',
+            'current_password' => 'Old Password',
+            'new_password' => 'New Password',
+            'new_password_confirmation' => 'New Password Confirmation',
         ];
     }
 

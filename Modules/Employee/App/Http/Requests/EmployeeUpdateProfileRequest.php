@@ -6,8 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-
-class EmployeeRequest extends FormRequest
+class EmployeeUpdateProfileRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -16,13 +15,13 @@ class EmployeeRequest extends FormRequest
      */
     public function rules(): array
     {
+        $userId = auth('user')->id();
         return [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:employees,email',
-            'phone' => 'sometimes|nullable|string|max:255|unique:employees,phone',
-            'password' => 'required|string|min:6',
-            'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'role_id' => 'required|exists:roles,id',
+            'name' => ['nullable', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:15', 'unique:users,phone,' . $userId],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
+            'gender' => [auth('user')->user()->hasRole('Teacher') ? 'nullable' : 'prohibited', 'string', 'in:m,f'],
+            'email' => ['nullable', 'email', 'unique:users,email,' . $userId],
         ];
     }
 
@@ -33,11 +32,10 @@ class EmployeeRequest extends FormRequest
     {
         return [
             'name' => 'Name',
-            'email' => 'Email Address',
-            'phone' => 'Phone Number',
-            'password' => 'Password',
+            'phone' => 'Phone',
             'image' => 'Image',
-            'role_id' => 'Role',
+            'gender' => 'Gender',
+            'email' => 'Email',
         ];
     }
 

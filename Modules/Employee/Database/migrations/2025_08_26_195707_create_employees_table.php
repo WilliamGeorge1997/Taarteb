@@ -15,11 +15,12 @@ return new class extends Migration {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('phone')->unique();
-            $table->string('email')->unique()->nullable();
+            $table->string('phone')->unique()->nullable();
+            $table->string('email')->unique();
             $table->string('password');
             $table->string('image')->nullable();
             $table->foreignIdFor(School::class)->index()->constrained()->cascadeOnDelete();
+            $table->boolean('is_active')->default(1);
             $table->timestamps();
         });
         DB::table('roles')->insert([
