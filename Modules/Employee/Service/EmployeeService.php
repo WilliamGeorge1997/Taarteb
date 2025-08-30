@@ -13,7 +13,7 @@ class EmployeeService
     use UploadHelper;
     public function findAll($data, $relations)
     {
-        $employees = Employee::query();
+        $employees = Employee::query()->latest();
         return getCaseCollection($employees, $data);
     }
 

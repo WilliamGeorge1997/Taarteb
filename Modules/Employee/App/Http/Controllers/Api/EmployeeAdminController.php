@@ -2,9 +2,9 @@
 
 namespace Modules\Employee\App\Http\Controllers\Api;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
-use Illuminate\Http\Client\Request;
 use App\Http\Controllers\Controller;
 use Modules\Employee\DTO\EmployeeDto;
 use Modules\Employee\Service\EmployeeService;

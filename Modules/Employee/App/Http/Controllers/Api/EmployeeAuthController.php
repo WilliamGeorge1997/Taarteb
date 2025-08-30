@@ -31,7 +31,7 @@ class EmployeeAuthController extends Controller
                 return returnValidationMessage(false, 'Unauthorized', ['password' => 'wrong credentials'], 'unauthorized');
             }
 
-            if (auth('user')->user()['is_active'] == 0) {
+            if (auth('employee')->user()['is_active'] == 0) {
                 return returnMessage(false, 'In-Active User Verification Required', null, 'temporary_redirect');
             }
 

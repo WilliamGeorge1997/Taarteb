@@ -15,7 +15,7 @@ use Modules\Employee\App\Http\Controllers\Api\EmployeeAdminController;
     |
 */
 Route::group(['prefix' => "admin"], function () {
-    Route::apiResource("employees", EmployeeAdminController::class)->only(['store']);
+    Route::apiResource("employees", EmployeeAdminController::class)->only(['index','store']);
 
     //Roles
     Route::get("employee-roles", [EmployeeAdminController::class, "employeeRoles"]);
