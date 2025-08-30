@@ -13,7 +13,7 @@ class EmployeeService
     use UploadHelper;
     public function findAll($data, $relations)
     {
-        $employees = Employee::query()->latest();
+        $employees = Employee::query()->available()->latest();
         return getCaseCollection($employees, $data);
     }
 
@@ -28,7 +28,7 @@ class EmployeeService
         $role = Role::findOrFail($data['role_id']);
         $employee->assignRole($role);
         return $employee;
-    }
+}
 
     public function changePassword($data){
         $employee = auth('employee')->user();
