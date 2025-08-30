@@ -4,6 +4,7 @@ namespace Modules\Employee\App\Http\Controllers\Api;
 
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
+use Illuminate\Http\Client\Request;
 use App\Http\Controllers\Controller;
 use Modules\Employee\DTO\EmployeeDto;
 use Modules\Employee\Service\EmployeeService;
@@ -17,6 +18,12 @@ class EmployeeAdminController extends Controller
         $this->middleware('auth:user');
         $this->middleware('role:School Manager');
         $this->employeeService = $employeeService;
+    }
+    public function index(Request $request)
+    {
+        $data = $request->all();
+        $employees = $this->employeeService->findAll($data, []);
+        return returnMessage(true, 'Employees', $employees);
     }
 
     public function store(EmployeeRequest $request)

@@ -11,7 +11,11 @@ use Modules\Employee\App\Models\Employee;
 class EmployeeService
 {
     use UploadHelper;
-
+    public function findAll($data, $relations)
+    {
+        $employees = Employee::query();
+        return getCaseCollection($employees, $data);
+    }
 
     public function create($data)
     {
