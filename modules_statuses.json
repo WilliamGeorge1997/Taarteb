@@ -9,5 +9,6 @@
     "Classroom": true,
     "User": true,
     "Session": true,
-    "Employee": true
+    "Employee": true,
+    "Purchase": true
 }

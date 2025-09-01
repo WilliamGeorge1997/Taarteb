@@ -1,15 +1,22 @@
 <?php
 
-namespace Modules\Employee\App\Http\Requests;
+namespace Modules\Purchase\App\Http\Requests;
 
-use Spatie\Permission\Models\Role;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-
-class EmployeeRequest extends FormRequest
+class PurchaseRequest extends FormRequest
 {
+    private $purchase;
+    public function prepareForValidation()
+    {
+        if ($this->route()->hasParameter('purchase')) {
+            $this->purchase = $this->route('purchase');
+        } else {
+            $this->purchase = null;
+        }
+    }
     /**
      * Get the validation rules that apply to the request.
      *
@@ -17,15 +24,12 @@ class EmployeeRequest extends FormRequest
      */
     public function rules(): array
     {
-        $roles_ids = Role::whereIn('name', ['Financial Director', 'Sales Employee', 'Purchasing Employee', 'Salaries Employee', 'Maintenance Employee'])->pluck('id');
-        return [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:employees,email',
-            'phone' => 'sometimes|nullable|string|max:255|unique:employees,phone',
-            'password' => 'required|string|min:6',
-            'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'role_id' => 'required|exists:roles,id|in:' . $roles_ids->implode(','),
+        $rules = [
+            'description' => ['required', 'string'],
+            'date' => ['required', 'date'],
         ];
+        $rules['image'] = [$this->purchase ? 'nullable' : 'required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'];
+        return $rules;
     }
 
     /**
@@ -34,12 +38,9 @@ class EmployeeRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'name' => 'Name',
-            'email' => 'Email Address',
-            'phone' => 'Phone Number',
-            'password' => 'Password',
+            'description' => 'Description',
             'image' => 'Image',
-            'role_id' => 'Role',
+            'date' => 'Date',
         ];
     }
 
@@ -48,8 +49,26 @@ class EmployeeRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        if ($this->purchase) {
+            $employee = auth('employee')->user();
+            if ($this->purchase->employee_id !== $employee->id) {
+                throw new HttpResponseException(
+                    returnMessage(
+                        false,
+                        'You are not authorized to update this purchase',
+                        null,
+                        'unauthorized'
+                    )
+                );
+            }
+        }
+
         return true;
     }
+
+    /**
+     * Configure the validator instance.
+     */
 
     /**
      * Handle a failed validation attempt.
