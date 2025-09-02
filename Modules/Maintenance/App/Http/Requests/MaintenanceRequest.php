@@ -1,20 +1,20 @@
 <?php
 
-namespace Modules\Purchase\App\Http\Requests;
+namespace Modules\Maintenance\App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class PurchaseRequest extends FormRequest
+class MaintenanceRequest extends FormRequest
 {
-    private $purchase;
+    private $maintenance;
     public function prepareForValidation()
     {
-        if ($this->route()->hasParameter('purchase')) {
-            $this->purchase = $this->route('purchase');
+        if ($this->route()->hasParameter('maintenance')) {
+            $this->maintenance = $this->route('maintenance');
         } else {
-            $this->purchase = null;
+            $this->maintenance = null;
         }
     }
     /**
@@ -29,7 +29,7 @@ class PurchaseRequest extends FormRequest
             'date' => ['required', 'date'],
             'price' => ['required', 'numeric', 'min:0'],
         ];
-        $rules['image'] = [$this->purchase ? 'nullable' : 'required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'];
+        $rules['image'] = [$this->maintenance ? 'nullable' : 'required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'];
         return $rules;
     }
 
@@ -51,13 +51,13 @@ class PurchaseRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        if ($this->purchase) {
+        if ($this->maintenance) {
             $employee = auth('employee')->user();
-            if ($this->purchase->employee_id !== $employee->id) {
+            if ($this->maintenance->employee_id !== $employee->id) {
                 throw new HttpResponseException(
                     returnMessage(
                         false,
-                        'You are not authorized to update this purchase',
+                        'You are not authorized to update this maintenance',
                         null,
                         'unauthorized'
                     )

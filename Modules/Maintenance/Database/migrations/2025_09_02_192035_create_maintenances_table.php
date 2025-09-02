@@ -6,13 +6,14 @@ use Illuminate\Database\Schema\Blueprint;
 use Modules\Employee\App\Models\Employee;
 use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('purchases', function (Blueprint $table) {
+        Schema::create('maintenances', function (Blueprint $table) {
             $table->id();
             $table->text('description')->nullable();
             $table->foreignIdFor(Employee::class)->nullable()->index()->constrained()->nullOnDelete();
@@ -31,6 +32,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('purchases');
+        Schema::dropIfExists('maintenances');
     }
 };

@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Purchase\DTO;
+namespace Modules\Maintenance\DTO;
 
-class PurchaseDto
+class MaintenanceDto
 {
     public $description;
     public $employee_id;

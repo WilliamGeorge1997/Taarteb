@@ -10,5 +10,6 @@
     "User": true,
     "Session": true,
     "Employee": true,
-    "Purchase": true
+    "Purchase": true,
+    "Maintenance": true
 }

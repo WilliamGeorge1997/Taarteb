@@ -13,7 +13,3 @@ use Modules\Purchase\App\Http\Controllers\PurchaseController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::group([], function () {
-    Route::resource('purchase', PurchaseController::class)->names('purchase');
-});

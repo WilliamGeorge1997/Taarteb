@@ -23,7 +23,8 @@ class EmployeeAdminController extends Controller
     public function index(Request $request)
     {
         $data = $request->all();
-        $employees = $this->employeeService->findAll($data, []);
+        $relations = ['role:id,name'];
+        $employees = $this->employeeService->findAll($data, $relations);
         return returnMessage(true, 'Employees', $employees);
     }
 

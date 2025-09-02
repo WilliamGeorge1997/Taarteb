@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Purchase\App\Models;
+namespace Modules\Maintenance\App\Models;
 
 use Spatie\Activitylog\LogOptions;
 use Modules\School\App\Models\School;
@@ -8,10 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 use Modules\Employee\App\Models\Employee;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Purchase extends Model
+class Maintenance extends Model
 {
     use HasFactory;
-
     const STATUS_PENDING = "pending";
     const STATUS_ACCEPTED = "accepted";
     const STATUS_REJECTED = "rejected";
@@ -26,7 +25,7 @@ class Purchase extends Model
             ->logAll()
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
-            ->useLogName('Purchase')
+            ->useLogName('Maintenance')
             ->dontLogIfAttributesChangedOnly(['updated_at']);
     }
     protected function serializeDate(\DateTimeInterface $date)
@@ -39,7 +38,7 @@ class Purchase extends Model
             if (filter_var($value, FILTER_VALIDATE_URL)) {
                 return $value;
             } else {
-                return asset('uploads/purchase/' . $value);
+                return asset('uploads/maintenance/' . $value);
             }
         }
     }
