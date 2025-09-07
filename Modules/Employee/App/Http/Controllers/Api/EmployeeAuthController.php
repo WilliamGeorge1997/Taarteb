@@ -83,11 +83,13 @@ class EmployeeAuthController extends Controller
      */
     protected function respondWithToken($token)
     {
+        $user = auth('employee')->user();
+        $user->role = $user->roles()->value('name');
         return returnMessage(true, 'Successfully Logged in', [
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth('employee')->factory()->getTTL() * 60,
-            'employee' => auth('employee')->user(),
+            'employee' => $user,
         ]);
     }
 }

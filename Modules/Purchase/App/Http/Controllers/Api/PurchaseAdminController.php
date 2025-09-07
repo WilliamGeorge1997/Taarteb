@@ -21,7 +21,8 @@ class PurchaseAdminController extends Controller
 
     public function index(Request $request)
     {
-        $purchases = $this->purchaseService->findAll($request->all());
+        $relations = ['employee', 'school'];
+        $purchases = $this->purchaseService->findAll($request->all(), $relations);
         return returnMessage(true, 'Purchases fetched successfully', $purchases);
     }
 

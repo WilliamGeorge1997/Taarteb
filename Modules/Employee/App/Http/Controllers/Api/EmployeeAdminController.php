@@ -8,6 +8,7 @@ use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Modules\Employee\DTO\EmployeeDto;
 use Modules\Employee\Service\EmployeeService;
+use Modules\Employee\App\resources\EmployeeResource;
 use Modules\Employee\App\Http\Requests\EmployeeRequest;
 
 class EmployeeAdminController extends Controller
@@ -23,9 +24,9 @@ class EmployeeAdminController extends Controller
     public function index(Request $request)
     {
         $data = $request->all();
-        $relations = ['role:id,name'];
+        $relations = ['roles:id,name', 'school'];
         $employees = $this->employeeService->findAll($data, $relations);
-        return returnMessage(true, 'Employees', $employees);
+        return returnMessage(true, 'Employees', EmployeeResource::collection($employees)->response()->getData(true));
     }
 
     public function store(EmployeeRequest $request)

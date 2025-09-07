@@ -65,6 +65,7 @@ class Employee extends Authenticatable implements JWTSubject
             }
         }
     }
+    
     //JWT
 
     /**
