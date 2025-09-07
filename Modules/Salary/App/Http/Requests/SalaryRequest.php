@@ -1,17 +1,17 @@
 <?php
 
-namespace Modules\Purchase\App\Http\Requests;
+namespace Modules\Salary\App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class PurchaseRequest extends FormRequest
+class SalaryRequest extends FormRequest
 {
-    private $purchase;
+    private $salary;
     public function prepareForValidation()
     {
-        $this->purchase = $this->route()->hasParameter('purchase') ? $this->route('purchase') : null;
+        $this->salary = $this->route()->hasParameter('salary') ? $this->route('salary') : null;
     }
     /**
      * Get the validation rules that apply to the request.
@@ -20,13 +20,13 @@ class PurchaseRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [
-            'description' => ['required', 'string'],
-            'date' => ['required', 'date'],
-            'price' => ['required', 'numeric', 'min:0'],
+        return [
+            'employee_id' => ['required', 'exists:employees,id'],
+            'salary' => ['required', 'numeric', 'min:0'],
+            'month' => ['required', 'integer', 'min:1', 'max:12'],
+            'year' => ['required', 'integer', 'max:65535'],
         ];
-        $rules['image'] = [$this->purchase ? 'nullable' : 'required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'];
-        return $rules;
+
     }
 
     /**
@@ -35,10 +35,10 @@ class PurchaseRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'description' => 'Description',
-            'image' => 'Image',
-            'date' => 'Date',
-            'price' => 'Price',
+            'employee_id' => 'Employee ID',
+            'salary' => 'Salary',
+            'month' => 'Month',
+            'year' => 'Year',
         ];
     }
 
@@ -47,13 +47,13 @@ class PurchaseRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        if ($this->purchase) {
+        if ($this->salary) {
             $employee = auth('employee')->user();
-            if ($this->purchase->employee_id !== $employee->id) {
+            if ($this->salary->created_by !== $employee->id) {
                 throw new HttpResponseException(
                     returnMessage(
                         false,
-                        'You are not authorized to update this purchase',
+                        'You are not authorized to update this salary',
                         null,
                         'unauthorized'
                     )

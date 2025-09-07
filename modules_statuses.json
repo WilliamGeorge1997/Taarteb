@@ -11,5 +11,6 @@
     "Session": true,
     "Employee": true,
     "Purchase": true,
-    "Maintenance": true
+    "Maintenance": true,
+    "Salary": true
 }
