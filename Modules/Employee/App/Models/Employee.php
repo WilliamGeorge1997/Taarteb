@@ -63,9 +63,14 @@ class Employee extends Authenticatable implements JWTSubject
             } else if ($admin->hasRole('School Manager')) {
                 $query->where('school_id', $admin->school_id);
             }
+        } else if (auth('employee')->check()) {
+            $employee = auth('employee')->user();
+            if ($employee->hasRole('Salaries Employee')) {
+                $query->where('school_id', $employee->school_id);
+            }
         }
     }
-    
+
     //JWT
 
     /**

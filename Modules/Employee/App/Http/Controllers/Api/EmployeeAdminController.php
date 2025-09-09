@@ -17,7 +17,7 @@ class EmployeeAdminController extends Controller
     public function __construct(EmployeeService $employeeService)
     {
         $this->middleware('auth:user');
-        $this->middleware('role:Super Admin|School Manager')->only('index');
+        $this->middleware('role:Super Admin|School Manager|Salaries Employee')->only('index');
         $this->middleware('role:School Manager')->except('index');
         $this->employeeService = $employeeService;
     }

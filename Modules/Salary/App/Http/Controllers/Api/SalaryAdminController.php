@@ -25,4 +25,6 @@ class SalaryAdminController extends Controller
         $salaries = $this->salaryService->findAll($request->all(), $relations);
         return returnMessage(true, 'Salaries fetched successfully', $salaries);
     }
+
+    
 }
