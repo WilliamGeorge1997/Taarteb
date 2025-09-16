@@ -39,4 +39,10 @@ class ExpenseService
     {
         $expense->delete();
     }
+
+    function saveExceptions($expense, $data)
+    {
+        $expense->exceptions()->syncWithoutDetaching($data['exceptions']);
+        return $expense->load('exceptions');
+    }
 }

@@ -6,6 +6,7 @@ use Spatie\Activitylog\LogOptions;
 use Modules\School\App\Models\School;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Student\App\Models\Student;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Modules\Teacher\App\Models\TeacherProfile;
@@ -60,6 +61,10 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(School::class);
     }
 
+    public function student()
+    {
+        return $this->hasOne(Student::class, 'user_id');
+    }
 
     //JWT
 

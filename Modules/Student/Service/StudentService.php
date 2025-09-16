@@ -39,6 +39,9 @@ class StudentService
 
     function create($data)
     {
+        if (request()->hasFile('application_form')) {
+            $data['application_form'] = $this->uploadFile(request()->file('application_form'), 'student/application_form');
+        }
         $student = Student::create($data);
         return $student;
     }

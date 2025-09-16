@@ -31,9 +31,17 @@ class UserAuthController extends Controller
             if (! $token = auth('user')->attempt($credentials)) {
                 return returnValidationMessage(false,'Unauthorized',['password'=>'wrong credentials'],'unauthorized');
             }
+            $user = auth('user')->user();
 
-            if (auth('user')->user()['is_active'] == 0) {
+            if ($user['is_active'] == 0) {
                 return returnMessage(false, 'In-Active User Verification Required', null, 'temporary_redirect');
+            }
+
+            if($user->hasRole('Student')) {
+                $student = $user->student;
+                if(!$student->canLogin()['status']) {
+                    return returnMessage(false, $student->canLogin()['message'], null, 'temporary_redirect');
+                }
             }
 
             return $this->respondWithToken($token);

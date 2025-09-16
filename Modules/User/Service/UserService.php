@@ -2,6 +2,7 @@
 
 namespace Modules\User\Service;
 
+use Modules\User\App\Models\User;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Modules\Common\Helpers\UploadHelper;
@@ -10,7 +11,8 @@ class UserService
 {
     use UploadHelper;
 
-    public function changePassword($data){
+    public function changePassword($data)
+    {
         $user = auth('user')->user();
         $user->update([
             'password' => Hash::make($data['new_password'])
@@ -46,5 +48,12 @@ class UserService
         } else {
             $user->update($data);
         }
+    }
+
+    public function saveStudentUser($data)
+    {
+        $user = User::create($data);
+        $user->assignRole('Student');
+        return $user;
     }
 }

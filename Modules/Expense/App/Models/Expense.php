@@ -7,6 +7,7 @@ use Spatie\Activitylog\LogOptions;
 use Modules\Grade\App\Models\Grade;
 use Modules\School\App\Models\School;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Student\App\Models\Student;
 use Modules\Grade\App\Models\GradeCategory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -51,6 +52,13 @@ class Expense extends Model
     public function grade()
     {
         return $this->belongsTo(Grade::class);
+    }
+
+    public function exceptions()
+    {
+        return $this->belongsToMany(Student::class, 'expense_student_exceptions')
+            ->withPivot('exception_price')
+            ->withTimestamps();
     }
 
     public function scopeAvailable($query)
