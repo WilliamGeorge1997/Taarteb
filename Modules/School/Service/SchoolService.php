@@ -35,6 +35,10 @@ class SchoolService
         return getCaseCollection($schools, $data);
     }
 
+    function active(){
+        return School::active()->get();
+    }
+
     function findById($id)
     {
         $school = School::findOrFail($id);

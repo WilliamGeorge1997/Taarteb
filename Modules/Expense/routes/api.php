@@ -17,5 +17,7 @@ use Modules\Expense\App\Http\Controllers\Api\ExpenseController;
 
 Route::group(['prefix' => 'admin'], function () {
     Route::apiResource('expenses', ExpenseController::class)->only(['index', 'store']);
+    Route::get('expenses/{expense}/exceptions', [ExpenseController::class, 'exceptions'])->name('expenses.exceptions.index');
     Route::post('expenses/{expense}/exceptions', [ExpenseController::class, 'storeExceptions'])->name('expenses.exceptions.store');
+    Route::post('expenses/{expense}/exceptions/update', [ExpenseController::class, 'updateExceptions'])->name('expenses.exceptions.update');
 });

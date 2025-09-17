@@ -41,15 +41,35 @@ class ExpenseController extends Controller
         }
     }
 
+    public function exceptions(Expense $expense)
+    {
+        $exceptions = $this->expenseService->findExceptions($expense);
+        return returnMessage(true, 'Exceptions fetched successfully', $exceptions);
+    }
+
     public function storeExceptions(ExpenseExceptionRequest $request, Expense $expense)
     {
-        try{
+        try {
             DB::beginTransaction();
             $data = $request->validated();
             $exceptions = $this->expenseService->saveExceptions($expense, $data);
             DB::commit();
             return returnMessage(true, 'Exceptions fetched successfully', $exceptions);
-        }catch(\Exception $e) {
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return returnMessage(false, $e->getMessage(), null, 'server_error');
+        }
+    }
+
+    public function updateExceptions(ExpenseExceptionRequest $request, Expense $expense)
+    {
+        try {
+            DB::beginTransaction();
+            $data = $request->validated();
+            $exceptions = $this->expenseService->updateExceptions($expense, $data);
+            DB::commit();
+            return returnMessage(true, 'Exceptions updated successfully', $exceptions);
+        } catch (\Exception $e) {
             DB::rollBack();
             return returnMessage(false, $e->getMessage(), null, 'server_error');
         }

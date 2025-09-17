@@ -14,6 +14,3 @@ use Modules\Expense\App\Http\Controllers\ExpenseController;
 |
 */
 
-Route::group([], function () {
-    Route::resource('expense', ExpenseController::class)->names('expense');
-});

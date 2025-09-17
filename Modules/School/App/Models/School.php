@@ -39,6 +39,10 @@ class School extends Model
         return $date->format('Y-m-d h:i A');
     }
 
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', 1);
+    }
 
     //Relations
     public function manager()

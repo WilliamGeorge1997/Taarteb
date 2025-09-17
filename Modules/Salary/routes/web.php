@@ -14,6 +14,3 @@ use Modules\Salary\App\Http\Controllers\SalaryController;
 |
 */
 
-Route::group([], function () {
-    Route::resource('salary', SalaryController::class)->names('salary');
-});

@@ -1,0 +1,36 @@
+<?php
+
+namespace Modules\Student\App\Http\Controllers\Api;
+
+use Exception;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Modules\Student\DTO\StudentFeeDto;
+use Modules\Student\Service\StudentFeeService;
+use Modules\Student\App\Http\Requests\StudentFeeRequest;
+
+class StudentFeeController extends Controller
+{
+    private $studentFeeService;
+    public function __construct(StudentFeeService $studentFeeService)
+    {
+        $this->middleware('auth:user');
+        $this->middleware('role:Student');
+        $this->studentFeeService = $studentFeeService;
+    }
+
+    public function store(StudentFeeRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+            $data = (new StudentFeeDto($request))->dataFromRequest();
+            $studentFee = $this->studentFeeService->save($data);
+            DB::commit();
+            return returnMessage(true, 'Student Fee Created Successfully', $studentFee);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return returnMessage(false, $e->getMessage(), null, 'server_error');
+        }
+    }
+
+}

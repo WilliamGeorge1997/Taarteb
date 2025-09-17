@@ -40,9 +40,25 @@ class ExpenseService
         $expense->delete();
     }
 
+    function findExceptions($expense)
+    {
+        return $expense->exceptions()->get();
+    }
+
     function saveExceptions($expense, $data)
     {
         $expense->exceptions()->syncWithoutDetaching($data['exceptions']);
+        return $expense->load('exceptions');
+    }
+
+    function updateExceptions($expense, $data)
+    {
+        foreach ($data['exceptions'] as $exception) {
+            $expense->exceptions()->updateExistingPivot(
+                $exception['student_id'],
+                ['exception_price' => $exception['exception_price']]
+            );
+        }
         return $expense->load('exceptions');
     }
 }
