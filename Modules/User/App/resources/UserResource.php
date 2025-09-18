@@ -22,6 +22,7 @@ class UserResource extends JsonResource
             "created_at" => $this->created_at->format('Y-m-d h:i A'),
             "updated_at" => $this->updated_at->format('Y-m-d h:i A'),
             'role' => $this->role,
+            'student' => $this->when($this->hasRole('Student'), $this->student),
             // 'permissions' => $this->roles->first()->permissions->groupBy('category')->map(function ($permissions) {
             //     return $permissions->pluck('name')->toArray();
             // }),

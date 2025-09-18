@@ -16,7 +16,7 @@ class ExpenseController extends Controller
     public function __construct(private ExpenseService $expenseService)
     {
         $this->middleware('auth:user');
-        $this->middleware('role:School Manager');
+        $this->middleware('role:School Manager | Financial Director');
     }
 
     public function index(Request $request)

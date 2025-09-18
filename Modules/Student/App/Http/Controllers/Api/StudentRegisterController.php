@@ -11,6 +11,7 @@ use Modules\Grade\Service\GradeService;
 use Modules\School\Service\SchoolService;
 use Modules\Student\DTO\StudentRegisterDto;
 use Modules\Student\Service\StudentService;
+use Modules\User\App\resources\UserResource;
 use Modules\Grade\Service\GradeCategoryService;
 use Modules\Student\App\Http\Requests\StudentRegisterRequest;
 
@@ -32,8 +33,9 @@ class StudentRegisterController extends Controller
             $studentUser = $this->userService->saveStudentUser($studentUserData);
             $data = (new StudentRegisterDto($request, $studentUser->id))->dataFromRequest();
             $student = $this->studentService->create($data);
+            $token = $studentUser->login();
             DB::commit();
-            return returnMessage(true, 'Student Registered Successfully', $student);
+            return returnMessage(true, 'Student Registered Successfully', $this->respondWithToken($token));
         } catch (Exception $e) {
             DB::rollBack();
             return returnMessage(false, $e->getMessage(), null, 'server_error');
@@ -57,6 +59,14 @@ class StudentRegisterController extends Controller
         $grades = (new GradeService)->findBy('grade_category_id', $grade_category_id);
         return returnMessage(true, 'Grades Fetched Successfully', $grades);
     }
-
+    protected function respondWithToken($token)
+    {
+        return returnMessage(true, 'Successfully Logged in', [
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth('user')->factory()->getTTL() * 60,
+            'user' => new UserResource(auth('user')->user()),
+        ]);
+    }
 
 }

@@ -61,4 +61,9 @@ class ExpenseService
         }
         return $expense->load('exceptions');
     }
+
+    function findStudentExpenses($student)
+    {
+        return $student->expenses()->get();
+    }
 }

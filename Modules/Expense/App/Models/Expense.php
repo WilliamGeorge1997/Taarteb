@@ -60,6 +60,7 @@ class Expense extends Model
             ->withPivot('exception_price')
             ->withTimestamps();
     }
+    
 
     public function scopeAvailable($query)
     {
