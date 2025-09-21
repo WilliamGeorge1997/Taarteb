@@ -3,6 +3,7 @@
 namespace Modules\User\Service;
 
 use Modules\User\App\Models\User;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Modules\Common\Helpers\UploadHelper;
@@ -54,6 +55,14 @@ class UserService
     {
         $user = User::create($data);
         $user->assignRole('Student');
+        return $user;
+    }
+    public function saveEmployeeUser($data)
+    {
+        $role = Role::find($data['role_id']);
+        $data['role'] = $role->name;
+        $user = User::create($data);
+        $user->assignRole($role->name);
         return $user;
     }
 }

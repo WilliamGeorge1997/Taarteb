@@ -25,7 +25,6 @@ class StudentRegisterDto
         if($request->get('grade_id')) $this->grade_id = $request->get('grade_id');
         if($request->get('school_id')) $this->school_id = $request->get('school_id');
         $this->user_id = $user_id;
-        $this->is_fee_paid = 1;
         $this->is_register = 1;
     }
 

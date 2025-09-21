@@ -22,15 +22,15 @@ Route::group(['prefix' => "admin"], function () {
 });
 
 
-Route::group([
-    'prefix' => 'employee'
-], function ($router) {
-    Route::group(['prefix' => 'auth'], function ($router) {
-        Route::post('login', [EmployeeAuthController::class, 'login']);
-        Route::post('logout', [EmployeeAuthController::class, 'logout']);
-        Route::post('refresh', [EmployeeAuthController::class, 'refresh']);
-        Route::post('me', [EmployeeAuthController::class, 'me']);
-    });
-    // Route::post('change-password', [UserController::class, 'changePassword']);
-    // Route::post('update-profile', [UserController::class, 'updateProfile']);
-});
+// Route::group([
+//     'prefix' => 'employee'
+// ], function ($router) {
+//     Route::group(['prefix' => 'auth'], function ($router) {
+//         Route::post('login', [EmployeeAuthController::class, 'login']);
+//         Route::post('logout', [EmployeeAuthController::class, 'logout']);
+//         Route::post('refresh', [EmployeeAuthController::class, 'refresh']);
+//         Route::post('me', [EmployeeAuthController::class, 'me']);
+//     });
+//     // Route::post('change-password', [UserController::class, 'changePassword']);
+//     // Route::post('update-profile', [UserController::class, 'updateProfile']);
+// });

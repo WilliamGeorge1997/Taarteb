@@ -15,6 +15,7 @@ class StudentDto
     public $grade_id;
     public $class_id;
     public $school_id;
+    public $is_fee_paid;
 
     public function __construct($request) {
         if($request->get('name')) $this->name = $request->get('name');
@@ -34,6 +35,7 @@ class StudentDto
                 $this->school_id = auth('user')->user()->school_id;
             }
         }
+        if($request->get('is_fee_paid')) $this->is_fee_paid = $request->get('is_fee_paid');
     }
 
     public function dataFromRequest()
@@ -48,6 +50,7 @@ class StudentDto
         if($this->grade_id == null) unset($data['grade_id']);
         if($this->class_id == null) unset($data['class_id']);
         if($this->school_id == null) unset($data['school_id']);
+        if($this->is_fee_paid == null) unset($data['is_fee_paid']);
         return $data;
     }
 }

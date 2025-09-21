@@ -18,14 +18,18 @@ class EmployeeRequest extends FormRequest
     public function rules(): array
     {
         $roles_ids = Role::whereIn('name', ['Financial Director', 'Sales Employee', 'Purchasing Employee', 'Salaries Employee', 'Maintenance Employee'])->pluck('id');
-        return [
+        $rules = [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:employees,email',
-            'phone' => 'sometimes|nullable|string|max:255|unique:employees,phone',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'sometimes|nullable|string|max:255|unique:users,phone',
             'password' => 'required|string|min:6',
-            'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,webp|max:1024',
             'role_id' => 'required|exists:roles,id|in:' . $roles_ids->implode(','),
         ];
+        if (auth('user')->user()->hasRole('Super Admin'))
+            $rules['school_id'] = 'required|exists:schools,id';
+
+        return $rules;
     }
 
     /**
@@ -40,6 +44,7 @@ class EmployeeRequest extends FormRequest
             'password' => 'Password',
             'image' => 'Image',
             'role_id' => 'Role',
+            'school_id' => 'School',
         ];
     }
 

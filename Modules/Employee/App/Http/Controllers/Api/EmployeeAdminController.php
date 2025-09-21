@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Modules\Employee\DTO\EmployeeDto;
+use Modules\User\DTO\EmployeeUserDto;
+use Modules\User\Service\UserService;
 use Modules\Employee\Service\EmployeeService;
 use Modules\Employee\App\resources\EmployeeResource;
 use Modules\Employee\App\Http\Requests\EmployeeRequest;
@@ -33,8 +35,8 @@ class EmployeeAdminController extends Controller
     {
         try {
             DB::beginTransaction();
-            $data = (new EmployeeDto($request))->dataFromRequest();
-            $employee = $this->employeeService->create($data);
+            $data = (new EmployeeUserDto($request))->dataFromRequest();
+            $employee = (new UserService())->saveEmployeeUser($data);
             DB::commit();
             return returnMessage(true, 'Employee Created Successfully', $employee);
         } catch (\Exception $e) {

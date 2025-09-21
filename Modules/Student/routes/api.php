@@ -6,6 +6,7 @@ use Modules\Student\App\Http\Controllers\Api\StudentController;
 use Modules\Student\App\Http\Controllers\Api\StudentFeeController;
 use Modules\Student\App\Http\Controllers\Api\StudentFeeAdminController;
 use Modules\Student\App\Http\Controllers\Api\StudentRegisterController;
+use Modules\Student\App\Http\Controllers\Api\StudentRegisterAdminController;
 
 /*
     |--------------------------------------------------------------------------
@@ -39,6 +40,8 @@ Route::post('students/import', [StudentController::class, 'importStudents']);
 Route::group(['prefix' => 'admin'], function () {
     Route::apiResource('student-fees', StudentFeeAdminController::class)->only(['index']);
     Route::post('student-fees/{studentFee}', [StudentFeeAdminController::class, 'update']);
+    Route::get('students-to-register', [StudentRegisterAdminController::class, 'index']);
+    Route::post('students-to-register/{student}/mark-as-paid', [StudentRegisterAdminController::class, 'markAsPaid']);
 });
 
 Route::post('student-fees', [StudentFeeController::class, 'store']);

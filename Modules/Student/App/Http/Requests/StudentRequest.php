@@ -33,6 +33,7 @@ class StudentRequest extends FormRequest
                     ['required', 'exists:classes,id', new ClassBelongToSchool($this->input('class_id'), $this->input('school_id')), new MaxStudents($this->input('class_id'))],
                 'parent_email' => ['nullable', 'email', 'unique:students,parent_email', 'unique:students,email', 'different:email'],
                 'parent_phone' => ['required', 'string'],
+                'is_fee_paid' => ['required', 'in:0,1'],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['required', 'exists:schools,id'];
@@ -70,6 +71,7 @@ class StudentRequest extends FormRequest
                     'not_in:' . ($this->input('email') ?? $this->student->email),
                 ],
                 'parent_phone' => ['nullable', 'string'],
+                'is_fee_paid' => ['nullable', 'in:0,1'],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['nullable', 'exists:schools,id'];
