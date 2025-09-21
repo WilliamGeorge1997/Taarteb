@@ -3,14 +3,16 @@
 namespace Modules\Expense\Service;
 
 use Modules\Expense\App\Models\Expense;
+use Modules\Common\Helpers\UploadHelper;
 use Modules\Expense\App\Models\StudentExpense;
 
 
 class StudentExpenseService
 {
+    use UploadHelper;
     function findAll($data = [], $relations = [])
     {
-        $studentExpenses = StudentExpense::query()->with($relations)->available()->latest();
+        $studentExpenses = StudentExpense::query()->with($relations)->latest();
         return getCaseCollection($studentExpenses, $data);
     }
 
@@ -26,12 +28,16 @@ class StudentExpenseService
 
     function create($data)
     {
+        if (request()->hasFile('receipt'))
+            $data['receipt'] = $this->upload(request()->file('receipt'), 'student/expense/receipt');
         $studentExpense = StudentExpense::create($data);
         return $studentExpense;
     }
 
     function update($studentExpense, $data)
     {
+        if (request()->hasFile('receipt'))
+            $data['receipt'] = $this->upload(request()->file('receipt'), 'student/expense/receipt');
         $studentExpense->update($data);
         return $studentExpense;
     }

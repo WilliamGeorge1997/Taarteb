@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Modules\Expense\App\Http\Controllers\Api\ExpenseController;
 use Modules\Expense\App\Http\Controllers\Api\ExpenseStudentController;
+use Modules\Expense\App\Http\Controllers\Api\ExpenseStudentAdminController;
 
 /*
     |--------------------------------------------------------------------------
@@ -21,9 +22,14 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('expenses/{expense}/exceptions', [ExpenseController::class, 'exceptions']);
     Route::post('expenses/{expense}/exceptions', [ExpenseController::class, 'storeExceptions']);
     Route::post('expenses/{expense}/exceptions/update', [ExpenseController::class, 'updateExceptions']);
+
+
+    Route::apiResource('student-expenses', ExpenseStudentAdminController::class)->only(['index']);
+    Route::post('student-expenses/{studentExpense}', [ExpenseStudentAdminController::class, 'update']);
 });
 
 Route::group(['prefix' => 'student'], function () {
     Route::get('required-expenses', [ExpenseStudentController::class, 'requiredExpenses']);
     Route::apiResource('expenses', ExpenseStudentController::class)->only(['index', 'store']);
+    Route::post('expenses/{studentExpense}', [ExpenseStudentController::class, 'update']);
 });

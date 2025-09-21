@@ -15,7 +15,7 @@ class StudentExpense extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['student_id', 'expense_id', 'amount', 'date', 'status'];
+    protected $fillable = ['student_id', 'expense_id', 'amount', 'date', 'status', 'receipt', 'rejected_reason'];
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -38,5 +38,29 @@ class StudentExpense extends Model
     public function expense()
     {
         return $this->belongsTo(Expense::class);
+    }
+
+    public function getReceiptAttribute($value)
+    {
+        if ($value != null && $value != '') {
+            if (filter_var($value, FILTER_VALIDATE_URL)) {
+                return $value;
+            } else {
+                return asset('uploads/student/expense/receipt/' . $value);
+            }
+        }
+    }
+    public function scopeAvailable($query)
+    {
+        if (auth('user')->check()) {
+            $admin = auth('user')->user();
+            if ($admin->hasRole('Super Admin')) {
+            }
+            if ($admin->hasRole('School Manager|Financial Director')) {
+                return $query->whereHas('expense', function ($query) use ($admin) {
+                    $query->where('school_id', $admin->school_id);
+                });
+            }
+        }
     }
 }

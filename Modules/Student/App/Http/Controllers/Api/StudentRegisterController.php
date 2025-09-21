@@ -33,9 +33,9 @@ class StudentRegisterController extends Controller
             $studentUser = $this->userService->saveStudentUser($studentUserData);
             $data = (new StudentRegisterDto($request, $studentUser->id))->dataFromRequest();
             $student = $this->studentService->create($data);
-            $token = $studentUser->login();
+            $token = auth('user')->login($studentUser);
             DB::commit();
-            return returnMessage(true, 'Student Registered Successfully', $this->respondWithToken($token));
+            return $this->respondWithToken($token);
         } catch (Exception $e) {
             DB::rollBack();
             return returnMessage(false, $e->getMessage(), null, 'server_error');
@@ -61,7 +61,7 @@ class StudentRegisterController extends Controller
     }
     protected function respondWithToken($token)
     {
-        return returnMessage(true, 'Successfully Logged in', [
+        return returnMessage(true, 'Successfully Registered', [
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth('user')->factory()->getTTL() * 60,

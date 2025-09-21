@@ -6,8 +6,7 @@ use Modules\Student\App\Models\Student;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -19,7 +18,9 @@ return new class extends Migration
             $table->foreignIdFor(Expense::class)->index()->constrained()->cascadeOnDelete();
             $table->unsignedInteger('amount')->default(0);
             $table->date('date')->nullable();
-            $table->enum('status', ['pending', 'partial', 'paid'])->default('pending');
+            $table->string('receipt')->nullable();
+            $table->string('rejected_reason')->nullable();
+            $table->enum('status', ['pending', 'partial', 'paid', 'rejected'])->default('pending');
             $table->timestamps();
         });
     }

@@ -1,0 +1,29 @@
+<?php
+
+namespace Modules\Expense\App\resources;
+
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class ExpenseStudentResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     */
+    public function toArray($request): array
+    {
+        return [
+            'id' => $this->id,
+            'student_id' => $this->student_id,
+            'student' => $this->student->name,
+            'final_amount' => $this->amount,
+            'date' => $this->date,
+            'status' => $this->status,
+            'expense_price' => $this->expense->price,
+            'grade_category_name' => $this->expense->grade->gradeCategory->name,
+            'grade_name' => $this->expense->grade->name,
+            'exception_price' => $this->expense->exceptions->where('id', $this->student_id)->values()->first()->pivot->exception_price ?? null,
+            'created_at' => $this->created_at->format('Y-m-d H:i A'),
+            'updated_at' => $this->updated_at->format('Y-m-d H:i A'),
+        ];
+    }
+}

@@ -68,7 +68,7 @@ class Expense extends Model
             $admin = auth('user')->user();
             if ($admin->hasRole('Super Admin')) {
             }
-            if ($admin->hasRole('School Manager')) {
+            if ($admin->hasRole('School Manager | Financial Director')) {
                 return $query->where('school_id', $admin->school_id);
             }
         }

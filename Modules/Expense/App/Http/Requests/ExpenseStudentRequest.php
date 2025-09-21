@@ -13,6 +13,7 @@ class ExpenseStudentRequest extends FormRequest
     {
         return [
             'expense_id' => ['required', 'exists:expenses,id'],
+            'receipt' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
         ];
 
     }
@@ -24,6 +25,7 @@ class ExpenseStudentRequest extends FormRequest
     {
         return [
             'expense_id' => 'Expense ID',
+            'receipt' => 'Receipt',
         ];
     }
 
