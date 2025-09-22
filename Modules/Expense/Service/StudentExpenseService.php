@@ -3,8 +3,8 @@
 namespace Modules\Expense\Service;
 
 use Modules\Expense\App\Models\Expense;
-use Modules\Common\Helpers\UploadHelper;
 use Modules\Expense\App\Models\StudentExpense;
+use Modules\Common\Helpers\UploadHelper;
 
 
 class StudentExpenseService
@@ -43,10 +43,14 @@ class StudentExpenseService
         return $studentExpense;
     }
 
-    function update($studentExpense, $data)
+    function update($studentExpense)
     {
-        if (request()->hasFile('receipt'))
+        $data = [];
+        if (request()->hasFile('receipt')) {
             $data['receipt'] = $this->upload(request()->file('receipt'), 'student/expense/receipt');
+            $data['status'] = 'pending';
+        }
+
         $studentExpense->update($data);
         return $studentExpense;
     }
@@ -59,12 +63,7 @@ class StudentExpenseService
     function findRequiredExpenses()
     {
         $student = auth('user')->user()->student;
-        $expensePayRequestIds = StudentExpense::query()
-            ->where('student_id', $student->id)
-            ->get()->pluck('expense_id');
-
         $expenses = Expense::query()
-            ->whereNotIn('id', $expensePayRequestIds)
             ->where('grade_id', $student->grade_id)
             ->where('grade_category_id', $student->grade->gradeCategory->id)
             ->where('school_id', $student->school_id)
@@ -74,7 +73,10 @@ class StudentExpenseService
                 },
                 'gradeCategory',
                 'grade',
-                'school'
+                'school',
+                'requests' => function ($query) use ($student) {
+                    $query->where('student_id', $student->id);
+                },
             ])->latest()
             ->get();
         return $expenses;

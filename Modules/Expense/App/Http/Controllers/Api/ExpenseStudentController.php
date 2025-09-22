@@ -25,6 +25,7 @@ class ExpenseStudentController extends Controller
     {
         $expenses = $this->studentExpenseService->findRequiredExpenses();
         return returnMessage(true, 'Required expenses fetched successfully', RequiredExpensesResource::collection($expenses));
+
     }
     public function index(Request $request)
     {
@@ -49,7 +50,7 @@ class ExpenseStudentController extends Controller
         $request->validate([
             'receipt' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
         ]);
-        $this->studentExpenseService->update($studentExpense, $request->validated());
+        $this->studentExpenseService->update($studentExpense);
         return returnMessage(true, 'Student expense updated successfully');
     }
 }

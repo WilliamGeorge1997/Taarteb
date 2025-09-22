@@ -9,6 +9,7 @@ use Modules\School\App\Models\School;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Student\App\Models\Student;
 use Modules\Grade\App\Models\GradeCategory;
+use Modules\Expense\App\Models\StudentExpense;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Expense extends Model
@@ -61,6 +62,10 @@ class Expense extends Model
             ->withTimestamps();
     }
 
+    public function requests()
+    {
+        return $this->hasMany(StudentExpense::class);
+    }
 
     public function scopeAvailable($query)
     {

@@ -18,7 +18,9 @@ class RequiredExpensesResource extends JsonResource
             'grade_name' => $this->grade->name,
             'price' => $this->price,
             'exceptions_price' => $this->exceptions->first()->pivot->exception_price ?? null,
-            'year' => $this->created_at->format('Y'),
+            'year' => $this->created_at->format('Y') ?? null,
+            'status' => $this->requests->first()->status ?? null,
+            'pay_date' => $this->requests->first()->date ?? null,
         ];
     }
 }
