@@ -21,7 +21,7 @@ class PurchaseService
     {
         $purchases = Purchase::query()
             ->with($relations)
-            ->where('employee_id', auth('employee')->id())
+            ->where('user_id', auth('user')->id())
             ->latest();
         return getCaseCollection($purchases, $data);
     }

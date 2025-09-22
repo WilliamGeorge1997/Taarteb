@@ -2,10 +2,10 @@
 
 namespace Modules\Maintenance\App\Models;
 
+use Modules\User\App\Models\User;
 use Spatie\Activitylog\LogOptions;
 use Modules\School\App\Models\School;
 use Illuminate\Database\Eloquent\Model;
-use Modules\Employee\App\Models\Employee;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Maintenance extends Model
@@ -17,7 +17,7 @@ class Maintenance extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['description', 'employee_id', 'school_id', 'image', 'date', 'price', 'reject_reason', 'status'];
+    protected $fillable = ['description', 'user_id', 'school_id', 'image', 'date', 'price', 'reject_reason', 'status'];
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -55,7 +55,7 @@ class Maintenance extends Model
     //Relations
     public function employee()
     {
-        return $this->belongsTo(Employee::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function school()

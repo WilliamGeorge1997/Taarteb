@@ -2,6 +2,7 @@
 
 namespace Modules\Employee\Service;
 
+use Modules\User\App\Models\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -13,7 +14,8 @@ class EmployeeService
     use UploadHelper;
     public function findAll($data, $relations)
     {
-        $employees = Employee::query()->available()->with($relations)->latest();
+        $roles = ['Financial Director', 'Sales Employee', 'Purchasing Employee', 'Salaries Employee', 'Maintenance Employee'];
+        $employees = User::query()->available()->whereIn('role', $roles)->with($relations)->latest();
         return getCaseCollection($employees, $data);
     }
 
@@ -28,9 +30,10 @@ class EmployeeService
         $role = Role::findOrFail($data['role_id']);
         $employee->assignRole($role);
         return $employee;
-}
+    }
 
-    public function changePassword($data){
+    public function changePassword($data)
+    {
         $employee = auth('employee')->user();
         $employee->update([
             'password' => Hash::make($data['new_password'])

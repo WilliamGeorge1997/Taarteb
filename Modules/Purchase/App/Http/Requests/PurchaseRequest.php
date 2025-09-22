@@ -48,8 +48,8 @@ class PurchaseRequest extends FormRequest
     public function authorize(): bool
     {
         if ($this->purchase) {
-            $employee = auth('employee')->user();
-            if ($this->purchase->employee_id !== $employee->id) {
+            $user = auth('user')->user();
+            if ($this->purchase->user_id !== $user->id) {
                 throw new HttpResponseException(
                     returnMessage(
                         false,

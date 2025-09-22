@@ -5,15 +5,15 @@ namespace Modules\Maintenance\DTO;
 class MaintenanceDto
 {
     public $description;
-    public $employee_id;
+    public $user_id;
     public $school_id;
     public $date;
     public $price;
     public function __construct($request, $store = false)
     {
         if ($store) {
-            $this->employee_id = auth('employee')->user()->id;
-            $this->school_id = auth('employee')->user()->school_id;
+            $this->user_id = auth('user')->user()->id;
+            $this->school_id = auth('user')->user()->school_id;
         }
         if ($request->get('description'))
             $this->description = $request->get('description');
@@ -26,8 +26,8 @@ class MaintenanceDto
     public function dataFromRequest()
     {
         $data = json_decode(json_encode($this), true);
-        if ($this->employee_id == null)
-            unset($data['employee_id']);
+        if ($this->user_id == null)
+            unset($data['user_id']);
         if ($this->school_id == null)
             unset($data['school_id']);
         if ($this->description == null)

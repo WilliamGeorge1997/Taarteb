@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
-use Modules\Employee\DTO\EmployeeDto;
 use Modules\User\DTO\EmployeeUserDto;
 use Modules\User\Service\UserService;
 use Modules\Employee\Service\EmployeeService;

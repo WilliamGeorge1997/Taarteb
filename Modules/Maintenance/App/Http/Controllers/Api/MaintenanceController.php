@@ -17,7 +17,7 @@ class MaintenanceController extends Controller
 
     public function __construct(MaintenanceService $maintenanceService)
     {
-        $this->middleware('auth:employee');
+        $this->middleware('auth:user');
         $this->middleware('role:Maintenance Employee');
         $this->middleware(CheckMaintenanceStatusForUpdate::class)->only('update');
         $this->maintenanceService = $maintenanceService;

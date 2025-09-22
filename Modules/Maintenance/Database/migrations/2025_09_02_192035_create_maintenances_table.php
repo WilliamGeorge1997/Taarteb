@@ -1,9 +1,9 @@
 <?php
 
+use Modules\User\App\Models\User;
 use Modules\School\App\Models\School;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use Modules\Employee\App\Models\Employee;
 use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('maintenances', function (Blueprint $table) {
             $table->id();
             $table->text('description')->nullable();
-            $table->foreignIdFor(Employee::class)->nullable()->index()->constrained()->nullOnDelete();
+            $table->foreignIdFor(User::class)->nullable()->index()->constrained()->nullOnDelete();
             $table->foreignIdFor(School::class)->index()->constrained()->cascadeOnDelete();
             $table->string('image')->nullable();
             $table->date('date')->nullable();

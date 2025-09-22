@@ -11,9 +11,6 @@ class EmployeeResource extends JsonResource
      */
     public function toArray($request): array
     {
-        $data = parent::toArray($request);
-        $data['role'] = $this->roles->first()->name ?? null;
-        unset($data['roles']);
-        return $data;
+        return parent::toArray($request);
     }
 }

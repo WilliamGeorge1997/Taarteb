@@ -5,7 +5,7 @@ namespace Modules\Salary\DTO;
 class SalaryDto
 {
     public $created_by;
-    public $employee_id;
+    public $user_id;
     public $school_id;
     public $salary;
     public $month;
@@ -13,11 +13,11 @@ class SalaryDto
     public function __construct($request, $store = false)
     {
         if ($store) {
-            $this->created_by = auth('employee')->id();
-            $this->school_id = auth('employee')->user()->school_id;
+            $this->created_by = auth('user')->id();
+            $this->school_id = auth('user')->user()->school_id;
         }
-        if ($request->get('employee_id'))
-            $this->employee_id = $request->get('employee_id');
+        if ($request->get('user_id'))
+            $this->user_id = $request->get('user_id');
         if ($request->get('salary'))
             $this->salary = $request->get('salary');
         if ($request->get('month'))

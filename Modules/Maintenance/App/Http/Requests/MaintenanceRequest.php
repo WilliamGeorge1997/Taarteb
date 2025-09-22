@@ -52,8 +52,8 @@ class MaintenanceRequest extends FormRequest
     public function authorize(): bool
     {
         if ($this->maintenance) {
-            $employee = auth('employee')->user();
-            if ($this->maintenance->employee_id !== $employee->id) {
+            $user = auth('user')->user();
+            if ($this->maintenance->user_id !== $user->id) {
                 throw new HttpResponseException(
                     returnMessage(
                         false,

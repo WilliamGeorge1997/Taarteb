@@ -12,7 +12,7 @@ class StudentRegisterAdminController extends Controller
     public function __construct(StudentService $studentService)
     {
         $this->middleware('auth:user');
-        $this->middleware('role:School Manager | Financial Director');
+        $this->middleware('role:School Manager|Financial Director');
         $this->studentService = $studentService;
     }
 

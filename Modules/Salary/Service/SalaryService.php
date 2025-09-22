@@ -21,7 +21,7 @@ class SalaryService
     {
         $salaries = Salary::query()
             ->with($relations)
-            ->where('created_by', auth('employee')->id())
+            ->where('created_by', auth('user')->id())
             ->latest();
         return getCaseCollection($salaries, $data);
     }

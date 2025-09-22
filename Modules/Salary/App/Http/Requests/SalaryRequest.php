@@ -21,7 +21,7 @@ class SalaryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'employee_id' => ['required', 'exists:employees,id'],
+            'user_id' => ['required', 'exists:users,id',],
             'salary' => ['required', 'numeric', 'min:0'],
             'month' => ['required', 'integer', 'min:1', 'max:12'],
             'year' => ['required', 'integer', 'max:65535'],
@@ -35,7 +35,7 @@ class SalaryRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'employee_id' => 'Employee ID',
+            'user_id' => 'User ID',
             'salary' => 'Salary',
             'month' => 'Month',
             'year' => 'Year',
@@ -48,8 +48,8 @@ class SalaryRequest extends FormRequest
     public function authorize(): bool
     {
         if ($this->salary) {
-            $employee = auth('employee')->user();
-            if ($this->salary->created_by !== $employee->id) {
+            $user = auth('user')->user();
+            if ($this->salary->created_by !== $user->id) {
                 throw new HttpResponseException(
                     returnMessage(
                         false,

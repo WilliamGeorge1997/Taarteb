@@ -66,6 +66,18 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(Student::class, 'user_id');
     }
 
+    public function scopeAvailable($query)
+    {
+        if (auth('user')->check()) {
+            $admin = auth('user')->user();
+            if ($admin->hasRole('Super Admin')) {
+            } elseif ($admin->hasAnyRole(['School Manager', 'Salaries Employee'])) {
+                return $query->where('school_id', $admin->school_id);
+            }
+        }
+
+    }
+
     //JWT
 
     /**

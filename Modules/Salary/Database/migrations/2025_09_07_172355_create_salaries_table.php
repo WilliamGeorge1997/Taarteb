@@ -1,9 +1,9 @@
 <?php
 
+use Modules\User\App\Models\User;
 use Modules\School\App\Models\School;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use Modules\Employee\App\Models\Employee;
 use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
@@ -15,12 +15,12 @@ return new class extends Migration
     {
         Schema::create('salaries', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Employee::class, 'employee_id')->nullable()->index()->constrained('employees')->cascadeOnDelete();
+            $table->foreignIdFor(User::class, 'user_id')->nullable()->index()->constrained('users')->cascadeOnDelete();
             $table->foreignIdFor(School::class)->index()->constrained()->cascadeOnDelete();
             $table->unsignedInteger('salary');
             $table->unsignedTinyInteger('month');
             $table->unsignedSmallInteger('year');
-            $table->foreignIdFor(Employee::class, 'created_by')->nullable()->index()->constrained('employees')->cascadeOnDelete();
+            $table->foreignIdFor(User::class, 'created_by')->nullable()->index()->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });
     }

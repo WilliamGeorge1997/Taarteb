@@ -3,9 +3,7 @@
 namespace Modules\Salary\App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Modules\Salary\App\Models\Salary;
 use Modules\Salary\Service\SalaryService;
 
 class SalaryAdminController extends Controller
@@ -26,5 +24,5 @@ class SalaryAdminController extends Controller
         return returnMessage(true, 'Salaries fetched successfully', $salaries);
     }
 
-    
+
 }

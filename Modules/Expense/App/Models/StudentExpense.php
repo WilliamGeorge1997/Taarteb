@@ -56,7 +56,7 @@ class StudentExpense extends Model
             $admin = auth('user')->user();
             if ($admin->hasRole('Super Admin')) {
             }
-            if ($admin->hasRole('School Manager|Financial Director')) {
+            if ($admin->hasAnyRole(['School Manager', 'Financial Director'])) {
                 return $query->whereHas('expense', function ($query) use ($admin) {
                     $query->where('school_id', $admin->school_id);
                 });
