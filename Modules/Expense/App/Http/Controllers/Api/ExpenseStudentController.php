@@ -26,10 +26,11 @@ class ExpenseStudentController extends Controller
         $expenses = $this->studentExpenseService->findRequiredExpenses();
         return returnMessage(true, 'Required expenses fetched successfully', RequiredExpensesResource::collection($expenses));
     }
-    public function index()
+    public function index(Request $request)
     {
+        $data = $request->all();
         $relations = ['expense.grade.gradeCategory'];
-        $studentExpenses = $this->studentExpenseService->findBy('student_id', auth('user')->user()->student->id, $relations);
+        $studentExpenses = $this->studentExpenseService->findBy('student_id', auth('user')->user()->student->id, $data, $relations);
         return returnMessage(true, 'Student expenses fetched successfully', $studentExpenses);
     }
     public function store(ExpenseStudentRequest $request)

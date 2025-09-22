@@ -21,9 +21,18 @@ class StudentExpenseService
         return StudentExpense::findOrFail($id);
     }
 
-    function findBy($key, $value, $relations = [])
+    function findBy($key, $value, $data = [], $relations = [])
     {
-        return StudentExpense::where($key, $value)->with($relations)->get();
+        $studentExpenses = StudentExpense::where($key, $value)->with($relations)->latest();
+        $collection = getCaseCollection($studentExpenses, $data);
+        $collection->transform(function ($studentExpense) {
+            if ($studentExpense->expense) {
+                $studentExpense->expense->year = $studentExpense->expense->created_at->format('Y');
+            }
+            return $studentExpense;
+        });
+
+        return $collection;
     }
 
     function create($data)
