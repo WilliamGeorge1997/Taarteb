@@ -2,6 +2,7 @@
 
 namespace Modules\Expense\App\Http\Requests;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -58,9 +59,9 @@ class ExpenseRequest extends FormRequest
                 );
             }
         }
-
         return true;
     }
+
 
     /**
      * Configure the validator instance.

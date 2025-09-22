@@ -14,7 +14,7 @@ class StudentFee extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['student_id', 'payment_method', 'amount', 'payment_status', 'status', 'receipt'];
+    protected $fillable = ['student_id', 'payment_method', 'amount', 'status', 'receipt', 'reason'];
 
 
     public function getReceiptAttribute($value)

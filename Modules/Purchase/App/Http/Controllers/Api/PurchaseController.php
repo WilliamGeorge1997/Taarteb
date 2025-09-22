@@ -17,7 +17,7 @@ class PurchaseController extends Controller
 
     public function __construct(PurchaseService $purchaseService)
     {
-        $this->middleware('auth:employee');
+        $this->middleware('auth:user');
         $this->middleware('role:Purchasing Employee');
         $this->middleware(CheckPurchaseStatusForUpdate::class)->only('update');
         $this->purchaseService = $purchaseService;

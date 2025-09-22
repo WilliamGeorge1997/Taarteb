@@ -8,6 +8,7 @@ use Modules\Expense\DTO\ExpenseDto;
 use App\Http\Controllers\Controller;
 use Modules\Expense\App\Models\Expense;
 use Modules\Expense\Service\ExpenseService;
+use Modules\Student\Service\StudentService;
 use Modules\Expense\App\Http\Requests\ExpenseRequest;
 use Modules\Expense\App\Http\Requests\ExpenseExceptionRequest;
 
@@ -73,5 +74,12 @@ class ExpenseController extends Controller
             DB::rollBack();
             return returnMessage(false, $e->getMessage(), null, 'server_error');
         }
+    }
+
+    public function students(Request $request)
+    {
+        $data = $request->all();
+        $students = (new StudentService)->findAll($data);
+        return returnMessage(true, 'Students fetched successfully', $students);
     }
 }

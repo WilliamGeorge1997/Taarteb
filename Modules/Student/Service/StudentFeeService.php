@@ -14,7 +14,14 @@ class StudentFeeService
     {
         $schoolId = auth('user')->user()->school_id;
         $students = (new StudentService())->findBy('school_id', $schoolId)->pluck('id');
-        $studentFees = StudentFee::whereIn('student_id', $students)->latest();
+        $studentFees = StudentFee::whereIn('student_id', $students)->with($relations)->latest();
+        return getCaseCollection($studentFees, $data);
+    }
+
+    public function findByStudent($data = [])
+    {
+        $studentId = auth('user')->id();
+        $studentFees = StudentFee::where('student_id', $studentId)->latest();
         return getCaseCollection($studentFees, $data);
     }
     public function save($data)

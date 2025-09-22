@@ -16,7 +16,7 @@ class SalaryController extends Controller
 
     public function __construct(SalaryService $salaryService)
     {
-        $this->middleware('auth:employee');
+        $this->middleware('auth:user');
         $this->middleware('role:Salaries Employee');
         $this->salaryService = $salaryService;
     }

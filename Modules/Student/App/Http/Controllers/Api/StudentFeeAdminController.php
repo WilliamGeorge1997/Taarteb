@@ -26,17 +26,16 @@ class StudentFeeAdminController extends Controller
         return returnMessage(true, 'Student Fees Fetched Successfully', $studentFees);
     }
 
-    public function update(StudentFee $studentFee, Request $request)
+    public function update(Request $request, StudentFee $studentFee)
     {
         try {
             DB::beginTransaction();
             $request->validate([
-                'payment_status' => 'sometimes|in:paid,pending,failed',
-                'status' => 'sometimes|in:accepted,rejected,pending',
+                'status' => 'required|in:accepted,rejected',
+                'reason' => 'required_if:status,rejected|string',
             ]);
-            $data = $request->validated();
-            $studentFee->update($data);
-            if ($data['payment_status'] == 'paid' || $data['status'] == 'accepted')
+            $studentFee->update(['status' => $request->status, 'reason' => @$request->reason]);
+            if ($request->status == 'accepted')
                 $studentFee->student->update(['is_fee_paid' => 1]);
             DB::commit();
             return returnMessage(true, 'Student Fee Updated Successfully', $studentFee->fresh()->load('student'));
@@ -45,5 +44,4 @@ class StudentFeeAdminController extends Controller
             return returnMessage(false, $e->getMessage(), null, 'server_error');
         }
     }
-
 }

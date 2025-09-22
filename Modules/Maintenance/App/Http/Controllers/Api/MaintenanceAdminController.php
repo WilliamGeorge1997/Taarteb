@@ -21,7 +21,8 @@ class MaintenanceAdminController extends Controller
 
     public function index(Request $request)
     {
-        $maintenances = $this->maintenanceService->findAll($request->all());
+        $relations = ['employee', 'school'];
+        $maintenances = $this->maintenanceService->findAll($request->all(), $relations);
         return returnMessage(true, 'Maintenances fetched successfully', $maintenances);
     }
 

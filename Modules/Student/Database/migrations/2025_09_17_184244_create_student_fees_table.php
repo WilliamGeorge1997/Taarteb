@@ -16,10 +16,9 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Student::class)->index()->constrained()->cascadeOnDelete();
             $table->unsignedTinyInteger('payment_method')->comment('1: cash, 2: visa 3:online payment');
-            $table->unsignedDecimal('amount', 10, 2)->nullable();
-            $table->enum('payment_status', ['paid', 'pending', 'failed'])->default('pending');
             $table->string('receipt')->nullable();
             $table->enum('status', ['accepted', 'rejected', 'pending'])->default('pending');
+            $table->string('reason')->nullable();
             $table->timestamps();
         });
     }

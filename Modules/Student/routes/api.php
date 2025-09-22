@@ -44,4 +44,5 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('students-to-register/{student}/mark-as-paid', [StudentRegisterAdminController::class, 'markAsPaid']);
 });
 
+Route::get('student-fees', [StudentFeeController::class, 'myFees']);
 Route::post('student-fees', [StudentFeeController::class, 'store']);

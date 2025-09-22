@@ -3,6 +3,7 @@
 namespace Modules\Student\App\Http\Controllers\Api;
 
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Student\DTO\StudentFeeDto;
@@ -17,6 +18,12 @@ class StudentFeeController extends Controller
         $this->middleware('auth:user');
         $this->middleware('role:Student');
         $this->studentFeeService = $studentFeeService;
+    }
+
+    public function myFees(Request $request)
+    {
+        $studentFees = $this->studentFeeService->findByStudent($request->all());
+        return returnMessage(true, 'Student Fees Fetched Successfully', $studentFees);
     }
 
     public function store(StudentFeeRequest $request)

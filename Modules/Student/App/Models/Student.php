@@ -99,7 +99,7 @@ class Student extends Model
             $admin = auth('user')->user();
             if ($admin->hasRole('Super Admin')) {
                 // Show All Students
-            } else if ($admin->hasRole('School Manager')) {
+            } else if ($admin->hasAnyRole(['School Manager', 'Financial Director'])) {
                 // Show Students Related To Current School
                 $query->where('school_id', $admin->school_id);
             } else if ($admin->hasRole('Teacher')) {

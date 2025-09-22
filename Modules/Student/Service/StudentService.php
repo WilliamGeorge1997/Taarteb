@@ -19,6 +19,14 @@ class StudentService
             ->when($data['email'] ?? null, function ($query) use ($data) {
                 $query->where('email', 'like', '%' . $data['email'] . '%');
             })
+            ->when($data['grade_id'] ?? null, function ($query) use ($data) {
+                $query->where('grade_id', $data['grade_id']);
+            })
+            ->when($data['grade_category_id'] ?? null, function ($query) use ($data) {
+                $query->whereHas('grade', function ($query) use ($data) {
+                    $query->where('grade_category_id', $data['grade_category_id']);
+                });
+            })
             ->availableAll()
             ->with('grade.gradeCategory', 'school')
             ->orderByDesc('id');

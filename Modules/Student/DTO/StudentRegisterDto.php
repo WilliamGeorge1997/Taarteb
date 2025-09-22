@@ -26,6 +26,7 @@ class StudentRegisterDto
         if($request->get('school_id')) $this->school_id = $request->get('school_id');
         $this->user_id = $user_id;
         $this->is_register = 1;
+        $this->is_fee_paid = 0;
     }
 
     public function dataFromRequest()

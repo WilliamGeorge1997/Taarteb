@@ -22,7 +22,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('expenses/{expense}/exceptions', [ExpenseController::class, 'exceptions']);
     Route::post('expenses/{expense}/exceptions', [ExpenseController::class, 'storeExceptions']);
     Route::post('expenses/{expense}/exceptions/update', [ExpenseController::class, 'updateExceptions']);
-
+    Route::get('expenses/students', [ExpenseController::class, 'students']);
 
     Route::apiResource('student-expenses', ExpenseStudentAdminController::class)->only(['index']);
     Route::post('student-expenses/{studentExpense}', [ExpenseStudentAdminController::class, 'update']);

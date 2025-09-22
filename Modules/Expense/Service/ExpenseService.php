@@ -47,16 +47,16 @@ class ExpenseService
 
     function saveExceptions($expense, $data)
     {
-        $expense->exceptions()->syncWithoutDetaching($data['exceptions']);
+        $expense->exceptions()->attach($data['student_ids'], ['exception_price' => $data['exception_price']]);
         return $expense->load('exceptions');
     }
 
     function updateExceptions($expense, $data)
     {
-        foreach ($data['exceptions'] as $exception) {
+        foreach ($data['student_ids'] as $student_id) {
             $expense->exceptions()->updateExistingPivot(
-                $exception['student_id'],
-                ['exception_price' => $exception['exception_price']]
+                $student_id,
+                ['exception_price' => $data['exception_price']]
             );
         }
         return $expense->load('exceptions');
