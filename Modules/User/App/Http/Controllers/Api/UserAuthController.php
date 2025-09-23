@@ -62,7 +62,7 @@ class UserAuthController extends Controller
      */
     public function me()
     {
-        return returnMessage(true, 'User Data', auth('user')->user());
+        return returnMessage(true, 'User Data',  new UserResource(auth('user')->user()));
     }
 
     /**
