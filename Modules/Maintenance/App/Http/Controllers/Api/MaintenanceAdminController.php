@@ -15,7 +15,7 @@ class MaintenanceAdminController extends Controller
     public function __construct(MaintenanceService $maintenanceService)
     {
         $this->middleware('auth:user');
-        $this->middleware('role:Super Admin|School Manager');
+        $this->middleware('role:Super Admin|School Manager|Financial Director');
         $this->maintenanceService = $maintenanceService;
     }
 

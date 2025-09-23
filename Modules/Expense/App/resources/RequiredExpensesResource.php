@@ -21,6 +21,7 @@ class RequiredExpensesResource extends JsonResource
             'year' => $this->created_at->format('Y') ?? null,
             'status' => $this->requests->first()->status ?? null,
             'pay_date' => $this->requests->first()->date ?? null,
+            'rejected_reason' => $this->requests->first()->rejected_reason ?? null,
         ];
     }
 }

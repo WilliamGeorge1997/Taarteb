@@ -15,7 +15,7 @@ class PurchaseAdminController extends Controller
     public function __construct(PurchaseService $purchaseService)
     {
         $this->middleware('auth:user');
-        $this->middleware('role:Super Admin|School Manager');
+        $this->middleware('role:Super Admin|School Manager|Financial Director');
         $this->purchaseService = $purchaseService;
     }
 
