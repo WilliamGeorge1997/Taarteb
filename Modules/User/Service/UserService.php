@@ -65,4 +65,10 @@ class UserService
         $user->assignRole($role->name);
         return $user;
     }
+
+    public function findToken($user_id)
+    {
+        $user = User::find($user_id);
+        return $user->fcm_token;
+    }
 }

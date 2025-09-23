@@ -44,8 +44,18 @@ class ExpenseController extends Controller
 
     public function exceptions(Expense $expense)
     {
+        $relations = ['grade','gradeCategory'];
         $exceptions = $this->expenseService->findExceptions($expense);
-        return returnMessage(true, 'Exceptions fetched successfully', $exceptions);
+        return returnMessage(true, 'Exceptions fetched successfully', [
+            'expense' => $expense->load($relations),
+            'exceptions' => $exceptions->map(function ($exception) use ($expense) {
+                return [
+                    ...$exception->toArray(),
+                    'grade_name' => $expense->grade->name ?? null,
+                    'grade_category_name' => $expense->gradeCategory->name ?? null,
+                ];
+            }),
+        ]);
     }
 
     public function storeExceptions(ExpenseExceptionRequest $request, Expense $expense)

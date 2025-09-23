@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Modules\Class\App\Models\Classroom;
 use Modules\Expense\App\Models\Expense;
 use Modules\Session\App\Models\Attendance;
+use Modules\Student\App\Models\StudentFee;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -73,6 +74,10 @@ class Student extends Model
         return $this->hasMany(Attendance::class);
     }
 
+    public function studentFees()
+    {
+        return $this->hasMany(StudentFee::class);
+    }
 
     //Helper
     protected function scopeAvailable($query)

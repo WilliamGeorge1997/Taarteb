@@ -12,7 +12,18 @@ class StudentExpenseService
     use UploadHelper;
     function findAll($data = [], $relations = [])
     {
-        $studentExpenses = StudentExpense::query()->with($relations)->latest();
+        $studentExpenses = StudentExpense::query()
+        ->when($data['grade_id'] ?? null, function ($query) use ($data) {
+            $query->whereHas('expense', function ($query) use ($data) {
+                $query->where('grade_id', $data['grade_id']);
+            });
+        })
+        ->when($data['grade_category_id'] ?? null, function ($query) use ($data) {
+            $query->whereHas('expense', function ($query) use ($data) {
+                $query->where('grade_category_id', $data['grade_category_id']);
+            });
+        })
+        ->with($relations)->latest();
         return getCaseCollection($studentExpenses, $data);
     }
 

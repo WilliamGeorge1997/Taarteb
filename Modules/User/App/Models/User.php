@@ -10,6 +10,7 @@ use Modules\Student\App\Models\Student;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Modules\Teacher\App\Models\TeacherProfile;
+use Modules\Notification\App\Models\Notification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -64,6 +65,11 @@ class User extends Authenticatable implements JWTSubject
     public function student()
     {
         return $this->hasOne(Student::class, 'user_id');
+    }
+
+    public function notifications()
+    {
+        return $this->morphMany(Notification::class, 'notifiable');
     }
 
     public function scopeAvailable($query)

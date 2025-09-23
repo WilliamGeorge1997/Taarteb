@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Modules\Expense\App\Models\StudentExpense;
 use Modules\Expense\Service\StudentExpenseService;
+use Modules\Notification\Service\NotificationService;
 use Modules\Expense\App\resources\ExpenseStudentResource;
 use Modules\Expense\App\Http\Requests\ExpenseStudentAdminRequest;
 
@@ -32,6 +33,23 @@ class ExpenseStudentAdminController extends Controller
             'status' => $request->status,
             'rejected_reason' => @$request->rejected_reason
         ]);
-        return returnMessage(true, 'Student expense status updated successfully' , $studentExpense);
+        $this->sendNotificationToStudent($studentExpense);
+        return returnMessage(true, 'Student expense status updated successfully', $studentExpense);
+    }
+
+    public function sendNotificationToStudent($studentExpense)
+    {
+        if ($studentExpense->status === 'paid') {
+            $data = [
+                'title' => 'تم دفع النفقات',
+                'description' => 'تم دفع نفقاتك بنجاح.',
+            ];
+        } elseif ($studentExpense->status === 'rejected') {
+            $data = [
+                'title' => 'تم رفض النفقات',
+                'description' => 'تم رفض طلب دفع النفقات الخاص بك. السبب: ' . ($studentExpense->rejected_reason ?? 'لم يتم تحديد السبب'),
+            ];
+        }
+        (new NotificationService())->sendNotificationToUser($data, $studentExpense->student->user_id, 'expense');
     }
 }

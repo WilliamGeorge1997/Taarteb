@@ -19,6 +19,7 @@ class RequiredExpensesResource extends JsonResource
             'price' => $this->price,
             'exceptions_price' => $this->exceptions->first()->pivot->exception_price ?? null,
             'year' => $this->created_at->format('Y') ?? null,
+            'payment_method' => $this->requests->first()->payment_method ?? null,
             'status' => $this->requests->first()->status ?? null,
             'pay_date' => $this->requests->first()->date ?? null,
             'rejected_reason' => $this->requests->first()->rejected_reason ?? null,

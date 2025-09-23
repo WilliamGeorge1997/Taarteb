@@ -13,5 +13,6 @@
     "Purchase": true,
     "Maintenance": true,
     "Salary": true,
-    "Expense": true
+    "Expense": true,
+    "Notification": true
 }

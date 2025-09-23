@@ -13,17 +13,18 @@ class ExpenseStudentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'student_id' => $this->student_id,
-            'student' => $this->student->name,
             'final_amount' => $this->amount,
             'date' => $this->date,
+            'payment_method' => $this->payment_method,
             'status' => $this->status,
+            'rejected_reason' => $this->rejected_reason ?? null,
             'expense_price' => $this->expense->price,
             'grade_category_name' => $this->expense->grade->gradeCategory->name,
             'grade_name' => $this->expense->grade->name,
             'exception_price' => $this->expense->exceptions->where('id', $this->student_id)->values()->first()->pivot->exception_price ?? null,
             'created_at' => $this->created_at->format('Y-m-d H:i A'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i A'),
+            'student'=> $this->student,
         ];
     }
 }

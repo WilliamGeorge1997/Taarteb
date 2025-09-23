@@ -11,7 +11,7 @@ class UserResource extends JsonResource
      */
     public function toArray($request): array
     {
-        return [
+        $data =  [
             "id" => $this->id,
             "name" => $this->name,
             "email" => $this->email,
@@ -22,10 +22,10 @@ class UserResource extends JsonResource
             "created_at" => $this->created_at->format('Y-m-d h:i A'),
             "updated_at" => $this->updated_at->format('Y-m-d h:i A'),
             'role' => $this->role,
-            'student' => $this->when($this->hasRole('Student'), $this->student),
-            // 'permissions' => $this->roles->first()->permissions->groupBy('category')->map(function ($permissions) {
-            //     return $permissions->pluck('name')->toArray();
-            // }),
         ];
+        if ($this->hasRole('Student')) {
+            $data['student'] = $this->student->load(['grade.gradeCategory','studentFees']);
+        }
+        return $data;
     }
 }

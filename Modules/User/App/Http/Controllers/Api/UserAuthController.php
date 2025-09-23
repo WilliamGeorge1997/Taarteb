@@ -8,7 +8,7 @@ use Modules\User\App\Http\Requests\UserLoginRequest;
 
 class UserAuthController extends Controller
 {
-   /**
+    /**
      * Create a new AuthController instance.
      *
      * @return void
@@ -25,11 +25,11 @@ class UserAuthController extends Controller
      */
     public function login(UserLoginRequest $request)
     {
-        try{
+        try {
             $credentials = $request->validated();
 
-            if (! $token = auth('user')->attempt($credentials)) {
-                return returnValidationMessage(false,'Unauthorized',['password'=>'wrong credentials'],'unauthorized');
+            if (!$token = auth('user')->attempt($credentials)) {
+                return returnValidationMessage(false, 'Unauthorized', ['password' => 'wrong credentials'], 'unauthorized');
             }
             $user = auth('user')->user();
 
@@ -37,17 +37,21 @@ class UserAuthController extends Controller
                 return returnMessage(false, 'In-Active User Verification Required', null, 'temporary_redirect');
             }
 
-            if($user->hasRole('Student')) {
+            if ($request['fcm_token'] ?? null) {
+                $user->update(['fcm_token' => $request->fcm_token]);
+            }
+
+            if ($user->hasRole('Student')) {
                 $student = $user->student;
-                if(!$student->canLogin()['status']) {
+                if (!$student->canLogin()['status']) {
                     return returnMessage(false, $student->canLogin()['message'], null, 'temporary_redirect');
                 }
             }
 
             return $this->respondWithToken($token);
 
-        }catch(\Exception $e){
-            return returnMessage(false,$e->getMessage(),null,'server_error');
+        } catch (\Exception $e) {
+            return returnMessage(false, $e->getMessage(), null, 'server_error');
         }
     }
 
@@ -58,7 +62,7 @@ class UserAuthController extends Controller
      */
     public function me()
     {
-        return returnMessage(true,'User Data',auth('user')->user());
+        return returnMessage(true, 'User Data', auth('user')->user());
     }
 
     /**
@@ -70,7 +74,7 @@ class UserAuthController extends Controller
     {
         auth()->logout();
 
-        return returnMessage(true,'Successfully logged out');
+        return returnMessage(true, 'Successfully logged out');
     }
 
     /**
@@ -92,7 +96,7 @@ class UserAuthController extends Controller
      */
     protected function respondWithToken($token)
     {
-        return returnMessage(true,'Successfully Logged in',[
+        return returnMessage(true, 'Successfully Logged in', [
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth('user')->factory()->getTTL() * 60,

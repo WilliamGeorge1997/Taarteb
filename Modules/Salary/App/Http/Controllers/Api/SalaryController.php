@@ -23,7 +23,8 @@ class SalaryController extends Controller
 
     public function mySalaries(Request $request)
     {
-        $salaries = $this->salaryService->findMySalaries($request->all());
+        $relations = ['employee'];
+        $salaries = $this->salaryService->findMySalaries($request->all(), $relations);
         return returnMessage(true, 'Salaries fetched successfully', $salaries);
     }
 

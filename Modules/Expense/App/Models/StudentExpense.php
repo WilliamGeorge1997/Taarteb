@@ -15,7 +15,7 @@ class StudentExpense extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['student_id', 'expense_id', 'amount', 'date', 'status', 'receipt', 'rejected_reason'];
+    protected $fillable = ['student_id', 'expense_id', 'date', 'status', 'receipt', 'rejected_reason'];
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
