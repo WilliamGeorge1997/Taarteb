@@ -12,6 +12,7 @@ class StudentExpenseDto
     public $expense_id;
     public $amount;
     public $date;
+    public $payment_method;
 
     public function __construct($request)
     {
@@ -19,6 +20,7 @@ class StudentExpenseDto
         $this->expense_id = $request->get('expense_id');
         $this->amount = $this->getAmount($this->expense_id);
         $this->date = now()->toDateString();
+        $this->payment_method = $request->get('payment_method');
     }
 
     private function getAmount($expense_id)
@@ -43,6 +45,8 @@ class StudentExpenseDto
             unset($data['amount']);
         if ($this->date == null)
             unset($data['date']);
+        if ($this->payment_method == null)
+            unset($data['payment_method']);
         return $data;
     }
 }

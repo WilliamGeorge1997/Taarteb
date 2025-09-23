@@ -61,7 +61,9 @@ class StudentExpenseService
             $data['receipt'] = $this->upload(request()->file('receipt'), 'student/expense/receipt');
             $data['status'] = 'pending';
         }
-
+        if (request()->has('payment_method') && request()->payment_method != null) {
+            $data['payment_method'] = request()->payment_method;
+        }
         $studentExpense->update($data);
         return $studentExpense;
     }

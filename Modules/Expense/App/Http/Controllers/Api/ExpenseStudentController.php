@@ -49,6 +49,7 @@ class ExpenseStudentController extends Controller
     {
         $request->validate([
             'receipt' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
+            'payment_method'=>['nullable','sometimes','in:1,2,3']
         ]);
         $this->studentExpenseService->update($studentExpense);
         return returnMessage(true, 'Student expense updated successfully');
