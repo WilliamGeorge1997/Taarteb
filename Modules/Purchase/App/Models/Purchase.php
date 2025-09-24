@@ -48,7 +48,7 @@ class Purchase extends Model
         if (auth('user')->check()) {
             $admin = auth('user')->user();
             if ($admin->hasRole('Super Admin')) {
-            } else if ($admin->hasRole('School Manager')) {
+            } else if ($admin->hasAnyRole('School Manager', 'Financial Director')) {
                 $query->where('school_id', $admin->school_id);
             }
         }

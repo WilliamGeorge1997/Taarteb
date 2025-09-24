@@ -24,7 +24,11 @@ class PurchaseAdminController extends Controller
     {
         $relations = ['employee', 'school'];
         $purchases = $this->purchaseService->findAll($request->all(), $relations);
-        return returnMessage(true, 'Purchases fetched successfully', $purchases);
+        $totalCost = $this->purchaseService->totalCost();
+        return returnMessage(true, 'Purchases fetched successfully', [
+            'data' => $purchases,
+            'total_cost' => $totalCost,
+        ]);
     }
 
     public function accept(Purchase $purchase)

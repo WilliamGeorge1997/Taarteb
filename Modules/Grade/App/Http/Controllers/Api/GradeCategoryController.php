@@ -20,10 +20,12 @@ class GradeCategoryController extends Controller
     {
         $this->middleware('auth:user');
         $this->middleware('role:Super Admin|School Manager');
-        $this->middleware('permission:Index-grade-category|Create-grade-category|Edit-grade-category|Delete-grade-category', ['only' => ['index', 'store']]);
-        $this->middleware('permission:Create-grade-category', ['only' => ['store']]);
-        $this->middleware('permission:Edit-grade-category', ['only' => ['update', 'activate']]);
-        $this->middleware('permission:Delete-grade-category', ['only' => ['destroy']]);
+        $this->middleware('role:Financial Director')->only('index');
+
+        // $this->middleware('permission:Index-grade-category|Create-grade-category|Edit-grade-category|Delete-grade-category', ['only' => ['index', 'store']]);
+        // $this->middleware('permission:Create-grade-category', ['only' => ['store']]);
+        // $this->middleware('permission:Edit-grade-category', ['only' => ['update', 'activate']]);
+        // $this->middleware('permission:Delete-grade-category', ['only' => ['destroy']]);
         $this->gradeCategoryService = $gradeCategoryService;
     }
     public function index(Request $request)

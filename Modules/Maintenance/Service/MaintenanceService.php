@@ -56,4 +56,9 @@ class MaintenanceService
         $maintenance->update($data);
         return $maintenance;
     }
+
+    function totalCost()
+    {
+        return Maintenance::available()->where('status', Maintenance::STATUS_ACCEPTED)->sum('price');
+    }
 }

@@ -56,4 +56,9 @@ class PurchaseService
         $purchase->update($data);
         return $purchase;
     }
+
+    function totalCost()
+    {
+        return Purchase::available()->where('status', Purchase::STATUS_ACCEPTED)->sum('price');
+    }
 }

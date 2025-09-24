@@ -10,6 +10,10 @@ class SalaryDto
     public $salary;
     public $month;
     public $year;
+    public $deduction;
+    public $deduction_reason;
+    public $bonus;
+    public $bonus_reason;
     public function __construct($request, $store = false)
     {
         if ($store) {
@@ -24,6 +28,14 @@ class SalaryDto
             $this->month = $request->get('month');
         if ($request->get('year'))
             $this->year = $request->get('year');
+        if ($request->get('deduction'))
+            $this->deduction = $request->get('deduction');
+        if ($request->get('deduction_reason'))
+            $this->deduction_reason = $request->get('deduction_reason');
+        if ($request->get('bonus'))
+            $this->bonus = $request->get('bonus');
+        if ($request->get('bonus_reason'))
+            $this->bonus_reason = $request->get('bonus_reason');
     }
 
     public function dataFromRequest()
@@ -31,6 +43,10 @@ class SalaryDto
         $data = json_decode(json_encode($this), true);
         if($data['created_by'] == null) unset($data['created_by']);
         if($data['school_id'] == null) unset($data['school_id']);
+        if($data['deduction'] == null) unset($data['deduction']);
+        if($data['deduction_reason'] == null) unset($data['deduction_reason']);
+        if($data['bonus'] == null) unset($data['bonus']);
+        if($data['bonus_reason'] == null) unset($data['bonus_reason']);
         return $data;
     }
 }

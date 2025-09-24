@@ -47,4 +47,18 @@ class SalaryService
         $salary->update($data);
         return $salary;
     }
+
+    function totalCost()
+    {
+        $salaries = Salary::available();
+        $sumSalary = $salaries->sum('salary');
+        $sumBonus = $salaries->sum('bonus');
+        $sumDeduction = $salaries->sum('deduction');
+        return [
+            'salaries' => $sumSalary,
+            'bonuses' => $sumBonus,
+            'deductions' => $sumDeduction,
+            'total' => $sumSalary + $sumBonus - $sumDeduction
+        ];
+    }
 }

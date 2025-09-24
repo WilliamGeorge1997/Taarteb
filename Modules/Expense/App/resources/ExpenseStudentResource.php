@@ -22,6 +22,7 @@ class ExpenseStudentResource extends JsonResource
             'grade_category_name' => $this->expense->grade->gradeCategory->name,
             'grade_name' => $this->expense->grade->name,
             'exception_price' => $this->expense->exceptions->where('id', $this->student_id)->values()->first()->pivot->exception_price ?? null,
+            'receipt' => $this->receipt ?? null,
             'created_at' => $this->created_at->format('Y-m-d H:i A'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i A'),
             'student'=> $this->student,

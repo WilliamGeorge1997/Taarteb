@@ -16,7 +16,7 @@ class StudentFeeAdminController extends Controller
     public function __construct(StudentFeeService $studentFeeService)
     {
         $this->middleware('auth:user');
-        $this->middleware('role:School Manager');
+        $this->middleware('role:School Manager|Financial Director');
         $this->studentFeeService = $studentFeeService;
     }
 

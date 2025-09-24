@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->unsignedTinyInteger('payment_method')->comment('1: cash, 2: visa 3:online payment');
             $table->string('receipt')->nullable();
             $table->string('rejected_reason')->nullable();
-            $table->enum('status', ['pending', 'partial', 'paid', 'rejected'])->default('pending');
+            $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
             $table->timestamps();
         });
     }

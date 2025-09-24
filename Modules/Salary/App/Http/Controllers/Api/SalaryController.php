@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Modules\Salary\App\Models\Salary;
 use Modules\Salary\Service\SalaryService;
+use Modules\Salary\App\resources\SalaryResource;
 use Modules\Salary\App\Http\Requests\SalaryRequest;
 
 class SalaryController extends Controller
@@ -17,7 +18,7 @@ class SalaryController extends Controller
     public function __construct(SalaryService $salaryService)
     {
         $this->middleware('auth:user');
-        $this->middleware('role:Salaries Employee');
+        $this->middleware('role:School Manager|Financial Director|Salaries Employee');
         $this->salaryService = $salaryService;
     }
 
@@ -25,7 +26,7 @@ class SalaryController extends Controller
     {
         $relations = ['employee'];
         $salaries = $this->salaryService->findMySalaries($request->all(), $relations);
-        return returnMessage(true, 'Salaries fetched successfully', $salaries);
+        return returnMessage(true, 'Salaries fetched successfully', SalaryResource::collection($salaries)->response()->getData(true));
     }
 
     public function store(SalaryRequest $request)

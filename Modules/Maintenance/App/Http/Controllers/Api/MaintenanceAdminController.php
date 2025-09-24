@@ -24,7 +24,11 @@ class MaintenanceAdminController extends Controller
     {
         $relations = ['employee', 'school'];
         $maintenances = $this->maintenanceService->findAll($request->all(), $relations);
-        return returnMessage(true, 'Maintenances fetched successfully', $maintenances);
+        $totalCost = $this->maintenanceService->totalCost();
+        return returnMessage(true, 'Maintenances fetched successfully', [
+            'data' => $maintenances,
+            'total_cost' => $totalCost,
+        ]);
     }
 
     public function accept(Maintenance $maintenance)

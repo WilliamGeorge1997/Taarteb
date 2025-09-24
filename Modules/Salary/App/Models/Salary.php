@@ -15,7 +15,7 @@ class Salary extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['created_by', 'user_id', 'school_id', 'salary', 'month', 'year'];
+    protected $fillable = ['created_by', 'user_id', 'school_id', 'salary', 'month', 'year', 'deduction', 'deduction_reason', 'bonus', 'bonus_reason'];
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
@@ -52,7 +52,7 @@ class Salary extends Model
         if (auth('user')->check()) {
             $admin = auth('user')->user();
             if ($admin->hasRole('Super Admin')) {
-            } else if ($admin->hasRole('School Manager') || $admin->hasRole('Financial Director')) {
+            } else if ($admin->hasAnyRole('School Manager', 'Financial Director')) {
                 $query->where('school_id', $admin->school_id);
             }
         }

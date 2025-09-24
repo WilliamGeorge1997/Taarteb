@@ -39,7 +39,7 @@ class ExpenseStudentAdminController extends Controller
 
     public function sendNotificationToStudent($studentExpense)
     {
-        if ($studentExpense->status === 'paid') {
+        if ($studentExpense->status === 'accepted') {
             $data = [
                 'title' => 'تم دفع النفقات',
                 'description' => 'تم دفع نفقاتك بنجاح.',

@@ -25,6 +25,10 @@ class SalaryRequest extends FormRequest
             'salary' => ['required', 'numeric', 'min:0'],
             'month' => ['required', 'integer', 'min:1', 'max:12'],
             'year' => ['required', 'integer', 'max:65535'],
+            'deduction' => ['sometimes', 'numeric', 'min:0'],
+            'deduction_reason' => ['nullable', 'sometimes', 'string', 'max:255'],
+            'bonus' => ['sometimes', 'numeric', 'min:0'],
+            'bonus_reason' => ['nullable', 'sometimes', 'string', 'max:255'],
         ];
 
     }
@@ -39,6 +43,10 @@ class SalaryRequest extends FormRequest
             'salary' => 'Salary',
             'month' => 'Month',
             'year' => 'Year',
+            'deduction' => 'Deduction',
+            'deduction_reason' => 'Deduction Reason',
+            'bonus' => 'Bonus',
+            'bonus_reason' => 'Bonus Reason',
         ];
     }
 

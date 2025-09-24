@@ -12,7 +12,7 @@ class ExpenseStudentAdminRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => ['required', 'in:paid,rejected'],
+            'status' => ['required', 'in:accepted,rejected'],
             'rejected_reason' => ['required_if:status,rejected', 'string', 'max:255'],
         ];
 
