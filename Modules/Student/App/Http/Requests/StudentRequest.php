@@ -22,8 +22,8 @@ class StudentRequest extends FormRequest
         if ($this->isMethod('POST')) {
             $rules = [
                 'name' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'email', 'unique:students,email', 'unique:students,parent_email', 'different:parent_email'],
-                'identity_number' => ['required', 'string'],
+                'email' => ['required', 'email', 'unique:students,email', 'unique:students,parent_email', 'different:parent_email', 'unique:users,email'],
+                'identity_number' => ['nullable', 'string'],
                 'gender' => ['required', 'in:m,f'],
                 'grade_id' => auth('user')->user()->hasRole('School Manager') ?
                     ['required', 'exists:grades,id', new GradeBelongToSchool( auth('user')->user()->school_id)] :
@@ -34,6 +34,9 @@ class StudentRequest extends FormRequest
                 'parent_email' => ['nullable', 'email', 'unique:students,parent_email', 'unique:students,email', 'different:email'],
                 'parent_phone' => ['required', 'string'],
                 'is_fee_paid' => ['required', 'in:0,1'],
+                'address' => ['nullable', 'string'],
+                'password' => ['required', 'string', 'min:6'],
+                'password_confirmation' => ['required', 'string', 'min:6', 'same:password'],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['required', 'exists:schools,id'];
@@ -72,6 +75,9 @@ class StudentRequest extends FormRequest
                 ],
                 'parent_phone' => ['nullable', 'string'],
                 'is_fee_paid' => ['nullable', 'in:0,1'],
+                'address' => ['nullable', 'string'],
+                'password' => ['nullable', 'string', 'min:6'],
+                'password_confirmation' => ['nullable', 'string', 'min:6', 'same:password'],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['nullable', 'exists:schools,id'];

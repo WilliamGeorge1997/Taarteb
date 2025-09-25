@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Modules\Student\DTO\StudentDto;
 use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
+use Modules\User\DTO\StudentUserDto;
+use Modules\User\Service\UserService;
 use Modules\Student\App\Models\Student;
 use Modules\Student\Service\StudentService;
 use Modules\Student\App\resources\StudentResource;
@@ -43,8 +45,10 @@ class StudentController extends Controller
     {
         try {
             DB::beginTransaction();
+            $studentUserData = (new StudentUserDto($request))->dataFromRequest();
+            $studentUser = (new UserService())->saveStudentUser($studentUserData);
             $data = (new StudentDto($request))->dataFromRequest();
-            $student = $this->studentService->create($data);
+            $student = $this->studentService->create($data, $studentUser);
             DB::commit();
             return returnMessage(true, 'Student Created Successfully', $student);
         } catch (Exception $e) {

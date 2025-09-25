@@ -21,7 +21,7 @@ class StudentRegisterRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'unique:students,email', 'unique:students,parent_email', 'unique:users,email', 'different:parent_email'],
             'phone' => ['required', 'string', 'unique:users,phone'],
-            'identity_number' => ['required', 'string'],
+            'identity_number' => ['nullable', 'string'],
             'gender' => ['required', 'in:m,f'],
             'parent_email' => ['nullable', 'email', 'unique:students,parent_email', 'unique:students,email', 'different:email'],
             'parent_phone' => ['required', 'string'],
@@ -30,6 +30,7 @@ class StudentRegisterRequest extends FormRequest
             'password' => ['required', 'string', 'min:6'],
             'password_confirmation' => ['required', 'string', 'min:6', 'same:password'],
             'application_form' => ['required', 'file', 'mimes:pdf', 'max:1024'],
+            'address' => ['nullable', 'string'],
         ];
     }
 
@@ -51,6 +52,7 @@ class StudentRegisterRequest extends FormRequest
             'password' => 'Password',
             'password_confirmation' => 'Password Confirmation',
             'application_form' => 'Application Form',
+            'address' => 'Address',
         ];
     }
 

@@ -46,6 +46,8 @@ class UserService
             if ($data['name']) {
                 $user->school()->update(['name' => $data['name']]);
             }
+        } elseif ($user->hasRole('Student')) {
+            $user->student()->update(['name' => $data['name'], 'email' => $data['email']]);
         } else {
             $user->update($data);
         }

@@ -14,6 +14,7 @@ class StudentRegisterDto
     public $school_id;
     public $is_fee_paid;
     public $is_register;
+    public $address;
 
     public function __construct($request , $user_id) {
         if($request->get('name')) $this->name = $request->get('name');
@@ -24,6 +25,7 @@ class StudentRegisterDto
         if($request->get('parent_phone')) $this->parent_phone = $request->get('parent_phone');
         if($request->get('grade_id')) $this->grade_id = $request->get('grade_id');
         if($request->get('school_id')) $this->school_id = $request->get('school_id');
+        if($request->get('address')) $this->address = $request->get('address');
         $this->user_id = $user_id;
         $this->is_register = 1;
         $this->is_fee_paid = 0;
@@ -40,6 +42,7 @@ class StudentRegisterDto
         if($this->gender == null) unset($data['gender']);
         if($this->grade_id == null) unset($data['grade_id']);
         if($this->school_id == null) unset($data['school_id']);
+        if($this->address == null) unset($data['address']);
         return $data;
     }
 }

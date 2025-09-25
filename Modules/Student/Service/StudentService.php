@@ -45,18 +45,24 @@ class StudentService
         return $student;
     }
 
-    function create($data)
+    function create($data, $studentUser)
     {
         if (request()->hasFile('application_form')) {
             $data['application_form'] = $this->uploadFile(request()->file('application_form'), 'student/application_form');
         }
-        $student = Student::create($data);
+        $student = $studentUser->student()->create($data);
         return $student;
     }
 
     function update($student, $data)
     {
         $student->update($data);
+        if ($student->user_id) {
+            $student->user->update([
+                'name' => $student->name,
+                'email' => $student->email,
+            ]);
+        }
         return $student;
     }
 

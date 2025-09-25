@@ -31,7 +31,7 @@ class Student extends Model
      * The attributes that are mass assignable.
      */
 
-    protected $fillable = ['name', 'email', 'identity_number', 'parent_email', 'parent_phone', 'grade_id', 'class_id', 'school_id', 'gender', 'is_graduated', 'is_active', 'user_id', 'is_fee_paid', 'application_form', 'is_register'];
+    protected $fillable = ['name', 'email', 'identity_number', 'parent_email', 'parent_phone', 'grade_id', 'class_id', 'school_id', 'gender', 'is_graduated', 'is_active', 'user_id', 'is_fee_paid', 'application_form', 'is_register', 'address'];
     protected function serializeDate(\DateTimeInterface $date)
     {
         return $date->format('Y-m-d h:i A');
