@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Route;
     |
 */
 
-Route::middleware(['auth:sanctum'])->prefix('v1')->name('api.')->group(function () {
-    Route::get('notification', fn (Request $request) => $request->user())->name('notification');
+Route::group([
+    'prefix' => 'notification',
+], function ($router) {
+
+    Route::get('all', 'NotificationController@index');
+    Route::post('read', 'NotificationController@readNotification');
+    Route::get('unReadNotificationsCount', 'NotificationController@unReadNotificationsCount');
 });
