@@ -2,9 +2,10 @@
 
 namespace Modules\Expense\Service;
 
+use Illuminate\Support\Facades\File;
 use Modules\Expense\App\Models\Expense;
-use Modules\Expense\App\Models\StudentExpense;
 use Modules\Common\Helpers\UploadHelper;
+use Modules\Expense\App\Models\StudentExpense;
 
 
 class StudentExpenseService
@@ -48,9 +49,24 @@ class StudentExpenseService
 
     function create($data)
     {
-        if (request()->hasFile('receipt'))
+        $existingStudentExpense = StudentExpense::where('student_id', $data['student_id'])
+            ->where('expense_id', $data['expense_id'])
+            ->first();
+
+        if (request()->hasFile('receipt')) {
+            if ($existingStudentExpense && $existingStudentExpense->receipt) {
+                File::delete(public_path('uploads/student/expense/receipt/' . $this->getImageName('student/expense/receipt', $existingStudentExpense->receipt)));
+            }
             $data['receipt'] = $this->upload(request()->file('receipt'), 'student/expense/receipt');
-        $studentExpense = StudentExpense::create($data);
+        }
+
+        $studentExpense = StudentExpense::updateOrCreate(
+            [
+                'student_id' => $data['student_id'],
+                'expense_id' => $data['expense_id']
+            ],
+            $data
+        );
         return $studentExpense;
     }
 
