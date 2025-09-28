@@ -31,8 +31,8 @@ class StudentRegisterController extends Controller
             DB::beginTransaction();
             $studentUserData = (new StudentUserDto($request))->dataFromRequest();
             $studentUser = $this->userService->saveStudentUser($studentUserData);
-            $data = (new StudentRegisterDto($request, $studentUser->id))->dataFromRequest();
-            $student = $this->studentService->create($data);
+            $data = (new StudentRegisterDto($request))->dataFromRequest();
+            $student = $this->studentService->create($data, $studentUser);
             $token = auth('user')->login($studentUser);
             DB::commit();
             return $this->respondWithToken($token);

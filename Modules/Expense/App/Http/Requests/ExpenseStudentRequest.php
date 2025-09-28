@@ -36,15 +36,15 @@ class ExpenseStudentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $studentExpense = StudentExpense::query()
-            ->where('student_id', auth('user')->user()->student->id)
-            ->where('expense_id', $this->input('expense_id'))
-            ->first();
-        if ($studentExpense) {
-            throw new HttpResponseException(
-                returnMessage(false, 'You have already requested to pay this expense before', null, 'unprocessable_entity')
-            );
-        }
+        // $studentExpense = StudentExpense::query()
+        //     ->where('student_id', auth('user')->user()->student->id)
+        //     ->where('expense_id', $this->input('expense_id'))
+        //     ->first();
+        // if ($studentExpense) {
+        //     throw new HttpResponseException(
+        //         returnMessage(false, 'You have already requested to pay this expense before', null, 'unprocessable_entity')
+        //     );
+        // }
         return true;
     }
 

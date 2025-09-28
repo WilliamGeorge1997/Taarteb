@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Modules\Notification\App\Http\Controllers\Api\NotificationController;
 
 /*
     |--------------------------------------------------------------------------
@@ -18,7 +18,7 @@ Route::group([
     'prefix' => 'notification',
 ], function ($router) {
 
-    Route::get('all', 'NotificationController@index');
-    Route::post('read', 'NotificationController@readNotification');
-    Route::get('unReadNotificationsCount', 'NotificationController@unReadNotificationsCount');
+    Route::get('all', [NotificationController::class, 'index']);
+    Route::post('read', [NotificationController::class, 'readNotification']);
+    Route::get('unReadNotificationsCount', [NotificationController::class, 'unReadNotificationsCount']);
 });

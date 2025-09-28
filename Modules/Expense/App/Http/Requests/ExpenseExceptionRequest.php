@@ -16,6 +16,7 @@ class ExpenseExceptionRequest extends FormRequest
             'student_ids' => ['required', 'array'],
             'student_ids.*' => ['required', 'exists:students,id,school_id,' . auth('user')->user()->school_id, 'distinct'],
             'exception_price' => ['required', 'numeric', 'min:0'],
+            'notes' => ['nullable', 'string'],
         ];
 
     }
@@ -29,6 +30,7 @@ class ExpenseExceptionRequest extends FormRequest
             'student_ids' => 'Student IDs',
             'student_ids.*' => 'Student ID',
             'exception_price' => 'Exception Price',
+            'notes' => 'Notes',
         ];
     }
 

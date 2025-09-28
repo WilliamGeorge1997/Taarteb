@@ -13,7 +13,3 @@ use Modules\Notification\App\Http\Controllers\NotificationController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::group([], function () {
-    Route::resource('notification', NotificationController::class)->names('notification');
-});

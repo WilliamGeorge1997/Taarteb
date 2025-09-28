@@ -47,7 +47,7 @@ class ExpenseService
 
     function saveExceptions($expense, $data)
     {
-        $expense->exceptions()->attach($data['student_ids'], ['exception_price' => $data['exception_price']]);
+        $expense->exceptions()->attach($data['student_ids'], ['exception_price' => $data['exception_price'], 'notes' => $data['notes']]);
         return $expense->load('exceptions');
     }
 
@@ -56,7 +56,7 @@ class ExpenseService
         foreach ($data['student_ids'] as $student_id) {
             $expense->exceptions()->updateExistingPivot(
                 $student_id,
-                ['exception_price' => $data['exception_price']]
+                ['exception_price' => $data['exception_price'], 'notes' => $data['notes']]
             );
         }
         return $expense->load('exceptions');
