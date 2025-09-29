@@ -19,8 +19,8 @@ class GradeCategoryController extends Controller
     public function __construct(GradeCategoryService $gradeCategoryService)
     {
         $this->middleware('auth:user');
-        $this->middleware('role:Super Admin|School Manager');
-        $this->middleware('role:Financial Director')->only('index');
+        $this->middleware('role:Super Admin|School Manager')->except('index');
+        $this->middleware('role:Super Admin|School Manager|Financial Director')->only('index');
 
         // $this->middleware('permission:Index-grade-category|Create-grade-category|Edit-grade-category|Delete-grade-category', ['only' => ['index', 'store']]);
         // $this->middleware('permission:Create-grade-category', ['only' => ['store']]);

@@ -21,7 +21,7 @@ class StudentResource extends JsonResource
             'gender' => $this->gender == 'm' ? 'Male' : 'Female',
             'grade' => $this->grade->name,
             'grade_category' => $this->grade->gradeCategory->name,
-            'class' => $this->class->name,
+            'class' => $this->class->name ?? null,
             'school' => $this->school->name,
             'is_active' => $this->is_active,
             'is_graduated' => $this->is_graduated,
