@@ -41,15 +41,18 @@ class ExpenseStudentController extends Controller
             $studentExpense = $this->studentExpenseService->create($data);
             return returnMessage(true, 'Student expense created successfully', $studentExpense);
         } catch (\Exception $e) {
-            return returnMessage(false, 'Student expense creation failed', $e->getMessage());
+            return returnMessage(false, $e->getMessage(), null, 'server_error');
         }
     }
 
     public function update(Request $request, StudentExpense $studentExpense)
     {
+        if ($studentExpense->status != 'rejected') 
+            return returnMessage(false, 'You cannot update this expense at this moment', null, 'bad_request');
+
         $request->validate([
             'receipt' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
-            'payment_method'=>['nullable','sometimes','in:1,2,3']
+            'payment_method' => ['nullable', 'sometimes', 'in:1,2,3']
         ]);
         $this->studentExpenseService->update($studentExpense);
         return returnMessage(true, 'Student expense updated successfully');

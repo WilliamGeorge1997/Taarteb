@@ -30,4 +30,12 @@ class StudentFeeService
             $data['receipt'] = $this->upload(request()->file('receipt'), 'student/receipt');
         return StudentFee::create($data);
     }
+
+    public function update($data, $studentFee)
+    {
+        if (request()->hasFile('receipt'))
+            $data['receipt'] = $this->upload(request()->file('receipt'), 'student/receipt');
+        $studentFee->update($data);
+        return $studentFee;
+    }
 }

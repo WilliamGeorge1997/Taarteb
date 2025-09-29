@@ -11,19 +11,36 @@ class RequiredExpensesResource extends JsonResource
      */
     public function toArray($request): array
     {
+        $total_amount_required = $this->requests->first()->amount;
+        $total_paid_amount = $this->requests->sum('amount_paid');
+        $total_amount_due = $total_amount_required - $total_paid_amount;
+
         return [
             'id' => $this->id,
             'school_name' => $this->school->name,
             'grade_category_name' => $this->gradeCategory->name,
             'grade_name' => $this->grade->name,
             'price' => $this->price,
+            'year' => $this->created_at->format('Y') ?? null,
             'exceptions_price' => $this->exceptions->first()->pivot->exception_price ?? null,
             'exceptions_notes' => $this->exceptions->first()->pivot->notes ?? null,
-            'year' => $this->created_at->format('Y') ?? null,
-            'payment_method' => $this->requests->first()->payment_method ?? null,
-            'status' => $this->requests->first()->status ?? null,
-            'pay_date' => $this->requests->first()->date ?? null,
-            'rejected_reason' => $this->requests->first()->rejected_reason ?? null,
+            'student_expenses' => $this->requests->map(function ($request) {
+                return [
+                    'id' => $request->id,
+                    'amount' => $request->amount,
+                    'amount_paid' => $request->amount_paid ?? null,
+                    'receipt' => $request->receipt,
+                    'payment_status' => $request->payment_status ?? null,
+                    'payment_method' => $request->payment_method,
+                    'date' => $request->date,
+                    'status' => $request->status,
+                    'rejected_reason' => $request->rejected_reason ?? null,
+                ];
+            }),
+            'total_amount_required' => $total_amount_required,
+            'total_amount_paid' => $total_paid_amount,
+            'total_amount_due' => $total_amount_due,
+
         ];
     }
 }

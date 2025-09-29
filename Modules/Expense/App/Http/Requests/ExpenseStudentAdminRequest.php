@@ -14,6 +14,7 @@ class ExpenseStudentAdminRequest extends FormRequest
         return [
             'status' => ['required', 'in:accepted,rejected'],
             'rejected_reason' => ['required_if:status,rejected', 'string', 'max:255'],
+            'amount_paid' => ['prohibited_if:status,rejected', 'required_if:status,accepted', 'numeric', 'min:0'],
         ];
 
     }

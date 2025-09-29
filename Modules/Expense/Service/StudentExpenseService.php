@@ -14,17 +14,17 @@ class StudentExpenseService
     function findAll($data = [], $relations = [])
     {
         $studentExpenses = StudentExpense::query()
-        ->when($data['grade_id'] ?? null, function ($query) use ($data) {
-            $query->whereHas('expense', function ($query) use ($data) {
-                $query->where('grade_id', $data['grade_id']);
-            });
-        })
-        ->when($data['grade_category_id'] ?? null, function ($query) use ($data) {
-            $query->whereHas('expense', function ($query) use ($data) {
-                $query->where('grade_category_id', $data['grade_category_id']);
-            });
-        })
-        ->with($relations)->latest();
+            ->when($data['grade_id'] ?? null, function ($query) use ($data) {
+                $query->whereHas('expense', function ($query) use ($data) {
+                    $query->where('grade_id', $data['grade_id']);
+                });
+            })
+            ->when($data['grade_category_id'] ?? null, function ($query) use ($data) {
+                $query->whereHas('expense', function ($query) use ($data) {
+                    $query->where('grade_category_id', $data['grade_category_id']);
+                });
+            })
+            ->with($relations)->latest();
         return getCaseCollection($studentExpenses, $data);
     }
 
@@ -49,24 +49,10 @@ class StudentExpenseService
 
     function create($data)
     {
-        $existingStudentExpense = StudentExpense::where('student_id', $data['student_id'])
-            ->where('expense_id', $data['expense_id'])
-            ->first();
-
         if (request()->hasFile('receipt')) {
-            if ($existingStudentExpense && $existingStudentExpense->receipt) {
-                File::delete(public_path('uploads/student/expense/receipt/' . $this->getImageName('student/expense/receipt', $existingStudentExpense->receipt)));
-            }
             $data['receipt'] = $this->upload(request()->file('receipt'), 'student/expense/receipt');
         }
-
-        $studentExpense = StudentExpense::updateOrCreate(
-            [
-                'student_id' => $data['student_id'],
-                'expense_id' => $data['expense_id']
-            ],
-            $data
-        );
+        $studentExpense = StudentExpense::create($data);
         return $studentExpense;
     }
 
@@ -81,6 +67,28 @@ class StudentExpenseService
             $data['payment_method'] = request()->payment_method;
         }
         $studentExpense->update($data);
+        return $studentExpense;
+    }
+
+    function updateStatus($data, $studentExpense)
+    {
+        $paymentStatus = null;
+        if ($data['status'] == 'accepted') {
+            $allStudentExpenses = StudentExpense::where('expense_id', $studentExpense->expense_id)
+                ->where('student_id', $studentExpense->student_id)
+                ->get();
+            $totalAmountPaid = $allStudentExpenses->sum('amount_paid');
+            $requiredAmount = $studentExpense->amount;
+            $paymentStatus = ($totalAmountPaid >= $requiredAmount) ? 'full' : 'partial';
+        }
+        
+        $studentExpense->update([
+            'status' => $data['status'],
+            'rejected_reason' => @$data['rejected_reason'],
+            'amount_paid' => $data['amount_paid'] ?? 0,
+            'payment_status' => @$paymentStatus,
+        ]);
+
         return $studentExpense;
     }
 

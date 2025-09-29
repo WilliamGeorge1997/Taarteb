@@ -46,3 +46,4 @@ Route::group(['prefix' => 'admin'], function () {
 
 Route::get('student-fees', [StudentFeeController::class, 'myFees']);
 Route::post('student-fees', [StudentFeeController::class, 'store']);
+Route::post('student-fees/{studentFee}', [StudentFeeController::class, 'update']);

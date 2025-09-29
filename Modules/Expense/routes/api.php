@@ -31,5 +31,5 @@ Route::group(['prefix' => 'admin'], function () {
 Route::group(['prefix' => 'student'], function () {
     Route::get('required-expenses', [ExpenseStudentController::class, 'requiredExpenses']);
     Route::apiResource('expenses', ExpenseStudentController::class)->only(['index', 'store']);
-    // Route::post('expenses/{studentExpense}', [ExpenseStudentController::class, 'update']);
+    Route::post('expenses/{studentExpense}', [ExpenseStudentController::class, 'update']);
 });

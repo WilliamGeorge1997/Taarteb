@@ -29,10 +29,7 @@ class ExpenseStudentAdminController extends Controller
 
     public function update(ExpenseStudentAdminRequest $request, StudentExpense $studentExpense)
     {
-        $studentExpense->update([
-            'status' => $request->status,
-            'rejected_reason' => @$request->rejected_reason
-        ]);
+        $studentExpense = $this->studentExpenseService->updateStatus($request->all(),$studentExpense);
         $this->sendNotificationToStudent($studentExpense);
         return returnMessage(true, 'Student expense status updated successfully', $studentExpense);
     }

@@ -14,7 +14,9 @@ class ExpenseStudentResource extends JsonResource
         return [
             'id' => $this->id,
             'final_amount' => $this->amount,
+            'amount_paid' => $this->amount_paid,
             'date' => $this->date,
+            'payment_status' => $this->payment_status ?? null,
             'payment_method' => $this->payment_method,
             'status' => $this->status,
             'rejected_reason' => $this->rejected_reason ?? null,

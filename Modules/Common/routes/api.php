@@ -18,6 +18,7 @@ use Modules\Common\App\Http\Controllers\Api\HistoryController;
 
 
 Route::post('contact', [CommonController::class, 'contact']);
+Route::get('financial-report', [CommonController::class, 'financialReport'])->middleware(['auth:user', 'role:Super Admin|School Manager|Financial Director']);
 Route::apiResource('history', HistoryController::class)->only(['index']);
 Route::apiResource('intros', IntroController::class)->only(['index', 'store', 'destroy']);
 Route::post('intros/{intro}', [IntroController::class, 'update']);
