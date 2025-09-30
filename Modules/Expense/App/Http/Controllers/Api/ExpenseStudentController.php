@@ -11,6 +11,7 @@ use Modules\Expense\App\Models\StudentExpense;
 use Modules\Expense\Service\StudentExpenseService;
 use Modules\Expense\App\resources\RequiredExpensesResource;
 use Modules\Expense\App\Http\Requests\ExpenseStudentRequest;
+use Modules\Notification\Service\NotificationService;
 
 class ExpenseStudentController extends Controller
 {
@@ -39,6 +40,7 @@ class ExpenseStudentController extends Controller
         try {
             $data = (new StudentExpenseDto($request))->dataFromRequest();
             $studentExpense = $this->studentExpenseService->create($data);
+            $this->sendNotificationToAdmins($studentExpense);
             return returnMessage(true, 'Student expense created successfully', $studentExpense);
         } catch (\Exception $e) {
             return returnMessage(false, $e->getMessage(), null, 'server_error');
@@ -47,7 +49,7 @@ class ExpenseStudentController extends Controller
 
     public function update(Request $request, StudentExpense $studentExpense)
     {
-        if ($studentExpense->status != 'rejected') 
+        if ($studentExpense->status != 'rejected')
             return returnMessage(false, 'You cannot update this expense at this moment', null, 'bad_request');
 
         $request->validate([
@@ -56,5 +58,15 @@ class ExpenseStudentController extends Controller
         ]);
         $this->studentExpenseService->update($studentExpense);
         return returnMessage(true, 'Student expense updated successfully');
+    }
+
+
+    private function sendNotificationToAdmins($studentExpense)
+    {
+        $data = [
+            'title' => 'تم إنشاء طلب دفع نفقة رقم : ' . $studentExpense->id,
+            'description' => 'تم إنشاء طلب دفع نفقة رقم : ' . $studentExpense->id . ' بواسطة الطالب: ' . auth('user')->user()->name,
+        ];
+        (new NotificationService())->sendNotificationToAdmins($data, $studentExpense->school_id, 'student_expense');
     }
 }

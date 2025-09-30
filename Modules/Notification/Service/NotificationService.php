@@ -52,10 +52,29 @@ class NotificationService
 
     function sendNotificationToUser($data, $user_id, $group_by)
     {
-        (new NotificationService())->save($data, $user_id, $group_by);
+        $this->save($data, $user_id, $group_by);
         $fcm = new FCMService;
         $user_token = (new UserService())->findToken($user_id);
         if ($user_token ?? null)
             $fcm->sendNotification($data, [$user_token]);
+    }
+
+    function sendNotificationToAdmins($data, $school_id, $group_by)
+    {
+        $admins = User::where('school_id', $school_id)
+            ->whereIn('role', ['School Manager', 'Financial Director'])
+            ->get();
+
+        $tokens = [];
+        foreach ($admins as $admin) {
+            $this->save($data, $admin->id, $group_by);
+            $token = (new UserService())->findToken($admin->id);
+            if ($token) {
+                $tokens[] = $token;
+            }
+        }
+        if (!empty($tokens)) {
+            (new FCMService())->sendNotification($data, $tokens);
+        }
     }
 }

@@ -5,6 +5,9 @@ namespace Modules\Expense\App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Modules\Student\App\Models\Student;
+use Modules\School\Service\SchoolService;
+use Modules\Common\Helpers\WhatsAppService;
 use Modules\Expense\App\Models\StudentExpense;
 use Modules\Expense\Service\StudentExpenseService;
 use Modules\Notification\Service\NotificationService;
@@ -31,6 +34,7 @@ class ExpenseStudentAdminController extends Controller
     {
         $studentExpense = $this->studentExpenseService->updateStatus($request->all(),$studentExpense);
         $this->sendNotificationToStudent($studentExpense);
+        $this->parentNotificationWhatsApp($studentExpense);
         return returnMessage(true, 'Student expense status updated successfully', $studentExpense);
     }
 
@@ -48,5 +52,18 @@ class ExpenseStudentAdminController extends Controller
             ];
         }
         (new NotificationService())->sendNotificationToUser($data, $studentExpense->student->user_id, 'expense');
+    }
+
+    private function parentNotificationWhatsApp($studentExpense)
+    {
+        $schoolSettings = (new SchoolService())->findById($studentExpense->school_id)->settings;
+        $student = Student::find($studentExpense->student_id);
+        if ($student->parent_phone) {
+            $whatsAppService = new WhatsAppService($schoolSettings);
+            $message = $studentExpense->status == 'accepted'
+                ? 'تم دفع نفقاتك بنجاح'
+                : 'تم رفض طلب دفع النفقات الخاص بك و السبب: ' . ($studentExpense->rejected_reason ?? 'لم يتم تحديد السبب');
+            $whatsAppService->sendMessage($student->parent_phone, $message);
+        }
     }
 }

@@ -20,6 +20,8 @@ class Expense extends Model
      * The attributes that are mass assignable.
      */
     protected $fillable = ['user_id', 'school_id', 'grade_category_id', 'grade_id', 'price', 'amount', 'amount_paid', 'payment_status'];
+
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

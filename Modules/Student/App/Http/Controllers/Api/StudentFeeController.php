@@ -10,6 +10,7 @@ use Modules\Student\DTO\StudentFeeDto;
 use Modules\Student\App\Models\StudentFee;
 use Modules\Student\Service\StudentFeeService;
 use Modules\Student\App\Http\Requests\StudentFeeRequest;
+use Modules\Notification\Service\NotificationService;
 
 class StudentFeeController extends Controller
 {
@@ -33,6 +34,7 @@ class StudentFeeController extends Controller
             DB::beginTransaction();
             $data = (new StudentFeeDto($request))->dataFromRequest();
             $studentFee = $this->studentFeeService->save($data);
+            $this->sendNotificationToAdmins($studentFee);
             DB::commit();
             return returnMessage(true, 'Student Fee Created Successfully', $studentFee);
         } catch (Exception $e) {
@@ -51,4 +53,12 @@ class StudentFeeController extends Controller
         return returnMessage(true, 'Student Fee Updated Successfully', $studentFee);
     }
 
+    private function sendNotificationToAdmins($studentFee)
+    {
+        $data = [
+            'title' => 'تم إنشاء طلب دفع استمارة الطالب رقم : ' . $studentFee->id,
+            'description' => 'تم إنشاء طلب دفع استمارة الطالب رقم : ' . $studentFee->id . ' بواسطة موظف الطالب: ' . auth('user')->user()->name,
+        ];
+        (new NotificationService())->sendNotificationToAdmins($data, $studentFee->school_id, 'student_fee');
+    }
 }

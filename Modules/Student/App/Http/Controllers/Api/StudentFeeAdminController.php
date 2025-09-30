@@ -51,13 +51,13 @@ class StudentFeeAdminController extends Controller
     {
         if ($studentFee->status == 'accepted') {
             $data = [
-                'title' => 'تم قبول طلب الرسوم',
-                'description' => 'تم قبول طلب الرسوم الخاص بك.',
+                'title' => 'تم قبول طلب دفع الاستمارة الخاصة بك',
+                'description' => 'تم قبول طلب دفع الاستمارة الخاصة بك.',
             ];
         } elseif ($studentFee->status == 'rejected') {
             $data = [
-                'title' => 'تم رفض طلب الرسوم',
-                'description' => 'تم رفض طلب الرسوم الخاص بك. السبب: ' . ($studentFee->reason ?? 'لم يتم تحديد السبب'),
+                'title' => 'تم رفض طلب دفع الاستمارة الخاصة بك',
+                'description' => 'تم رفض طلب دفع الاستمارة الخاصة بك. السبب: ' . ($studentFee->reason ?? 'لم يتم تحديد السبب'),
             ];
         }
         (new NotificationService())->sendNotificationToUser($data, $studentFee->student->user_id, 'student_fee');

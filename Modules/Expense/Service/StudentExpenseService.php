@@ -81,7 +81,7 @@ class StudentExpenseService
             $requiredAmount = $studentExpense->amount;
             $paymentStatus = ($totalAmountPaid >= $requiredAmount) ? 'full' : 'partial';
         }
-        
+
         $studentExpense->update([
             'status' => $data['status'],
             'rejected_reason' => @$data['rejected_reason'],
@@ -89,7 +89,7 @@ class StudentExpenseService
             'payment_status' => @$paymentStatus,
         ]);
 
-        return $studentExpense;
+        return $studentExpense->fresh();
     }
 
     function delete($studentExpense)

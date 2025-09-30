@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Modules\Purchase\DTO\PurchaseDto;
 use Modules\Purchase\App\Models\Purchase;
 use Modules\Purchase\Service\PurchaseService;
+use Modules\Notification\Service\NotificationService;
 use Modules\Purchase\App\Http\Requests\PurchaseRequest;
 use Modules\Purchase\App\Http\Middleware\CheckPurchaseStatusForUpdate;
 
@@ -35,6 +36,7 @@ class PurchaseController extends Controller
             DB::beginTransaction();
             $data = (new PurchaseDto($request, true))->dataFromRequest();
             $purchase = $this->purchaseService->create($data);
+            $this->sendNotificationToAdmins($purchase);
             DB::commit();
             return returnMessage(true, 'Purchase created successfully', $purchase);
         } catch (\Exception $e) {
@@ -49,11 +51,21 @@ class PurchaseController extends Controller
             DB::beginTransaction();
             $data = (new PurchaseDto($request))->dataFromRequest();
             $purchase = $this->purchaseService->update($purchase, $data);
+            $this->sendNotificationToAdmins($purchase, 'update');
             DB::commit();
             return returnMessage(true, 'Purchase updated successfully', $purchase);
         } catch (\Exception $e) {
             DB::rollBack();
             return returnMessage(false, $e->getMessage(), null, 'server_error');
         }
+    }
+
+    private function sendNotificationToAdmins($purchase, $update = false)
+    {
+        $data = [
+            'title' => $update ? 'تم تحديث طلب شراء رقم : ' . $purchase->id : 'رقم : ' . $purchase->id . ' تم إنشاء طلب شراء',
+            'description' => $update ? 'تم تحديث طلب شراء بواسطة موظف المشتريات: ' . auth('user')->user()->name : 'تم إنشاء طلب شراء جديد بواسطة موظف المشتريات: ' . auth('user')->user()->name,
+        ];
+        (new NotificationService())->sendNotificationToAdmins($data, $purchase->school_id, 'purchase');
     }
 }

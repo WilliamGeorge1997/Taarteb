@@ -4,6 +4,7 @@ namespace Modules\Expense\App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Modules\Expense\App\Models\StudentExpense;
 use Modules\Expense\DTO\ExpenseDto;
 use App\Http\Controllers\Controller;
 use Modules\Expense\App\Models\Expense;
