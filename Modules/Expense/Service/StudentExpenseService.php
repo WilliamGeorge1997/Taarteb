@@ -24,6 +24,7 @@ class StudentExpenseService
                     $query->where('grade_category_id', $data['grade_category_id']);
                 });
             })
+            ->available()
             ->with($relations)->latest();
         return getCaseCollection($studentExpenses, $data);
     }
@@ -52,6 +53,28 @@ class StudentExpenseService
         if (request()->hasFile('receipt')) {
             $data['receipt'] = $this->upload(request()->file('receipt'), 'student/expense/receipt');
         }
+        $existingExpenses = StudentExpense::where('expense_id', $data['expense_id'])
+            ->where('student_id', $data['student_id'])
+            ->get();
+
+        if ($existingExpenses->count() > 0) {
+            $totalAmountPaid = $existingExpenses->sum('amount_paid');
+            $latestExpense = $existingExpenses->sortByDesc('id')->first();
+
+            $pendingExpense = $existingExpenses->firstWhere('status', 'pending');
+            if ($pendingExpense) {
+                throw new \Exception('You have a pending expense request, please wait for it to be accepted or rejected');
+            }
+
+            $rejectedExpense = $existingExpenses->firstWhere('status', 'rejected');
+            if ($rejectedExpense) {
+                throw new \Exception('You have a rejected expense request, please update it before creating a new one');
+            }
+
+            if ($latestExpense && $latestExpense->payment_status === 'full' && $totalAmountPaid >= ($data['amount'])) {
+                throw new \Exception('You have paid the required amount for this expense');
+            }
+        }
         $studentExpense = StudentExpense::create($data);
         return $studentExpense;
     }
@@ -72,12 +95,13 @@ class StudentExpenseService
 
     function updateStatus($data, $studentExpense)
     {
+
         $paymentStatus = null;
         if ($data['status'] == 'accepted') {
             $allStudentExpenses = StudentExpense::where('expense_id', $studentExpense->expense_id)
                 ->where('student_id', $studentExpense->student_id)
                 ->get();
-            $totalAmountPaid = $allStudentExpenses->sum('amount_paid');
+            $totalAmountPaid = $allStudentExpenses->sum('amount_paid') + $data['amount_paid'];
             $requiredAmount = $studentExpense->amount;
             $paymentStatus = ($totalAmountPaid >= $requiredAmount) ? 'full' : 'partial';
         }

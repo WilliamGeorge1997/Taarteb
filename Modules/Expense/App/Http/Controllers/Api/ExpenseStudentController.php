@@ -57,16 +57,17 @@ class ExpenseStudentController extends Controller
             'payment_method' => ['nullable', 'sometimes', 'in:1,2,3']
         ]);
         $this->studentExpenseService->update($studentExpense);
+        $this->sendNotificationToAdmins($studentExpense, 'updated');
         return returnMessage(true, 'Student expense updated successfully');
     }
 
 
-    private function sendNotificationToAdmins($studentExpense)
+    private function sendNotificationToAdmins($studentExpense, $update = false)
     {
         $data = [
-            'title' => 'تم إنشاء طلب دفع نفقة رقم : ' . $studentExpense->id,
-            'description' => 'تم إنشاء طلب دفع نفقة رقم : ' . $studentExpense->id . ' بواسطة الطالب: ' . auth('user')->user()->name,
+            'title' => 'تم ' . ($update ? 'تحديث' : 'إنشاء') . ' طلب دفع نفقة رقم : ' . $studentExpense->id,
+            'description' => 'تم ' . ($update ? 'تحديث' : 'إنشاء') . ' طلب دفع نفقة رقم : ' . $studentExpense->id . ' بواسطة الطالب: ' . auth('user')->user()->name,
         ];
-        (new NotificationService())->sendNotificationToAdmins($data, $studentExpense->school_id, 'student_expense');
+        (new NotificationService())->sendNotificationToAdmins($data, $studentExpense->student->school_id, 'student_expense');
     }
 }

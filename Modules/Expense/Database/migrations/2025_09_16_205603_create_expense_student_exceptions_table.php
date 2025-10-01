@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignIdFor(Expense::class)->index()->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Student::class)->index()->constrained()->restrictOnDelete();
             $table->unsignedInteger('exception_price');
+            $table->string('notes')->nullable();
             $table->timestamps();
 
             $table->primary(['expense_id', 'student_id']);

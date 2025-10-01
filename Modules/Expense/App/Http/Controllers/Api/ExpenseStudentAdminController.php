@@ -3,6 +3,7 @@
 namespace Modules\Expense\App\Http\Controllers\Api;
 
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Modules\Student\App\Models\Student;
@@ -16,10 +17,12 @@ use Modules\Expense\App\Http\Requests\ExpenseStudentAdminRequest;
 
 class ExpenseStudentAdminController extends Controller
 {
+
     public function __construct(private StudentExpenseService $studentExpenseService)
     {
         $this->middleware('auth:user');
-        $this->middleware('role:School Manager|Financial Director');
+        $this->middleware('role:School Manager|Financial Director')->except('index');
+        $this->middleware('role:School Manager|Financial Director|Sales Employee')->only('index');
     }
 
     public function index(Request $request)
@@ -32,10 +35,17 @@ class ExpenseStudentAdminController extends Controller
 
     public function update(ExpenseStudentAdminRequest $request, StudentExpense $studentExpense)
     {
-        $studentExpense = $this->studentExpenseService->updateStatus($request->all(),$studentExpense);
-        $this->sendNotificationToStudent($studentExpense);
-        $this->parentNotificationWhatsApp($studentExpense);
-        return returnMessage(true, 'Student expense status updated successfully', $studentExpense);
+        try {
+            DB::beginTransaction();
+            $studentExpense = $this->studentExpenseService->updateStatus($request->all(), $studentExpense);
+            $this->sendNotificationToStudent($studentExpense);
+            $this->parentNotificationWhatsApp($studentExpense);
+            DB::commit();
+            return returnMessage(true, 'Student expense status updated successfully', $studentExpense);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return returnMessage(false, $e->getMessage(), null, 'server_error');
+        }
     }
 
     public function sendNotificationToStudent($studentExpense)
@@ -56,9 +66,9 @@ class ExpenseStudentAdminController extends Controller
 
     private function parentNotificationWhatsApp($studentExpense)
     {
-        $schoolSettings = (new SchoolService())->findById($studentExpense->school_id)->settings;
         $student = Student::find($studentExpense->student_id);
-        if ($student->parent_phone) {
+        $schoolSettings = (new SchoolService())->findById($student->school_id)->settings;
+        if ($student->parent_phone && $schoolSettings && $schoolSettings->ultramsg_token && $schoolSettings->ultramsg_instance_id) {
             $whatsAppService = new WhatsAppService($schoolSettings);
             $message = $studentExpense->status == 'accepted'
                 ? 'تم دفع نفقاتك بنجاح'

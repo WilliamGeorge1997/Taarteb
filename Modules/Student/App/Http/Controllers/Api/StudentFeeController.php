@@ -50,15 +50,16 @@ class StudentFeeController extends Controller
             return returnMessage(false, 'You cannot update this fee at this moment', null, 'bad_request');
         }
         $studentFee = $this->studentFeeService->update($request->all(), $studentFee);
+        $this->sendNotificationToAdmins($studentFee, 'updated');
         return returnMessage(true, 'Student Fee Updated Successfully', $studentFee);
     }
 
-    private function sendNotificationToAdmins($studentFee)
+    private function sendNotificationToAdmins($studentFee, $update = false)
     {
         $data = [
-            'title' => 'تم إنشاء طلب دفع استمارة الطالب رقم : ' . $studentFee->id,
-            'description' => 'تم إنشاء طلب دفع استمارة الطالب رقم : ' . $studentFee->id . ' بواسطة موظف الطالب: ' . auth('user')->user()->name,
+            'title' => 'تم ' . ($update ? 'تحديث' : 'إنشاء') . ' طلب دفع استمارة الطالب رقم : ' . $studentFee->id,
+            'description' => 'تم ' . ($update ? 'تحديث' : 'إنشاء') . ' طلب دفع استمارة الطالب رقم : ' . $studentFee->id . ' بواسطة موظف الطالب: ' . auth('user')->user()->name,
         ];
-        (new NotificationService())->sendNotificationToAdmins($data, $studentFee->school_id, 'student_fee');
+        (new NotificationService())->sendNotificationToAdmins($data, $studentFee->student->school_id, 'student_fee');
     }
 }

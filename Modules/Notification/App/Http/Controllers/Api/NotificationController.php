@@ -21,7 +21,7 @@ class NotificationController extends Controller
             ->user()
             ->notifications()
             ->orderByDesc('id')
-            ->paginate(10)
+            ->get()
             ->groupBy('group_by');
 
         return returnMessage(true, 'User Notifications', $notifications);

@@ -15,7 +15,7 @@ class RequiredExpensesResource extends JsonResource
             ? $this->requests->first()->amount
             : null;
         $total_paid_amount = $this->requests && $this->requests->isNotEmpty()
-            ? $this->requests->sum('amount_paid')
+            ? $this->requests->where('status', 'accepted')->sum('amount_paid')
             : null;
         $total_amount_due = ($total_amount_required && $total_paid_amount !== null)
             ? $total_amount_required - $total_paid_amount

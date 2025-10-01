@@ -16,6 +16,9 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(Student::class)->index()->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Expense::class)->index()->constrained()->cascadeOnDelete();
+            $table->unsignedInteger('amount')->nullable();
+            $table->unsignedInteger('amount_paid')->nullable();
+            $table->enum('payment_status', ['partial', 'full'])->nullable();
             $table->date('date')->nullable();
             $table->unsignedTinyInteger('payment_method')->comment('1: cash, 2: visa 3:online payment');
             $table->string('receipt')->nullable();

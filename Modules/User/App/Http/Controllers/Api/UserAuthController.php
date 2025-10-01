@@ -41,12 +41,12 @@ class UserAuthController extends Controller
                 $user->update(['fcm_token' => $request->fcm_token]);
             }
 
-            if ($user->hasRole('Student')) {
-                $student = $user->student;
-                if (!$student->canLogin()['status']) {
-                    return returnMessage(false, $student->canLogin()['message'], null, 'temporary_redirect');
-                }
-            }
+            // if ($user->hasRole('Student')) {
+            //     $student = $user->student;
+            //     if (!$student->canLogin()['status']) {
+            //         return returnMessage(false, $student->canLogin()['message'], null, 'temporary_redirect');
+            //     }
+            // }
 
             return $this->respondWithToken($token);
 
