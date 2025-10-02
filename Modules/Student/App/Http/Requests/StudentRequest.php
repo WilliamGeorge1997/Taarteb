@@ -37,6 +37,7 @@ class StudentRequest extends FormRequest
                 'address' => ['nullable', 'string'],
                 'password' => ['required', 'string', 'min:6'],
                 'password_confirmation' => ['required', 'string', 'min:6', 'same:password'],
+                'application_form' => ['required', 'file', 'mimes:pdf', 'max:1024'],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['required', 'exists:schools,id'];
@@ -78,6 +79,7 @@ class StudentRequest extends FormRequest
                 'address' => ['nullable', 'string'],
                 'password' => ['nullable', 'string', 'min:6'],
                 'password_confirmation' => ['nullable', 'string', 'min:6', 'same:password'],
+                'application_form' => ['nullable', 'file', 'mimes:pdf', 'max:1024'],
             ];
             if (auth('user')->user()->hasRole('Super Admin')) {
                 $rules['school_id'] = ['nullable', 'exists:schools,id'];

@@ -56,6 +56,10 @@ class StudentService
 
     function update($student, $data)
     {
+        if (request()->hasFile('application_form')) {
+            File::delete(public_path('uploads/student/application_form/' . $student->application_form));
+            $data['application_form'] = $this->uploadFile(request()->file('application_form'), 'student/application_form');
+        }
         $student->update($data);
         if ($student->user_id) {
             $student->user->update([

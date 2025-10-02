@@ -4,20 +4,19 @@ namespace Modules\Student\App\Http\Controllers\Api;
 
 use Exception;
 use Illuminate\Http\Request;
-use App\Imports\StudentsImport;
 use Illuminate\Support\Facades\DB;
 use Modules\Student\DTO\StudentDto;
 use App\Http\Controllers\Controller;
-use Maatwebsite\Excel\Facades\Excel;
 use Modules\User\DTO\StudentUserDto;
 use Modules\User\Service\UserService;
 use Modules\Student\App\Models\Student;
 use Modules\Student\Service\StudentService;
+use Modules\Student\Service\StudentImportService;
 use Modules\Student\App\resources\StudentResource;
 use Modules\Student\App\Http\Requests\StudentRequest;
 use Modules\Student\App\Http\Requests\UpgradeRequest;
 use Modules\Student\App\Http\Requests\GraduateRequest;
-use Modules\School\App\Http\Requests\SchoolImportRequest;
+use Modules\Student\App\Http\Requests\StudentImportRequest;
 
 class StudentController extends Controller
 {
@@ -122,9 +121,19 @@ class StudentController extends Controller
         }
     }
 
-    public function importStudents(SchoolImportRequest $request)
+    public function importStudents(StudentImportRequest $request)
     {
-        Excel::import(new StudentsImport, $request->file('file'));
-        return returnMessage(true, 'Students Imported Successfully', null);
+        try {
+            $importService = new StudentImportService();
+            $importService->importStudents(
+                $request->file('file'),
+                $request->file('pdf_zip')
+            );
+            return returnMessage(true, 'Students Imported Successfully', null);
+        } catch (\Illuminate\Http\Exceptions\HttpResponseException $e) {
+            return $e->getResponse();
+        } catch (Exception $e) {
+            return returnMessage(false, $e->getMessage(), null, 'server_error');
+        }
     }
 }
