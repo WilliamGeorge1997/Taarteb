@@ -95,14 +95,24 @@ class StudentExpenseService
 
     function updateStatus($data, $studentExpense)
     {
-
         $paymentStatus = null;
         if ($data['status'] == 'accepted') {
             $allStudentExpenses = StudentExpense::where('expense_id', $studentExpense->expense_id)
                 ->where('student_id', $studentExpense->student_id)
+                ->where('status', 'accepted')
                 ->get();
-            $totalAmountPaid = $allStudentExpenses->sum('amount_paid') + $data['amount_paid'];
+
+            $previouslyPaid = $allStudentExpenses->sum('amount_paid');
+            $newPayment = $data['amount_paid'];
+            $totalAmountPaid = $previouslyPaid + $newPayment;
             $requiredAmount = $studentExpense->amount;
+
+            $remaining = $requiredAmount - $previouslyPaid;
+
+            if ($newPayment > $remaining) {
+                throw new \Exception("Payment amount ({$newPayment}) exceeds remaining balance ({$remaining})");
+            }
+
             $paymentStatus = ($totalAmountPaid >= $requiredAmount) ? 'full' : 'partial';
         }
 

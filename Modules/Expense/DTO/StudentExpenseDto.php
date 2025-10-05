@@ -25,11 +25,10 @@ class StudentExpenseDto
 
     private function getAmount($expense_id)
     {
-        $expense = Expense::findOrFail($expense_id)->with([
-            'exceptions' => function ($query) {
-                $query->where('student_id', $this->student_id);
-            }
-        ])->first();
+        $expense = Expense::with(['exceptions' => function($query){
+            $query->where('student_id', $this->student_id);
+        }])->findOrFail($expense_id);
+
         if ($expense->exceptions->count() > 0) {
             return $expense->exceptions->first()->pivot->exception_price;
         }
