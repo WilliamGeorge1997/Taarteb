@@ -45,12 +45,34 @@ class StudentService
         return $student;
     }
 
-    function create($data, $studentUser)
+    function create($data, $studentUser, $studentParentData)
     {
         if (request()->hasFile('application_form')) {
             $data['application_form'] = $this->uploadFile(request()->file('application_form'), 'student/application_form');
         }
+        if (request()->hasFile('parent_identity_card_image')) {
+            $data['parent_identity_card_image'] = $this->uploadFile(request()->file('parent_identity_card_image'), 'student/application_form');
+        }
+        if (request()->hasFile('student_residence_card_image')) {
+            $data['student_residence_card_image'] = $this->uploadFile(request()->file('student_residence_card_image'), 'student/application_form');
+        }
+        if (request()->hasFile('image')) {
+            $data['image'] = $this->uploadFile(request()->file('image'), 'student/application_form');
+        }
+        if (request()->hasFile('student_passport_image')) {
+            $data['student_passport_image'] = $this->uploadFile(request()->file('student_passport_image'), 'student/application_form');
+        }
+        if (request()->hasFile('student_birth_certificate_image')) {
+            $data['student_birth_certificate_image'] = $this->uploadFile(request()->file('student_birth_certificate_image'), 'student/application_form');
+        }
+        if (request()->hasFile('student_health_card_image')) {
+            $data['student_health_card_image'] = $this->uploadFile(request()->file('student_health_card_image'), 'student/application_form');
+        }
+        if (request()->hasFile('home_map_image')) {
+            $data['home_map_image'] = $this->uploadFile(request()->file('home_map_image'), 'student/application_form');
+        }
         $student = $studentUser->student()->create($data);
+        $student->parent()->create($studentParentData);
         return $student;
     }
 

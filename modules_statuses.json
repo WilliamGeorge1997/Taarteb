@@ -14,5 +14,6 @@
     "Maintenance": true,
     "Salary": true,
     "Expense": true,
-    "Notification": true
+    "Notification": true,
+    "Country": true
 }

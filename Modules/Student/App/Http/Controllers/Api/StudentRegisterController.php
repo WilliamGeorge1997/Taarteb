@@ -9,6 +9,7 @@ use Modules\User\DTO\StudentUserDto;
 use Modules\User\Service\UserService;
 use Modules\Grade\Service\GradeService;
 use Modules\School\Service\SchoolService;
+use Modules\Student\DTO\StudentParentDto;
 use Modules\Student\DTO\StudentRegisterDto;
 use Modules\Student\Service\StudentService;
 use Modules\User\App\resources\UserResource;
@@ -32,7 +33,8 @@ class StudentRegisterController extends Controller
             $studentUserData = (new StudentUserDto($request))->dataFromRequest();
             $studentUser = $this->userService->saveStudentUser($studentUserData);
             $data = (new StudentRegisterDto($request))->dataFromRequest();
-            $student = $this->studentService->create($data, $studentUser);
+            $studentParentData = (new StudentParentDto($request))->dataFromRequest();
+            $student = $this->studentService->create($data, $studentUser, $studentParentData);
             $token = auth('user')->login($studentUser);
             DB::commit();
             return $this->respondWithToken($token);

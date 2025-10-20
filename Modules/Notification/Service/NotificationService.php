@@ -62,7 +62,7 @@ class NotificationService
     function sendNotificationToAdmins($data, $school_id, $group_by)
     {
         $admins = User::where('school_id', $school_id)
-            ->whereIn('role', ['School Manager', 'Financial Director'])
+            ->whereIn('role', ['School Manager', 'Financial Director', 'Sales Employee'])
             ->get();
 
         $tokens = [];

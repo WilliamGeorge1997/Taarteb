@@ -8,7 +8,6 @@ use Modules\Grade\App\Models\Grade;
 use Modules\School\App\Models\School;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Class\App\Models\Classroom;
-use Modules\Expense\App\Models\Expense;
 use Modules\Session\App\Models\Attendance;
 use Modules\Student\App\Models\StudentFee;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -31,7 +30,56 @@ class Student extends Model
      * The attributes that are mass assignable.
      */
 
-    protected $fillable = ['name', 'email', 'identity_number', 'parent_email', 'parent_phone', 'grade_id', 'class_id', 'school_id', 'gender', 'is_graduated', 'is_active', 'user_id', 'is_fee_paid', 'application_form', 'is_register', 'address'];
+    protected $fillable = [
+        'name',
+        'email',
+        'identity_number',
+        'parent_email',
+        'parent_phone',
+        'grade_id',
+        'class_id',
+        'school_id',
+        'gender',
+        'is_graduated',
+        'is_active',
+        'user_id',
+        'is_fee_paid',
+        'application_form',
+        'is_register',
+        'address',
+        'state_id',
+        'branch_id',
+        'name_en',
+        'birth_date',
+        'education_level',
+        'has_learning_difficulties',
+        'educational_system',
+        'behavioral_data',
+        'pronunciation',
+        'chronic_diseases',
+        'food_allergies',
+        'other_notes',
+        'transport',
+        'street_number',
+        'house_number',
+        'nearest_landmark',
+        'home_location_url',
+        'siblings_count',
+        'parent_identity_card_image',
+        'student_residence_card_image',
+        'image',
+        'student_passport_image',
+        'student_birth_certificate_image',
+        'student_health_card_image',
+        'home_map_image'
+    ];
+    protected $casts = ['behavioral_data' => 'array'];
+
+    public function parent()
+    {
+        return $this->hasOne(StudentParent::class);
+    }
+
     protected function serializeDate(\DateTimeInterface $date)
     {
         return $date->format('Y-m-d h:i A');

@@ -22,4 +22,5 @@ Route::group(['prefix' => 'admin'], function () {
 
 Route::get('my-salaries', [SalaryController::class, 'mySalaries']);
 Route::post('salaries', [SalaryController::class, 'store']);
+Route::post('salaries/import', [SalaryController::class, 'import']);
 Route::post('salaries/{salary}', [SalaryController::class, 'update']);
