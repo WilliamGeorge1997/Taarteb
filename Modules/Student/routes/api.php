@@ -28,6 +28,7 @@ Route::group(['prefix' => 'students'], function () {
     //Register Student
     Route::post('register', [StudentRegisterController::class, 'register']);
     Route::get('schools', [StudentRegisterController::class, 'schools']);
+    Route::post('upload-register-fee-receipt', [StudentRegisterController::class, 'uploadRegisterFeeReceipt']);
     Route::get('schools/{school_id}/grade-categories', [StudentRegisterController::class, 'gradeCategories']);
     Route::get('grade-categories/{grade_category_id}/grades', [StudentRegisterController::class, 'grades']);
 });
@@ -42,6 +43,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('student-fees/{studentFee}', [StudentFeeAdminController::class, 'update']);
     Route::get('students-to-register', [StudentRegisterAdminController::class, 'index']);
     Route::post('students-to-register/{student}/mark-as-paid', [StudentRegisterAdminController::class, 'markAsPaid']);
+    Route::post('students-to-register/{student}/reject-register-fee', [StudentRegisterAdminController::class, 'rejectRegisterFee']);
 });
 
 Route::get('student-fees', [StudentFeeController::class, 'myFees']);

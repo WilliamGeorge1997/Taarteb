@@ -51,25 +51,25 @@ class StudentService
             $data['application_form'] = $this->uploadFile(request()->file('application_form'), 'student/application_form');
         }
         if (request()->hasFile('parent_identity_card_image')) {
-            $data['parent_identity_card_image'] = $this->uploadFile(request()->file('parent_identity_card_image'), 'student/application_form');
+            $data['parent_identity_card_image'] = $this->uploadFile(request()->file('parent_identity_card_image'), 'student/parent_identity_card_image');
         }
         if (request()->hasFile('student_residence_card_image')) {
-            $data['student_residence_card_image'] = $this->uploadFile(request()->file('student_residence_card_image'), 'student/application_form');
+            $data['student_residence_card_image'] = $this->uploadFile(request()->file('student_residence_card_image'), 'student/student_residence_card_image');
         }
         if (request()->hasFile('image')) {
-            $data['image'] = $this->uploadFile(request()->file('image'), 'student/application_form');
+            $data['image'] = $this->uploadFile(request()->file('image'), 'student');
         }
         if (request()->hasFile('student_passport_image')) {
-            $data['student_passport_image'] = $this->uploadFile(request()->file('student_passport_image'), 'student/application_form');
+            $data['student_passport_image'] = $this->uploadFile(request()->file('student_passport_image'), 'student/student_passport_image');
         }
         if (request()->hasFile('student_birth_certificate_image')) {
-            $data['student_birth_certificate_image'] = $this->uploadFile(request()->file('student_birth_certificate_image'), 'student/application_form');
+            $data['student_birth_certificate_image'] = $this->uploadFile(request()->file('student_birth_certificate_image'), 'student/student_birth_certificate_image');
         }
         if (request()->hasFile('student_health_card_image')) {
-            $data['student_health_card_image'] = $this->uploadFile(request()->file('student_health_card_image'), 'student/application_form');
+            $data['student_health_card_image'] = $this->uploadFile(request()->file('student_health_card_image'), 'student/student_health_card_image');
         }
         if (request()->hasFile('home_map_image')) {
-            $data['home_map_image'] = $this->uploadFile(request()->file('home_map_image'), 'student/application_form');
+            $data['home_map_image'] = $this->uploadFile(request()->file('home_map_image'), 'student/home_map_image');
         }
         $student = $studentUser->student()->create($data);
         $student->parent()->create($studentParentData);

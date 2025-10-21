@@ -27,7 +27,16 @@ class StudentRegisterAdminController extends Controller
     {
         $student = $this->studentService->findById($id);
         $student->is_fee_paid = 1;
+        $student->is_register_fee_accepted = 1;
         $student->save();
         return returnMessage(true, 'Student marked as paid successfully');
+    }
+
+    public function rejectRegisterFee($id)
+    {
+        $student = $this->studentService->findById($id);
+        $student->is_register_fee_accepted = 0;
+        $student->save();
+        return returnMessage(true, 'Student register fee rejected successfully');
     }
 }

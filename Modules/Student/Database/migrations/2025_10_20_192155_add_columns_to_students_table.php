@@ -4,7 +4,6 @@ use Modules\Country\App\Models\State;
 use Illuminate\Support\Facades\Schema;
 use Modules\Country\App\Models\Branch;
 use Illuminate\Database\Schema\Blueprint;
-use phpDocumentor\Reflection\Types\Nullable;
 use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
@@ -49,7 +48,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('students', function (Blueprint $table) {
-
+            
         });
     }
 };

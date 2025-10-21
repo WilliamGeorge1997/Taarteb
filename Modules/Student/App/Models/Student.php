@@ -5,12 +5,16 @@ namespace Modules\Student\App\Models;
 use Modules\User\App\Models\User;
 use Spatie\Activitylog\LogOptions;
 use Modules\Grade\App\Models\Grade;
+use Modules\Country\App\Models\State;
 use Modules\School\App\Models\School;
+use Modules\Country\App\Models\Branch;
+use Modules\Country\App\Models\Region;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Class\App\Models\Classroom;
 use Modules\Session\App\Models\Attendance;
 use Modules\Student\App\Models\StudentFee;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Modules\Student\App\Models\StudentParent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Student extends Model
@@ -47,7 +51,7 @@ class Student extends Model
         'application_form',
         'is_register',
         'address',
-        'state_id',
+        'region_id',
         'branch_id',
         'name_en',
         'birth_date',
@@ -71,10 +75,19 @@ class Student extends Model
         'student_passport_image',
         'student_birth_certificate_image',
         'student_health_card_image',
-        'home_map_image'
+        'home_map_image',
+        'register_fee_image',
     ];
     protected $casts = ['behavioral_data' => 'array'];
-
+    protected $with = ['branch', 'region.state.governorate'];
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
+    public function region()
+    {
+        return $this->belongsTo(Region::class);
+    }
     public function parent()
     {
         return $this->hasOne(StudentParent::class);
@@ -85,6 +98,17 @@ class Student extends Model
         return $date->format('Y-m-d h:i A');
     }
 
+    public function getImageAttribute($value)
+    {
+        if ($value != null && $value != '') {
+            if (filter_var($value, FILTER_VALIDATE_URL)) {
+                return $value;
+            } else {
+                return asset('uploads/student/' . $value);
+            }
+        }
+    }
+
     public function getApplicationFormAttribute($value)
     {
         if ($value != null && $value != '') {
@@ -92,6 +116,78 @@ class Student extends Model
                 return $value;
             } else {
                 return asset('uploads/student/application_form/' . $value);
+            }
+        }
+    }
+
+    public function getRegisterFeeImageAttribute($value)
+    {
+        if ($value != null && $value != '') {
+            if (filter_var($value, FILTER_VALIDATE_URL)) {
+                return $value;
+            } else {
+                return asset('uploads/student/register_fee_image/' . $value);
+            }
+        }
+    }
+    public function getParentIdentityCardImageAttribute($value)
+    {
+        if ($value != null && $value != '') {
+            if (filter_var($value, FILTER_VALIDATE_URL)) {
+                return $value;
+            } else {
+                return asset('uploads/student/parent_identity_card_image/' . $value);
+            }
+        }
+    }
+
+    public function getStudentResidenceCardImageAttribute($value)
+    {
+        if ($value != null && $value != '') {
+            if (filter_var($value, FILTER_VALIDATE_URL)) {
+                return $value;
+            } else {
+                return asset('uploads/student/student_residence_card_image/' . $value);
+            }
+        }
+    }
+    public function getStudentPassportImageAttribute($value)
+    {
+        if ($value != null && $value != '') {
+            if (filter_var($value, FILTER_VALIDATE_URL)) {
+                return $value;
+            } else {
+                return asset('uploads/student/student_passport_image/' . $value);
+            }
+        }
+    }
+    public function getStudentBirthCertificateImageAttribute($value)
+    {
+        if ($value != null && $value != '') {
+            if (filter_var($value, FILTER_VALIDATE_URL)) {
+                return $value;
+            } else {
+                return asset('uploads/student/student_birth_certificate_image/' . $value);
+            }
+        }
+    }
+    public function getStudentHealthCardImageAttribute($value)
+    {
+        if ($value != null && $value != '') {
+            if (filter_var($value, FILTER_VALIDATE_URL)) {
+                return $value;
+            } else {
+                return asset('uploads/student/student_health_card_image/' . $value);
+            }
+        }
+    }
+    public function getHomeMapImageAttribute($value)
+    {
+        if ($value != null && $value != '') {
+            if (filter_var($value, FILTER_VALIDATE_URL)) {
+                return $value;
+            } else {
+                return asset('uploads/student/home_map_image/' . $value);
             }
         }
     }

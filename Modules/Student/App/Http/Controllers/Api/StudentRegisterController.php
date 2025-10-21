@@ -15,15 +15,20 @@ use Modules\Student\Service\StudentService;
 use Modules\User\App\resources\UserResource;
 use Modules\Grade\Service\GradeCategoryService;
 use Modules\Student\App\Http\Requests\StudentRegisterRequest;
+use Modules\Student\App\Http\Requests\StudentUploadRegisterFeeReceiptRequest;
+use Modules\Common\Helpers\UploadHelper;
 
 class StudentRegisterController extends Controller
 {
+    use UploadHelper;
     private $studentService;
     private $userService;
     public function __construct(StudentService $studentService, UserService $userService)
     {
         $this->studentService = $studentService;
         $this->userService = $userService;
+        $this->middleware('auth:user')->only('uploadRegisterFeeReceipt');
+        $this->middleware('role:Student')->only('uploadRegisterFeeReceipt');
     }
 
     public function register(StudentRegisterRequest $request)
@@ -40,6 +45,18 @@ class StudentRegisterController extends Controller
             return $this->respondWithToken($token);
         } catch (Exception $e) {
             DB::rollBack();
+            return returnMessage(false, $e->getMessage(), null, 'server_error');
+        }
+    }
+
+    public function uploadRegisterFeeReceipt(StudentUploadRegisterFeeReceiptRequest $request)
+    {
+        try {
+            $student = $this->studentService->findById(auth('user')->user()->student->id);
+            $student->register_fee_image = $this->upload(request()->file('register_fee_image'), 'student/register_fee_image');
+            $student->save();
+            return returnMessage(true, 'Register Fee Receipt Uploaded Successfully', $student);
+        } catch (Exception $e) {
             return returnMessage(false, $e->getMessage(), null, 'server_error');
         }
     }

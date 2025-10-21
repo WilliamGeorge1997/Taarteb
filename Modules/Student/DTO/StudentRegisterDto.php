@@ -1,6 +1,7 @@
 <?php
 
 namespace Modules\Student\DTO;
+
 class StudentRegisterDto
 {
     public $name;
@@ -14,8 +15,7 @@ class StudentRegisterDto
     public $is_fee_paid;
     public $is_register;
     public $address;
-
-    public $state_id;
+    public $region_id;
     public $branch_id;
     public $name_en;
     public $birth_date;
@@ -56,8 +56,8 @@ class StudentRegisterDto
             $this->address = $request->get('address');
         $this->is_register = 1;
         $this->is_fee_paid = 0;
-        if ($request->get('state_id'))
-            $this->state_id = $request->get('state_id');
+        if ($request->get('region_id'))
+            $this->region_id = $request->get('region_id');
         if ($request->get('branch_id'))
             $this->branch_id = $request->get('branch_id');
         if ($request->get('name_en'))
@@ -115,8 +115,8 @@ class StudentRegisterDto
             unset($data['school_id']);
         if ($this->address == null)
             unset($data['address']);
-        if ($this->state_id == null)
-            unset($data['state_id']);
+        if ($this->region_id == null)
+            unset($data['region_id']);
         if ($this->branch_id == null)
             unset($data['branch_id']);
         if ($this->name_en == null)
