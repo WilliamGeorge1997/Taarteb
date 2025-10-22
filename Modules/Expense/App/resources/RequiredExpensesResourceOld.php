@@ -4,24 +4,16 @@ namespace Modules\Expense\App\resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RequiredExpensesResource extends JsonResource
+class RequiredExpensesResourceOld extends JsonResource
 {
     /**
      * Transform the resource into an array.
      */
     public function toArray($request): array
     {
-        $registrationFeeDeduction = $this->registration_fee_deduction ?? 0;
-
-        $basePrice = $this->exceptions->first()
-            ? $this->exceptions->first()->pivot->exception_price
-            : $this->price;
-
-        $finalPrice = $basePrice - $registrationFeeDeduction;
-
         $total_amount_required = $this->requests && $this->requests->isNotEmpty()
             ? $this->requests->first()->amount
-            : $finalPrice;
+            : null;
         $total_paid_amount = $this->requests && $this->requests->isNotEmpty()
             ? $this->requests->where('status', 'accepted')->sum('amount_paid')
             : null;
@@ -34,12 +26,9 @@ class RequiredExpensesResource extends JsonResource
             'school_name' => $this->school->name,
             'grade_category_name' => $this->gradeCategory->name,
             'grade_name' => $this->grade->name,
-            'price' => $finalPrice,
-            'registration_fee_deduction' => $registrationFeeDeduction,
+            'price' => $this->price,
             'year' => $this->created_at->format('Y') ?? null,
-            'exceptions_price' => $this->exceptions->first()
-                ? $this->exceptions->first()->pivot->exception_price - $registrationFeeDeduction
-                : null,
+            'exceptions_price' => $this->exceptions->first()->pivot->exception_price ?? null,
             'exceptions_notes' => $this->exceptions->first()->pivot->notes ?? null,
             'student_expenses' => $this->requests && $this->requests->isNotEmpty()
                 ? $this->requests->map(function ($request) {

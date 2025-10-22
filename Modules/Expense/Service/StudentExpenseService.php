@@ -97,6 +97,8 @@ class StudentExpenseService
     {
         $paymentStatus = null;
         if ($data['status'] == 'accepted') {
+            $student = $studentExpense->student;
+
             $allStudentExpenses = StudentExpense::where('expense_id', $studentExpense->expense_id)
                 ->where('student_id', $studentExpense->student_id)
                 ->where('status', 'accepted')
@@ -114,6 +116,9 @@ class StudentExpenseService
             }
 
             $paymentStatus = ($totalAmountPaid >= $requiredAmount) ? 'full' : 'partial';
+            if (!$student->expense_registration_fee_deducted && $previouslyPaid == 0) {
+                $student->update(['expense_registration_fee_deducted' => 10]);
+            }
         }
 
         $studentExpense->update([
@@ -150,6 +155,17 @@ class StudentExpenseService
                 },
             ])->latest()
             ->get();
+        $hasNeverPaid = !$student->expense_registration_fee_deducted;
+        if ($expenses->isNotEmpty() && $hasNeverPaid) {
+            $firstExpense = $expenses->first();
+
+            $hasException = $firstExpense->exceptions->isNotEmpty();
+            $basePrice = $hasException
+                ? $firstExpense->exceptions->first()->pivot->exception_price
+                : $firstExpense->price;
+            $firstExpense->registration_fee_deduction = 10;
+        }
+
         return $expenses;
     }
 }

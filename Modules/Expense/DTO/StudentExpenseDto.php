@@ -4,6 +4,7 @@
 namespace Modules\Expense\DTO;
 
 use Modules\Expense\App\Models\Expense;
+use Modules\Expense\App\Models\StudentExpense;
 
 
 class StudentExpenseDto
@@ -25,14 +26,28 @@ class StudentExpenseDto
 
     private function getAmount($expense_id)
     {
-        $expense = Expense::with(['exceptions' => function($query){
-            $query->where('student_id', $this->student_id);
-        }])->findOrFail($expense_id);
+        $student = auth('user')->user()->student;
 
-        if ($expense->exceptions->count() > 0) {
-            return $expense->exceptions->first()->pivot->exception_price;
+        $expense = Expense::with([
+            'exceptions' => function ($query) {
+                $query->where('student_id', $this->student_id);
+            }
+        ])->findOrFail($expense_id);
+
+        $basePrice = $expense->exceptions->count() > 0
+            ? $expense->exceptions->first()->pivot->exception_price
+            : $expense->price;
+
+        $hasNeverPaid = !$student->expense_registration_fee_deducted;
+        $isFirstExpense = !StudentExpense::where('student_id', $this->student_id)
+            ->where('expense_id', $expense_id)
+            ->exists();
+
+        if ($hasNeverPaid && $isFirstExpense) {
+            $basePrice = $basePrice - 10;
         }
-        return $expense->price;
+
+        return $basePrice;
     }
 
     public function dataFromRequest()
