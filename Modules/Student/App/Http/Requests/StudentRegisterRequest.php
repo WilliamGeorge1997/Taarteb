@@ -19,9 +19,9 @@ class StudentRegisterRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'unique:students,email', 'unique:students,parent_email', 'unique:users,email', 'different:parent_email'],
+            'email' => ['nullable', 'email', 'unique:students,email', 'unique:students,parent_email', 'unique:users,email', 'different:parent_email'],
             'phone' => ['required', 'string', 'unique:users,phone'],
-            'identity_number' => ['nullable', 'string'],
+            'identity_number' => ['required', 'string', 'unique:students,identity_number'],
             'gender' => ['required', 'in:m,f'],
             'parent_email' => ['nullable', 'email', 'unique:students,parent_email', 'unique:students,email', 'different:email'],
             'parent_phone' => ['required', 'string'],

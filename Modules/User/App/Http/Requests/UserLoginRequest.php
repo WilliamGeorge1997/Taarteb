@@ -2,6 +2,7 @@
 
 namespace Modules\User\App\Http\Requests;
 
+use Modules\Student\App\Models\Student;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -13,8 +14,21 @@ class UserLoginRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function credentials(): array
+   public function credentials(): array
     {
+        if ($this->filled('identity_number')) {
+            $student = Student::where('identity_number', $this->identity_number)->first();
+
+            if ($student && $student->user_id) {
+                return [
+                    'user_id' => $student->user_id,
+                    'password' => $this->password,
+                ];
+            }
+
+            return ['user_id' => null, 'password' => ''];
+        }
+
         return $this->only(['email', 'password']);
     }
 
@@ -26,8 +40,10 @@ class UserLoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email', 'exists:users,email'],
-            'password' => ['required'],
+            'email' => ['required_without:identity_number', 'nullable', 'email', 'exists:users,email'],
+            'identity_number' => ['required_without:email', 'nullable', 'string', 'exists:students,identity_number'],
+            'password' => ['required', 'string'],
+            'fcm_token' => ['nullable', 'string'],
         ];
     }
 
@@ -38,6 +54,7 @@ class UserLoginRequest extends FormRequest
     {
         return [
             'email' => 'Email Address',
+            'identity_number' => 'Identity Number',
             'password' => 'Password',
         ];
     }
