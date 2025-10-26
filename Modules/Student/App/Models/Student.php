@@ -77,6 +77,16 @@ class Student extends Model
         'student_health_card_image',
         'home_map_image',
         'register_fee_image',
+        'distinguished_skills',
+        'has_previous_education',
+        'previous_school_data',
+        'can_distinguish_letters_randomly',
+        'reads_short_words',
+        'reads_short_sentences',
+        'memorizes_quran_surahs',
+        'memorizes_quran_from',
+        'memorizes_quran_to',
+        'additional_educational_notes',
     ];
     protected $casts = ['behavioral_data' => 'array'];
     protected $with = ['branch', 'region.state.governorate'];

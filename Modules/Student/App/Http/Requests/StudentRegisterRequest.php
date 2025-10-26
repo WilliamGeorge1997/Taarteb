@@ -39,7 +39,7 @@ class StudentRegisterRequest extends FormRequest
             'has_learning_difficulties' => ['nullable', 'boolean'],
             'educational_system' => ['nullable', 'in:monolingual,bilingual'],
             'behavioral_data' => ['nullable', 'array'],
-            'behavioral_data.*' => ['nullable', 'string', 'in:articulate,sociable,introvert,shy,unresponsive,inflexible,irritable,hyperactive'],
+            'behavioral_data.*' => ['nullable', 'string', 'in:articulate,sociable,introvert,shy,unresponsive,inflexible,irritable,hyperactive,stubbon,normal,aggressive'],
             'pronunciation' => ['nullable', 'in:excellent,good,needs_follow_up'],
             'chronic_diseases' => ['nullable', 'string'],
             'food_allergies' => ['nullable', 'string'],
@@ -74,6 +74,16 @@ class StudentRegisterRequest extends FormRequest
             'relative_name' => ['nullable', 'string'],
             'relative_relation' => ['nullable', 'string'],
             'relative_phone' => ['nullable', 'string'],
+            'distinguished_skills' => ['nullable', 'string'],
+            'has_previous_education' => ['nullable', 'boolean'],
+            'previous_school_data' => ['nullable', 'string'],
+            'can_distinguish_letters_randomly' => ['nullable', 'boolean'],
+            'reads_short_words' => ['nullable', 'in:excellent,very_good,good,cannot_read'],
+            'reads_short_sentences' => ['nullable', 'in:excellent,very_good,good,cannot_read'],
+            'memorizes_quran_surahs' => ['nullable', 'boolean'],
+            'memorizes_quran_from' => ['nullable', 'string'],
+            'memorizes_quran_to' => ['nullable', 'string'],
+            'additional_educational_notes' => ['nullable', 'string'],
         ];
     }
 
@@ -138,6 +148,16 @@ class StudentRegisterRequest extends FormRequest
             'relative_name' => 'Relative Name',
             'relative_relation' => 'Relative Relation',
             'relative_phone' => 'Relative Phone',
+            'distinguished_skills' => 'Distinguished Skills',
+            'has_previous_education' => 'Has Previous Education',
+            'previous_school_data' => 'Previous School Data',
+            'can_distinguish_letters_randomly' => 'Can Distinguish Letters Randomly',
+            'reads_short_words' => 'Reads Short Words',
+            'reads_short_sentences' => 'Reads Short Sentences',
+            'memorizes_quran_surahs' => 'Memorizes Quran Surahs',
+            'memorizes_quran_from' => 'Memorizes Quran From',
+            'memorizes_quran_to' => 'Memorizes Quran To',
+            'additional_educational_notes' => 'Additional Educational Notes',
         ];
     }
 

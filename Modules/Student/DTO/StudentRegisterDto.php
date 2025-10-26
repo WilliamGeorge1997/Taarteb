@@ -33,6 +33,16 @@ class StudentRegisterDto
     public $nearest_landmark;
     public $home_location_url;
     public $siblings_count;
+    public $distinguished_skills;
+    public $has_previous_education;
+    public $previous_school_data;
+    public $can_distinguish_letters_randomly;
+    public $reads_short_words;
+    public $reads_short_sentences;
+    public $memorizes_quran_surahs;
+    public $memorizes_quran_from;
+    public $memorizes_quran_to;
+    public $additional_educational_notes;
 
     public function __construct($request)
     {
@@ -92,6 +102,26 @@ class StudentRegisterDto
             $this->home_location_url = $request->get('home_location_url');
         if ($request->get('siblings_count'))
             $this->siblings_count = $request->get('siblings_count');
+        if ($request->get('distinguished_skills'))
+            $this->distinguished_skills = $request->get('distinguished_skills');
+        if ($request->get('has_previous_education'))
+            $this->has_previous_education = $request->get('has_previous_education');
+        if ($request->get('previous_school_data'))
+            $this->previous_school_data = $request->get('previous_school_data');
+        if ($request->get('can_distinguish_letters_randomly'))
+            $this->can_distinguish_letters_randomly = $request->get('can_distinguish_letters_randomly');
+        if ($request->get('reads_short_words'))
+            $this->reads_short_words = $request->get('reads_short_words');
+        if ($request->get('reads_short_sentences'))
+            $this->reads_short_sentences = $request->get('reads_short_sentences');
+        if ($request->get('memorizes_quran_surahs'))
+            $this->memorizes_quran_surahs = $request->get('memorizes_quran_surahs');
+        if ($request->get('memorizes_quran_from'))
+            $this->memorizes_quran_from = $request->get('memorizes_quran_from');
+        if ($request->get('memorizes_quran_to'))
+            $this->memorizes_quran_to = $request->get('memorizes_quran_to');
+        if ($request->get('additional_educational_notes'))
+            $this->additional_educational_notes = $request->get('additional_educational_notes');
     }
 
     public function dataFromRequest()
@@ -151,6 +181,26 @@ class StudentRegisterDto
             unset($data['home_location_url']);
         if ($this->siblings_count == null)
             unset($data['siblings_count']);
+        if ($this->distinguished_skills == null)
+            unset($data['distinguished_skills']);
+        if ($this->has_previous_education == null)
+            unset($data['has_previous_education']);
+        if ($this->previous_school_data == null)
+            unset($data['previous_school_data']);
+        if ($this->can_distinguish_letters_randomly == null)
+            unset($data['can_distinguish_letters_randomly']);
+        if ($this->reads_short_words == null)
+            unset($data['reads_short_words']);
+        if ($this->reads_short_sentences == null)
+            unset($data['reads_short_sentences']);
+        if ($this->memorizes_quran_surahs == null)
+            unset($data['memorizes_quran_surahs']);
+        if ($this->memorizes_quran_from == null)
+            unset($data['memorizes_quran_from']);
+        if ($this->memorizes_quran_to == null)
+            unset($data['memorizes_quran_to']);
+        if ($this->additional_educational_notes == null)
+            unset($data['additional_educational_notes']);
         return $data;
     }
 }
