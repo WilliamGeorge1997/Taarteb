@@ -41,6 +41,7 @@ class RequiredExpensesResource extends JsonResource
                 ? $this->exceptions->first()->pivot->exception_price - $registrationFeeDeduction
                 : null,
             'exceptions_notes' => $this->exceptions->first()->pivot->notes ?? null,
+            'details' => $this->whenLoaded('details'),
             'student_expenses' => $this->requests && $this->requests->isNotEmpty()
                 ? $this->requests->map(function ($request) {
                     return [

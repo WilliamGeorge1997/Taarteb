@@ -12,7 +12,10 @@ class ExpenseService
         $expenses = Expense::query()->with($relations)->available()->latest();
         return getCaseCollection($expenses, $data);
     }
-
+    function findExpenses($data =[], $relations = []){
+        $expenses = Expense::query()->with($relations)->where('school_id', $data['school_id'])->latest();
+        return getCaseCollection($expenses, $data);
+    }
     function findById($id)
     {
         return Expense::findOrFail($id);
@@ -26,7 +29,11 @@ class ExpenseService
     function create($data)
     {
         $expense = Expense::create($data);
-        return $expense;
+        if (isset($data['details']) && !empty($data['details'])) {
+            $expense->details()->createMany($data['details']);
+
+        }
+        return $expense->load('details');
     }
 
     function update($expense, $data)

@@ -24,7 +24,7 @@ class ExpenseController extends Controller
     public function index(Request $request)
     {
         $data = $request->all();
-        $relations = ['gradeCategory', 'grade', 'exceptions'];
+        $relations = ['gradeCategory', 'grade', 'exceptions', 'details'];
         $expenses = $this->expenseService->findAll($data, $relations);
         return returnMessage(true, 'Expenses fetched successfully', $expenses);
     }

@@ -11,7 +11,7 @@ class ExpenseDto
     public $grade_category_id;
     public $grade_id;
     public $price;
-
+    public $details;
     public function __construct($request, $isCreate = false)
     {
         if ($isCreate) {
@@ -25,6 +25,8 @@ class ExpenseDto
             $this->grade_id = $request->get('grade_id');
         if ($request->get('price'))
             $this->price = $request->get('price');
+        if ($request->get('details'))
+            $this->details = $request->get('details');
     }
 
     public function dataFromRequest()
@@ -40,6 +42,8 @@ class ExpenseDto
             unset($data['grade_id']);
         if ($this->price == null)
             unset($data['price']);
+        if ($this->details == null)
+            unset($data['details']);
         return $data;
     }
 }

@@ -33,3 +33,5 @@ Route::group(['prefix' => 'student'], function () {
     Route::apiResource('expenses', ExpenseStudentController::class)->only(['index', 'store']);
     Route::post('expenses/{studentExpense}', [ExpenseStudentController::class, 'update']);
 });
+
+Route::get('expenses', [ExpenseStudentController::class, 'expenses']);

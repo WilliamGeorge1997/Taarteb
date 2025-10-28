@@ -7,21 +7,27 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Modules\Common\Helpers\UploadHelper;
 use Modules\Expense\DTO\StudentExpenseDto;
+use Modules\Expense\Service\ExpenseService;
 use Modules\Expense\App\Models\StudentExpense;
 use Modules\Expense\Service\StudentExpenseService;
+use Modules\Notification\Service\NotificationService;
 use Modules\Expense\App\resources\RequiredExpensesResource;
 use Modules\Expense\App\Http\Requests\ExpenseStudentRequest;
-use Modules\Notification\Service\NotificationService;
 
 class ExpenseStudentController extends Controller
 {
     use UploadHelper;
     public function __construct(private StudentExpenseService $studentExpenseService)
     {
-        $this->middleware('auth:user');
-        $this->middleware('role:Student');
+        $this->middleware('auth:user')->except('expenses');
+        $this->middleware('role:Student')->except('expenses');
     }
 
+    public function expenses(Request $request)
+    {
+        $expenses = (new ExpenseService)->findExpenses($request->all(), ['gradeCategory', 'grade', 'details']);
+        return returnMessage(true,'Expenses fetched successfully', $expenses);
+    }
     public function requiredExpenses()
     {
         $expenses = $this->studentExpenseService->findRequiredExpenses();

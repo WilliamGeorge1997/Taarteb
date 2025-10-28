@@ -147,6 +147,7 @@ class StudentExpenseService
                 'exceptions' => function ($query) use ($student) {
                     $query->where('student_id', $student->id);
                 },
+                'details',
                 'gradeCategory',
                 'grade',
                 'school',

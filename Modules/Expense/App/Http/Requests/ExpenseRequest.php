@@ -25,8 +25,24 @@ class ExpenseRequest extends FormRequest
             'grade_category_id' => ['required', 'exists:grade_categories,id'],
             'grade_id' => ['required', 'exists:grades,id'],
             'price' => ['required', 'numeric', 'min:0'],
+            'details' => ['required', 'array'],
+            'details.*.name' => ['required', 'string', 'max:255'],
+            'details.*.price' => ['required', 'numeric', 'min:0'],
         ];
 
+    }
+
+    public function withValidator(Validator $validator)
+    {
+        $validator->after(function (Validator $validator) {
+            $price = $this->input('price');
+            $details = $this->input('details');
+
+            $detailsSum = collect($details)->sum('price');
+            if ($detailsSum != $price) {
+                $validator->errors()->add('details', 'The details price must be equal to the price');
+            }
+        });
     }
 
     /**
@@ -38,6 +54,9 @@ class ExpenseRequest extends FormRequest
             'grade_category_id' => 'Grade Category ID',
             'grade_id' => 'Grade ID',
             'price' => 'Price',
+            'details' => 'Details',
+            'details.*.name' => 'Name',
+            'details.*.price' => 'Price',
         ];
     }
 
