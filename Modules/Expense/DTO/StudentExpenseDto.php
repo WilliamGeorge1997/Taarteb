@@ -44,8 +44,11 @@ class StudentExpenseDto
             ->exists();
 
         if ($hasNeverPaid && $isFirstExpense) {
-            $basePrice = $basePrice - 10;
+            $startPaymentDetail = $expense->details->firstWhere('name', 'مقدم الدفع');
+            $startPayment = $startPaymentDetail ? $startPaymentDetail->price : 0;
+            $basePrice = $basePrice - $startPayment;
         }
+
 
         return $basePrice;
     }

@@ -117,7 +117,10 @@ class StudentExpenseService
 
             $paymentStatus = ($totalAmountPaid >= $requiredAmount) ? 'full' : 'partial';
             if (!$student->expense_registration_fee_deducted && $previouslyPaid == 0) {
-                $student->update(['expense_registration_fee_deducted' => 10]);
+                $expense = $studentExpense->expense()->with('details')->first();
+                $startPaymentDetail = $expense->details->firstWhere('name', 'مقدم الدفع');
+                $startPayment = $startPaymentDetail ? $startPaymentDetail->price : 0;
+                $student->update(['expense_registration_fee_deducted' => $startPayment]);
             }
         }
 
@@ -164,7 +167,9 @@ class StudentExpenseService
             $basePrice = $hasException
                 ? $firstExpense->exceptions->first()->pivot->exception_price
                 : $firstExpense->price;
-            $firstExpense->registration_fee_deduction = 10;
+
+            $startPaymentDetail = $firstExpense->details->firstWhere('name', 'مقدم الدفع');
+            $firstExpense->registration_fee_deduction = $startPaymentDetail ? $startPaymentDetail->price : 0;
         }
 
         return $expenses;
