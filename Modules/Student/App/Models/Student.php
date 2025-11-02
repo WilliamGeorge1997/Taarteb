@@ -87,6 +87,7 @@ class Student extends Model
         'memorizes_quran_from',
         'memorizes_quran_to',
         'additional_educational_notes',
+        'sibling_order',
     ];
     protected $casts = ['behavioral_data' => 'array'];
     protected $with = ['branch', 'region.state.governorate'];

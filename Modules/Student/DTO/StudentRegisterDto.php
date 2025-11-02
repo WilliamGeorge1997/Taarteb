@@ -33,6 +33,7 @@ class StudentRegisterDto
     public $nearest_landmark;
     public $home_location_url;
     public $siblings_count;
+    public $sibling_order;
     public $distinguished_skills;
     public $has_previous_education;
     public $previous_school_data;
@@ -102,6 +103,8 @@ class StudentRegisterDto
             $this->home_location_url = $request->get('home_location_url');
         if ($request->get('siblings_count'))
             $this->siblings_count = $request->get('siblings_count');
+        if ($request->get('sibling_order'))
+            $this->sibling_order = $request->get('sibling_order');
         if ($request->get('distinguished_skills'))
             $this->distinguished_skills = $request->get('distinguished_skills');
         if ($request->get('has_previous_education'))
@@ -181,6 +184,8 @@ class StudentRegisterDto
             unset($data['home_location_url']);
         if ($this->siblings_count == null)
             unset($data['siblings_count']);
+        if ($this->sibling_order == null)
+            unset($data['sibling_order']);
         if ($this->distinguished_skills == null)
             unset($data['distinguished_skills']);
         if ($this->has_previous_education == null)

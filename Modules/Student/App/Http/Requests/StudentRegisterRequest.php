@@ -84,6 +84,7 @@ class StudentRegisterRequest extends FormRequest
             'memorizes_quran_from' => ['nullable', 'string'],
             'memorizes_quran_to' => ['nullable', 'string'],
             'additional_educational_notes' => ['nullable', 'string'],
+            'sibling_order' => ['nullable', 'string'],
         ];
     }
 
@@ -158,6 +159,7 @@ class StudentRegisterRequest extends FormRequest
             'memorizes_quran_from' => 'Memorizes Quran From',
             'memorizes_quran_to' => 'Memorizes Quran To',
             'additional_educational_notes' => 'Additional Educational Notes',
+            'sibling_order' => 'Sibling Order',
         ];
     }
 
