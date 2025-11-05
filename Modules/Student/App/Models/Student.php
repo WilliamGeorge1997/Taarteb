@@ -88,6 +88,9 @@ class Student extends Model
         'memorizes_quran_to',
         'additional_educational_notes',
         'sibling_order',
+        'expense_registration_fee_deducted',
+        'is_register_fee_accepted',
+        
     ];
     protected $casts = ['behavioral_data' => 'array'];
     protected $with = ['branch', 'region.state.governorate'];

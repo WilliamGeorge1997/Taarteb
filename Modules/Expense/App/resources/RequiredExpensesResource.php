@@ -19,15 +19,13 @@ class RequiredExpensesResource extends JsonResource
 
         $finalPrice = $basePrice - $registrationFeeDeduction;
 
-        $total_amount_required = $this->requests && $this->requests->isNotEmpty()
-            ? $this->requests->first()->amount
-            : $finalPrice;
+        $total_amount_required = $finalPrice;
+
         $total_paid_amount = $this->requests && $this->requests->isNotEmpty()
             ? $this->requests->where('status', 'accepted')->sum('amount_paid')
-            : null;
-        $total_amount_due = ($total_amount_required && $total_paid_amount !== null)
-            ? $total_amount_required - $total_paid_amount
-            : null;
+            : 0;
+
+        $total_amount_due = $total_amount_required - $total_paid_amount;
 
         return [
             'id' => $this->id,
@@ -35,7 +33,6 @@ class RequiredExpensesResource extends JsonResource
             'grade_category_name' => $this->gradeCategory->name,
             'grade_name' => $this->grade->name,
             'price' => $finalPrice,
-            'registration_fee_deduction' => $registrationFeeDeduction,
             'year' => $this->created_at->format('Y') ?? null,
             'exceptions_price' => $this->exceptions->first()
                 ? $this->exceptions->first()->pivot->exception_price - $registrationFeeDeduction
@@ -57,8 +54,11 @@ class RequiredExpensesResource extends JsonResource
                     ];
                 })
                 : [],
+            'total_amount_required_without_registration_fee_deduction' => $basePrice,
             'total_amount_required' => $total_amount_required,
-            'total_amount_paid' => $total_paid_amount,
+            'amount_paid_without_registration_fee_deduction' => $total_paid_amount,
+            'registration_fee_deduction' => $registrationFeeDeduction,
+            'total_amount_paid' => $total_paid_amount + $registrationFeeDeduction,
             'total_amount_due' => $total_amount_due,
         ];
     }
