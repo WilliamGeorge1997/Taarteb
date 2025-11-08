@@ -134,4 +134,69 @@ class StudentService
                 'grade_id' => $class->grade_id
             ]);
     }
+
+    function uploadRegisterFeeReceipt($data)
+    {
+        $student = auth('user')->user()->student;
+
+        $firstExpense = \Modules\Expense\App\Models\Expense::query()
+            ->where('grade_id', $student->grade_id)
+            ->where('grade_category_id', $student->grade->grade_category_id)
+            ->where('school_id', $student->school_id)
+            ->with('details')
+            ->oldest()
+            ->first();
+
+        if (!$firstExpense) {
+            throw new \Exception('No expenses found for your grade');
+        }
+
+        $startPaymentDetail = $firstExpense->details->firstWhere('name', 'مقدم الدفع');
+
+        if (!$startPaymentDetail) {
+            throw new \Exception('Registration fee (مقدم الدفع) not configured for this grade');
+        }
+
+        $existingRegistrationExpense = \Modules\Expense\App\Models\StudentExpense::query()
+            ->where('student_id', $student->id)
+            ->where('is_registration_fee', true)
+            ->whereIn('status', ['pending', 'accepted'])
+            ->first();
+
+        if ($existingRegistrationExpense) {
+            throw new \Exception('Registration fee expense already submitted and is ' . $existingRegistrationExpense->status);
+        }
+
+        if ($student->expense_registration_fee_deducted > 0 || $student->is_register_fee_accepted) {
+            throw new \Exception('Registration fee already processed');
+        }
+
+        if (request()->hasFile('register_fee_image')) {
+            $data['register_fee_image'] = $this->uploadFile(request()->file('register_fee_image'), 'student/register_fee_image');
+        }
+        $studentExpense = \Modules\Expense\App\Models\StudentExpense::create([
+            'student_id' => $student->id,
+            'expense_id' => $firstExpense->id,
+            'amount' => $firstExpense->price,
+            'amount_paid' => 0,
+            'date' => now()->toDateString(),
+            'payment_method' => $data['payment_method'],
+            'receipt' => $data['register_fee_image'],
+            'status' => 'pending',
+            'is_registration_fee' => 1,
+        ]);
+
+        $student->update(['register_fee_image' => $data['register_fee_image']]);
+
+        $notificationData = [
+            'title' => 'تم رفع إيصال رسوم التسجيل',
+            'description' => 'قام الطالب ' . $student->name . ' برفع إيصال رسوم التسجيل وينتظر المراجعة',
+        ];
+        (new \Modules\Notification\Service\NotificationService())->sendNotificationToAdmins(
+            $notificationData,
+            $student->school_id,
+            'registration_fee'
+        );
+        return $studentExpense;
+    }
 }

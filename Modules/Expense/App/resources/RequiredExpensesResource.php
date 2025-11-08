@@ -11,31 +11,25 @@ class RequiredExpensesResource extends JsonResource
      */
     public function toArray($request): array
     {
-        $registrationFeeDeduction = $this->registration_fee_deduction ?? 0;
-
         $basePrice = $this->exceptions->first()
             ? $this->exceptions->first()->pivot->exception_price
             : $this->price;
-
-        $finalPrice = $basePrice - $registrationFeeDeduction;
-
-        $total_amount_required = $finalPrice;
 
         $total_paid_amount = $this->requests && $this->requests->isNotEmpty()
             ? $this->requests->where('status', 'accepted')->sum('amount_paid')
             : 0;
 
-        $total_amount_due = $total_amount_required - $total_paid_amount;
+        $total_amount_due = $basePrice - $total_paid_amount;
 
         return [
             'id' => $this->id,
             'school_name' => $this->school->name,
             'grade_category_name' => $this->gradeCategory->name,
             'grade_name' => $this->grade->name,
-            'price' => $finalPrice,
+            'price' => $basePrice,
             'year' => $this->created_at->format('Y') ?? null,
             'exceptions_price' => $this->exceptions->first()
-                ? $this->exceptions->first()->pivot->exception_price - $registrationFeeDeduction
+                ? $this->exceptions->first()->pivot->exception_price
                 : null,
             'exceptions_notes' => $this->exceptions->first()->pivot->notes ?? null,
             'details' => $this->whenLoaded('details'),
@@ -50,15 +44,13 @@ class RequiredExpensesResource extends JsonResource
                         'payment_method' => $request->payment_method,
                         'date' => $request->date,
                         'status' => $request->status,
+                        'is_registration_fee' => $request->is_registration_fee,
                         'rejected_reason' => $request->rejected_reason ?? null,
                     ];
                 })
                 : [],
-            'total_amount_required_without_registration_fee_deduction' => $basePrice,
-            'total_amount_required' => $total_amount_required,
-            'amount_paid_without_registration_fee_deduction' => $total_paid_amount,
-            'registration_fee_deduction' => $registrationFeeDeduction,
-            'total_amount_paid' => $total_paid_amount + $registrationFeeDeduction,
+            'total_amount_required' => $basePrice,
+            'total_amount_paid' => $total_paid_amount,
             'total_amount_due' => $total_amount_due,
         ];
     }

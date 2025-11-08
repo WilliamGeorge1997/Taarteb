@@ -93,100 +93,48 @@ class StudentExpenseService
         return $studentExpense;
     }
 
-    // function updateStatus($data, $studentExpense)
-    // {
-    //     $paymentStatus = null;
-    //     if ($data['status'] == 'accepted') {
-    //         $student = $studentExpense->student;
+    function updateStatus($data, $studentExpense)
+    {
+        $paymentStatus = null;
+        if ($data['status'] == 'accepted') {
+            $student = $studentExpense->student;
 
-    //         $allStudentExpenses = StudentExpense::where('expense_id', $studentExpense->expense_id)
-    //             ->where('student_id', $studentExpense->student_id)
-    //             ->where('status', 'accepted')
-    //             ->get();
+            $allStudentExpenses = StudentExpense::where('expense_id', $studentExpense->expense_id)
+                ->where('student_id', $studentExpense->student_id)
+                ->where('status', 'accepted')
+                ->get();
 
-    //         $previouslyPaid = $allStudentExpenses->sum('amount_paid');
-    //         $newPayment = $data['amount_paid'];
-    //         $totalAmountPaid = $previouslyPaid + $newPayment;
-    //         $requiredAmount = $studentExpense->amount;
+            $previouslyPaid = $allStudentExpenses->sum('amount_paid');
+            $newPayment = $data['amount_paid'];
+            $totalAmountPaid = $previouslyPaid + $newPayment;
 
-    //         $remaining = $requiredAmount - $previouslyPaid;
+            $requiredAmount = $studentExpense->amount;
 
-    //         if ($newPayment > $remaining) {
-    //             throw new \Exception("Payment amount ({$newPayment}) exceeds remaining balance ({$remaining})");
-    //         }
+            $actualRequiredAmount = $requiredAmount - $newPayment;
+            $remaining = $actualRequiredAmount - $previouslyPaid;
 
-    //         $paymentStatus = ($totalAmountPaid >= $requiredAmount) ? 'full' : 'partial';
-    //         if (!$student->expense_registration_fee_deducted && $previouslyPaid == 0) {
-    //             $expense = $studentExpense->expense()->with('details')->first();
-    //             $startPaymentDetail = $expense->details->firstWhere('name', 'مقدم الدفع');
-    //             $startPayment = $startPaymentDetail ? $startPaymentDetail->price : 0;
-    //             $student->update(['expense_registration_fee_deducted' => $startPayment]);
-    //             $student->update(['is_register_fee_accepted' => 1]);
-    //         }
-    //     }
+            if ($newPayment > $remaining) {
+                throw new \Exception("Payment amount ({$newPayment}) exceeds remaining balance ({$remaining})");
+            }
 
-    //     $studentExpense->update([
-    //         'status' => $data['status'],
-    //         'rejected_reason' => @$data['rejected_reason'],
-    //         'amount_paid' => $data['amount_paid'] ?? 0,
-    //         'payment_status' => @$paymentStatus,
-    //     ]);
+            $paymentStatus = ($totalAmountPaid >= $actualRequiredAmount) ? 'full' : 'partial';
 
-    //     return $studentExpense->fresh();
-    // }
-
-
-function updateStatus($data, $studentExpense)
-{
-    $paymentStatus = null;
-    if ($data['status'] == 'accepted') {
-        $student = $studentExpense->student;
-
-        $allStudentExpenses = StudentExpense::where('expense_id', $studentExpense->expense_id)
-            ->where('student_id', $studentExpense->student_id)
-            ->where('status', 'accepted')
-            ->get();
-
-        $previouslyPaid = $allStudentExpenses->sum('amount_paid');
-        $newPayment = $data['amount_paid'];
-        $totalAmountPaid = $previouslyPaid + $newPayment;
-
-        // Get the base required amount
-        $requiredAmount = $studentExpense->amount;
-
-        // Deduct مقدم الدفع if this is the first payment
-        $registrationFeeDeduction = 0;
-        if (!$student->expense_registration_fee_deducted && $previouslyPaid == 0) {
-            $expense = $studentExpense->expense()->with('details')->first();
-            $startPaymentDetail = $expense->details->firstWhere('name', 'مقدم الدفع');
-            $registrationFeeDeduction = $startPaymentDetail ? $startPaymentDetail->price : 0;
-            $student->update(['expense_registration_fee_deducted' => $registrationFeeDeduction]);
-            $student->update(['is_register_fee_accepted' => 1]);
-        } elseif ($student->expense_registration_fee_deducted > 0) {
-            // If already deducted, use the stored deduction amount
-            $registrationFeeDeduction = $student->expense_registration_fee_deducted;
+            if ($studentExpense->is_registration_fee) {
+                $student->update(['expense_registration_fee_deducted' => $newPayment]);
+                $student->update(['is_register_fee_accepted' => 1]);
+            }
         }
 
-        // Calculate actual required amount after deduction
-        $actualRequiredAmount = $requiredAmount - $registrationFeeDeduction;
-        $remaining = $actualRequiredAmount - $previouslyPaid;
+        $studentExpense->update([
+            'status' => $data['status'],
+            'rejected_reason' => @$data['rejected_reason'],
+            'amount_paid' => $data['amount_paid'] ?? 0,
+            'payment_status' => @$paymentStatus,
+        ]);
 
-        if ($newPayment > $remaining) {
-            throw new \Exception("Payment amount ({$newPayment}) exceeds remaining balance ({$remaining})");
-        }
-
-        $paymentStatus = ($totalAmountPaid >= $actualRequiredAmount) ? 'full' : 'partial';
+        return $studentExpense->fresh();
     }
 
-    $studentExpense->update([
-        'status' => $data['status'],
-        'rejected_reason' => @$data['rejected_reason'],
-        'amount_paid' => $data['amount_paid'] ?? 0,
-        'payment_status' => @$paymentStatus,
-    ]);
-
-    return $studentExpense->fresh();
-}
     function delete($studentExpense)
     {
         $studentExpense->delete();
@@ -212,22 +160,22 @@ function updateStatus($data, $studentExpense)
                 },
             ])->latest()
             ->get();
-        if ($expenses->isNotEmpty()) {
-            $firstExpense = $expenses->first();
+        // if ($expenses->isNotEmpty()) {
+        //     $firstExpense = $expenses->first();
 
-            $hasException = $firstExpense->exceptions->isNotEmpty();
-            $basePrice = $hasException
-                ? $firstExpense->exceptions->first()->pivot->exception_price
-                : $firstExpense->price;
+        //     $hasException = $firstExpense->exceptions->isNotEmpty();
+        //     $basePrice = $hasException
+        //         ? $firstExpense->exceptions->first()->pivot->exception_price
+        //         : $firstExpense->price;
 
-            $startPaymentDetail = $firstExpense->details->firstWhere('name', 'مقدم الدفع');
-            $startPaymentAmount = $startPaymentDetail ? $startPaymentDetail->price : 0;
+        //     $startPaymentDetail = $firstExpense->details->firstWhere('name', 'مقدم الدفع');
+        //     $startPaymentAmount = $startPaymentDetail ? $startPaymentDetail->price : 0;
 
 
-            $firstExpense->registration_fee_deduction = $student->expense_registration_fee_deducted > 0
-                ? $student->expense_registration_fee_deducted
-                : $startPaymentAmount;
-        }
+        //     $firstExpense->registration_fee_deduction = $student->expense_registration_fee_deducted > 0
+        //         ? $student->expense_registration_fee_deducted
+        //         : $startPaymentAmount;
+        // }
 
         return $expenses;
     }

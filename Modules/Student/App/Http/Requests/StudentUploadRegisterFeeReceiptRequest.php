@@ -3,7 +3,7 @@
 namespace Modules\Student\App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;  
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StudentUploadRegisterFeeReceiptRequest extends FormRequest
@@ -18,6 +18,7 @@ class StudentUploadRegisterFeeReceiptRequest extends FormRequest
     {
         return [
             'register_fee_image' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:1024'],
+            'payment_method' => ['required', 'in:1,2,3'],
         ];
     }
 

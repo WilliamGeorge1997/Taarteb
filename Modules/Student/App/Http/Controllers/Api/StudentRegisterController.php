@@ -49,18 +49,33 @@ class StudentRegisterController extends Controller
         }
     }
 
+    // public function uploadRegisterFeeReceipt(StudentUploadRegisterFeeReceiptRequest $request)
+    // {
+    //     try {
+    //         $student = $this->studentService->findById(auth('user')->user()->student->id);
+    //         $student->register_fee_image = $this->upload(request()->file('register_fee_image'), 'student/register_fee_image');
+    //         $student->save();
+    //         return returnMessage(true, 'Register Fee Receipt Uploaded Successfully', $student);
+    //     } catch (Exception $e) {
+    //         return returnMessage(false, $e->getMessage(), null, 'server_error');
+    //     }
+    // }
+// ... existing code ...
+
     public function uploadRegisterFeeReceipt(StudentUploadRegisterFeeReceiptRequest $request)
     {
         try {
-            $student = $this->studentService->findById(auth('user')->user()->student->id);
-            $student->register_fee_image = $this->upload(request()->file('register_fee_image'), 'student/register_fee_image');
-            $student->save();
-            return returnMessage(true, 'Register Fee Receipt Uploaded Successfully', $student);
+            DB::beginTransaction();
+            $student = $this->studentService->uploadRegisterFeeReceipt($request->validated());
+            DB::commit();
+            return returnMessage(true, 'Register Fee Receipt Uploaded Successfully and pending admin approval', $student);
         } catch (Exception $e) {
+            DB::rollBack();
             return returnMessage(false, $e->getMessage(), null, 'server_error');
         }
     }
 
+    // ... existing code ...
     public function schools()
     {
         $schools = (new SchoolService)->active();
