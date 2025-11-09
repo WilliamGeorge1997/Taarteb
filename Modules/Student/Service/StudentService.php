@@ -146,7 +146,6 @@ class StudentService
             ->with('details')
             ->oldest()
             ->first();
-
         if (!$firstExpense) {
             throw new \Exception('No expenses found for your grade');
         }
@@ -172,8 +171,8 @@ class StudentService
         }
 
         if (request()->hasFile('register_fee_image')) {
-            $data['register_fee_image'] = $this->uploadFile(request()->file('register_fee_image'), 'student/register_fee_image');
-            $data['receipt'] = $this->uploadFile(request()->file('register_fee_image'), 'student/expense/receipt');
+            $data['register_fee_image'] = $this->upload(request()->file('register_fee_image'), 'student/register_fee_image');
+            $data['receipt'] = $this->upload(request()->file('register_fee_image'), 'student/expense/receipt');
         }
         $studentExpense = \Modules\Expense\App\Models\StudentExpense::create([
             'student_id' => $student->id,
