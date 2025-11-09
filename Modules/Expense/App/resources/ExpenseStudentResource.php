@@ -11,7 +11,7 @@ class ExpenseStudentResource extends JsonResource
      */
     public function toArray($request): array
     {
-        return [
+        $data = [
             'id' => $this->id,
             'final_amount' => $this->amount,
             'amount_paid' => $this->amount_paid,
@@ -26,9 +26,14 @@ class ExpenseStudentResource extends JsonResource
             'exception_price' => $this->expense->exceptions->where('id', $this->student_id)->values()->first()->pivot->exception_price ?? null,
             'notes' => $this->expense->exceptions->where('id', $this->student_id)->values()->first()->pivot->notes ?? null,
             'receipt' => $this->receipt ?? null,
+            'is_registration_fee' => $this->is_registration_fee,
             'created_at' => $this->created_at->format('Y-m-d H:i A'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i A'),
-            'student'=> $this->student,
+            'student' => $this->student,
         ];
+        if ($this->is_registration_fee) {
+            $data['registration_fee_price'] = $this->expense->details->where('name', 'مقدم الدفع')->first()->price;
+        }
+        return $data;
     }
 }
