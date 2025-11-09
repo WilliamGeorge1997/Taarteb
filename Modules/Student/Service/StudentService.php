@@ -173,6 +173,7 @@ class StudentService
 
         if (request()->hasFile('register_fee_image')) {
             $data['register_fee_image'] = $this->uploadFile(request()->file('register_fee_image'), 'student/register_fee_image');
+            $data['receipt'] = $this->uploadFile(request()->file('register_fee_image'), 'student/expense/receipt');
         }
         $studentExpense = \Modules\Expense\App\Models\StudentExpense::create([
             'student_id' => $student->id,
@@ -181,7 +182,7 @@ class StudentService
             'amount_paid' => 0,
             'date' => now()->toDateString(),
             'payment_method' => $data['payment_method'],
-            'receipt' => $data['register_fee_image'],
+            'receipt' => $data['receipt'],
             'status' => 'pending',
             'is_registration_fee' => 1,
         ]);
