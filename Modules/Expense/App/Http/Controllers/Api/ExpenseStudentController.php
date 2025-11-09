@@ -26,7 +26,7 @@ class ExpenseStudentController extends Controller
     public function expenses(Request $request)
     {
         $expenses = (new ExpenseService)->findExpenses($request->all(), ['gradeCategory', 'grade', 'details']);
-        return returnMessage(true,'Expenses fetched successfully', $expenses);
+        return returnMessage(true, 'Expenses fetched successfully', $expenses);
     }
     public function requiredExpenses()
     {
@@ -39,7 +39,17 @@ class ExpenseStudentController extends Controller
         $data = $request->all();
         $relations = ['expense.grade.gradeCategory'];
         $studentExpenses = $this->studentExpenseService->findBy('student_id', auth('user')->user()->student->id, $data, $relations);
-        return returnMessage(true, 'Student expenses fetched successfully', $studentExpenses);
+
+        $required_amount = $studentExpenses->first()->amount;
+        $paid_amount = $studentExpenses->where('status', 'accepted')->sum('amount_paid');
+        $due_amount = $required_amount - $paid_amount;
+
+        return returnMessage(true, 'Student expenses fetched successfully', [
+            'data' => $studentExpenses,
+            'required_amount' => $required_amount,
+            'paid_amount' => $paid_amount,
+            'due_amount' => $due_amount
+        ]);
     }
     public function store(ExpenseStudentRequest $request)
     {

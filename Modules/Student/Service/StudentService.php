@@ -178,7 +178,7 @@ class StudentService
             'student_id' => $student->id,
             'expense_id' => $firstExpense->id,
             'amount' => $firstExpense->price,
-            'amount_paid' => 0,
+            'amount_paid' => $startPaymentDetail->price,
             'date' => now()->toDateString(),
             'payment_method' => $data['payment_method'],
             'receipt' => $data['receipt'],

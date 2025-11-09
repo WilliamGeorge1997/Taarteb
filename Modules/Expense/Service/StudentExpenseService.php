@@ -41,10 +41,10 @@ class StudentExpenseService
         $collection->transform(function ($studentExpense) {
             if ($studentExpense->expense) {
                 $studentExpense->expense->year = $studentExpense->expense->created_at->format('Y');
+
             }
             return $studentExpense;
         });
-
         return $collection;
     }
 
@@ -125,12 +125,16 @@ class StudentExpenseService
             }
         }
 
-        $studentExpense->update([
+        $toBeUpdatedData = [
             'status' => $data['status'],
             'rejected_reason' => @$data['rejected_reason'],
-            'amount_paid' => $data['amount_paid'] ?? 0,
-            'payment_status' => @$paymentStatus,
-        ]);
+            'payment_status' => $paymentStatus,
+
+        ];
+        if ($studentExpense->is_registration_fee == 0) {
+            $toBeUpdatedData['amount_paid'] = $data['amount_paid'] ?? 0;
+        }
+        $studentExpense->update($toBeUpdatedData);
 
         return $studentExpense->fresh();
     }

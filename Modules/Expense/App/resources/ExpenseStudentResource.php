@@ -11,10 +11,12 @@ class ExpenseStudentResource extends JsonResource
      */
     public function toArray($request): array
     {
-        $data = [
+        $amount_paid = $this->is_registration_fee ? $this->expense->details->where('name', 'مقدم الدفع')->first()->price : $this->amount_paid;
+        return [
             'id' => $this->id,
             'final_amount' => $this->amount,
-            'amount_paid' => $this->amount_paid,
+            'amount_paid' => $amount_paid,
+            'amount_due' => $this->amount - $amount_paid,
             'date' => $this->date,
             'payment_status' => $this->payment_status ?? null,
             'payment_method' => $this->payment_method,
@@ -31,9 +33,5 @@ class ExpenseStudentResource extends JsonResource
             'updated_at' => $this->updated_at->format('Y-m-d H:i A'),
             'student' => $this->student,
         ];
-        if ($this->is_registration_fee) {
-            $data['registration_fee_price'] = $this->expense->details->where('name', 'مقدم الدفع')->first()->price;
-        }
-        return $data;
     }
 }
