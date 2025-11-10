@@ -109,15 +109,13 @@ class StudentExpenseService
             $totalAmountPaid = $previouslyPaid + $newPayment;
 
             $requiredAmount = $studentExpense->amount;
-
-            $actualRequiredAmount = $requiredAmount - $newPayment;
-            $remaining = $actualRequiredAmount - $previouslyPaid;
+            $remaining = $requiredAmount - $previouslyPaid;
 
             if ($newPayment > $remaining) {
                 throw new \Exception("Payment amount ({$newPayment}) exceeds remaining balance ({$remaining})");
             }
 
-            $paymentStatus = ($totalAmountPaid >= $actualRequiredAmount) ? 'full' : 'partial';
+            $paymentStatus = ($totalAmountPaid >= $requiredAmount) ? 'full' : 'partial';
 
             if ($studentExpense->is_registration_fee) {
                 $student->update(['expense_registration_fee_deducted' => $newPayment]);
