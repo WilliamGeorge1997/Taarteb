@@ -18,39 +18,34 @@ class StudentExpenseDto
     public function __construct($request)
     {
         $this->student_id = auth('user')->user()->student->id;
-        $this->expense_id = $request->get('expense_id');
-        $this->amount = $this->getAmount($this->expense_id);
+        $this->expense_id = $this->getExpense()->id;
+        $this->amount = $this->getAmount();
         $this->date = now()->toDateString();
         $this->payment_method = $request->get('payment_method');
     }
 
-    private function getAmount($expense_id)
+    private function getAmount()
     {
-        $student = auth('user')->user()->student;
-
-        $expense = Expense::with([
-            'exceptions' => function ($query) {
-                $query->where('student_id', $this->student_id);
-            }
-        ])->findOrFail($expense_id);
-
+        $expense = $this->getExpense();
         $basePrice = $expense->exceptions->count() > 0
             ? $expense->exceptions->first()->pivot->exception_price
             : $expense->price;
 
-        $hasNeverPaid = !$student->expense_registration_fee_deducted;
-        $isFirstExpense = !StudentExpense::where('student_id', $this->student_id)
-            ->where('expense_id', $expense_id)
-            ->exists();
-
-        if ($hasNeverPaid && $isFirstExpense) {
-            $startPaymentDetail = $expense->details->firstWhere('name', 'مقدم الدفع');
-            $startPayment = $startPaymentDetail ? $startPaymentDetail->price : 0;
-            $basePrice = $basePrice - $startPayment;
-        }
-
-
         return $basePrice;
+    }
+
+    private function getExpense()
+    {
+        $student = auth('user')->user()->student;
+        $expense = Expense::with([
+            'exceptions' => function ($query) {
+                $query->where('student_id', $this->student_id);
+            }
+        ])->where('grade_id', $student->grade_id)
+            ->where('grade_category_id', $student->grade->gradeCategory->id)
+            ->where('school_id', $student->school_id)
+            ->first();
+        return $expense;
     }
 
     public function dataFromRequest()
