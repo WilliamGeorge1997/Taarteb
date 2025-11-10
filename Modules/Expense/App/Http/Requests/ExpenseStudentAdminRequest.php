@@ -17,7 +17,7 @@ class ExpenseStudentAdminRequest extends FormRequest
             'status' => ['required', 'in:accepted,rejected'],
             'rejected_reason' => ['required_if:status,rejected', 'string', 'max:255'],
         ];
-        if ($studentExpense->is_registration_fee) {
+        if (!$studentExpense->is_registration_fee) {
             $rules['amount_paid'] = ['prohibited_if:status,rejected', 'required_if:status,accepted', 'numeric', 'min:0'];
         } else {
             $rules['amount_paid'] = ['nullable', 'numeric', 'min:0'];
