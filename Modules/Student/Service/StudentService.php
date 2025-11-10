@@ -146,6 +146,7 @@ class StudentService
             ->with('details')
             ->oldest()
             ->first();
+            
         if (!$firstExpense) {
             throw new \Exception('No expenses found for your grade');
         }

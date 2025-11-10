@@ -20,7 +20,7 @@ class StudentRegisterRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['nullable', 'email', 'unique:students,email', 'unique:students,parent_email', 'unique:users,email', 'different:parent_email'],
-            'phone' => ['required', 'string', 'unique:users,phone'],
+            'phone' => ['nullable', 'string', 'unique:users,phone'],
             'identity_number' => ['required', 'string', 'unique:students,identity_number'],
             'gender' => ['required', 'in:m,f'],
             'parent_email' => ['nullable', 'email', 'unique:students,parent_email', 'unique:students,email', 'different:email'],

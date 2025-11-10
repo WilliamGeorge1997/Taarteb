@@ -66,31 +66,23 @@ class UserAuthController extends Controller
                 if (!$credentials['user_id']) {
                     return returnValidationMessage(false,'Unauthorized',['identity_number' => 'Invalid identity number'],'unauthorized');
                 }
-
                 $user = User::find($credentials['user_id']);
-
                 if (!$user) {
                     return returnValidationMessage(false,'Unauthorized',['identity_number' => 'Student account not found'],'unauthorized');
                 }
-
                 if (!Hash::check($credentials['password'], $user->password)) {
                     return returnValidationMessage(false,'Unauthorized',['password' => 'Wrong password'],'unauthorized');
                 }
-
                 $token = auth('user')->login($user);
-
             } else {
                 if (!$token = auth('user')->attempt($credentials)) {
                     return returnValidationMessage(false,'Unauthorized',['password' => 'Wrong credentials'],'unauthorized');
                 }
             }
-
             $user = auth('user')->user();
-
             if ($user->is_active == 0) {
                 return returnMessage(false,'In-Active User Verification Required',null,'temporary_redirect');
             }
-
             if ($request->filled('fcm_token')) {
                 $user->update(['fcm_token' => $request->fcm_token]);
             }
