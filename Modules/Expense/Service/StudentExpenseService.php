@@ -13,7 +13,7 @@ class StudentExpenseService
     use UploadHelper;
     function findAll($data = [], $relations = [])
     {
-        $studentExpenses = StudentExpense::query()
+        $query = StudentExpense::query()
             ->when($data['grade_id'] ?? null, function ($query) use ($data) {
                 $query->whereHas('expense', function ($query) use ($data) {
                     $query->where('grade_id', $data['grade_id']);
@@ -25,8 +25,25 @@ class StudentExpenseService
                 });
             })
             ->available()
-            ->with($relations)->latest();
-        return getCaseCollection($studentExpenses, $data);
+            ->with($relations)
+            ->latest();
+
+        $studentExpenses = getCaseCollection($query, $data);
+
+        $grouped = $studentExpenses->groupBy(function ($expense) {
+            return $expense->student_id . '_' . $expense->expense_id;
+        });
+
+        foreach ($grouped as $group) {
+            $cumulativePaid = 0;
+            foreach ($group->sortBy('id') as $expense) {
+                $cumulativePaid += $expense->amount_paid;
+                $expense->cumulative_paid = $cumulativePaid;
+                $expense->amount_due = $expense->expense->price - $cumulativePaid;
+            }
+        }
+
+        return $studentExpenses;
     }
 
     function findById($id)
@@ -105,7 +122,7 @@ class StudentExpenseService
                 ->get();
 
             $previouslyPaid = $allStudentExpenses->sum('amount_paid');
-            $newPayment =  $studentExpense->is_registration_fee ? $studentExpense->expense->details->where('name', 'مقدم الدفع')->first()->price : $data['amount_paid'];
+            $newPayment = $studentExpense->is_registration_fee ? $studentExpense->expense->details->where('name', 'مقدم الدفع')->first()->price : $data['amount_paid'];
             $totalAmountPaid = $previouslyPaid + $newPayment;
 
             $requiredAmount = $studentExpense->amount;
