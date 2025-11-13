@@ -8,15 +8,19 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Student\App\Models\Student;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Notifications\Notifiable;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Modules\Teacher\App\Models\TeacherProfile;
+use Illuminate\Contracts\Auth\CanResetPassword;
 use Modules\Notification\App\Models\Notification;
+use Modules\User\App\Notifications\UserVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject, CanResetPassword
 {
-    use HasFactory, HasRoles, LogsActivity;
+    use HasFactory, HasRoles, LogsActivity, CanResetPasswordTrait, Notifiable;
 
     protected $fillable = ['name', 'email', 'phone', 'password', 'role', 'is_active', 'image', 'school_id', 'fcm_token'];
     protected $hidden = ['password', 'remember_token'];
@@ -83,7 +87,15 @@ class User extends Authenticatable implements JWTSubject
         }
 
     }
-
+    /**
+     * Send the email verification notification.
+     *
+     * @return void
+     */
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new UserVerifyEmail);
+    }
     //JWT
 
     /**
@@ -104,5 +116,14 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+
+    /**
+     * Get the e-mail address where password reset links are sent.
+     */
+    public function getEmailForPasswordReset()
+    {
+        return $this->email;
     }
 }

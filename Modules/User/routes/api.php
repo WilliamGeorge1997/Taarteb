@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\User\App\Http\Controllers\Api\UserController;
 use Modules\User\App\Http\Controllers\Api\UserAuthController;
 use Modules\User\App\Http\Controllers\Api\DashboardController;
+use Modules\User\App\Http\Controllers\Api\PasswordResetController;
 
 /*
     |--------------------------------------------------------------------------
@@ -27,6 +28,12 @@ Route::group([
     });
     Route::post('change-password', [UserController::class, 'changePassword']);
     Route::post('update-profile', [UserController::class, 'updateProfile']);
+
+    // Password Reset API Routes for React
+    Route::post('forgot-password', [PasswordResetController::class, 'forgotPassword']);
+    Route::post('validate-reset-token', [PasswordResetController::class, 'validateResetToken']);
+    Route::post('reset-password', [PasswordResetController::class, 'resetPassword']);
+
 });
 
 //Dashboard
@@ -36,3 +43,4 @@ Route::get('todays-attendance-statistics', [DashboardController::class, 'getToda
 Route::get('attendance-statistics-comparison', [DashboardController::class, 'getAttendanceStatisticsComparison']);
 Route::get('weekly-attendance-report', [DashboardController::class, 'getWeeklyAttendanceReport']);
 Route::get('gender-statistics', [DashboardController::class, 'getGenderStatistics']);
+
