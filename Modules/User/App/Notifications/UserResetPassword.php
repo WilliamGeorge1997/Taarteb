@@ -36,7 +36,7 @@ class UserResetPassword extends Notification
         ]);
 
         return (new MailMessage)
-            ->subject('Reset Your Password - Blue Nile Hights')
+            ->subject('Reset Your Password - Afak School')
             ->greeting('Hello ' . $notifiable->name . '!')
             ->line('You are receiving this email because we received a password reset request for your account.')
             ->line('')
@@ -47,6 +47,6 @@ class UserResetPassword extends Notification
             ->line('')
             ->line('If you\'re having trouble clicking the "Reset Password" button, copy and paste the URL below into your web browser:')
             ->line($resetUrl)
-            ->salutation('Blue Nile Hights Team');
+            ->salutation('Afak School Team');
     }
 }

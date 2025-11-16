@@ -90,10 +90,10 @@ class Student extends Model
         'sibling_order',
         'expense_registration_fee_deducted',
         'is_register_fee_accepted',
-        
+
     ];
     protected $casts = ['behavioral_data' => 'array'];
-    protected $with = ['branch', 'region.state.governorate'];
+    protected $with = ['branch', 'region.state.governorate', 'parent'];
     public function branch()
     {
         return $this->belongsTo(Branch::class);
