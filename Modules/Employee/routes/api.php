@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Employee\App\Http\Controllers\Api\EmployeeAuthController;
 use Modules\Employee\App\Http\Controllers\Api\EmployeeAdminController;
 
 /*
@@ -15,8 +14,9 @@ use Modules\Employee\App\Http\Controllers\Api\EmployeeAdminController;
     |
 */
 Route::group(['prefix' => "admin"], function () {
+    Route::post("employees/import", [EmployeeAdminController::class, 'import']);
     Route::apiResource("employees", EmployeeAdminController::class)->only(['index','store']);
-
+    Route::post("employees/{user}", [EmployeeAdminController::class, 'update']);
     //Roles
     Route::get("employee-roles", [EmployeeAdminController::class, "employeeRoles"]);
 });

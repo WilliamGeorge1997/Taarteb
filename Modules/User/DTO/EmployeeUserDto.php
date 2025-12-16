@@ -12,7 +12,8 @@ class EmployeeUserDto
     public $phone;
     public $password;
     public $school_id;
-    public $role_id;
+    public $role_ids;
+    public $job_title;
     public function __construct($request)
     {
         if ($request->get('name'))
@@ -30,8 +31,10 @@ class EmployeeUserDto
         } else if (auth('user')->user()->hasRole('School Manager')) {
             $this->school_id = auth('user')->user()->school_id;
         }
-        if ($request->get('role_id'))
-            $this->role_id = $request->get('role_id');
+        if ($request->get('role_ids'))
+            $this->role_ids = $request->get('role_ids');
+        if ($request->get('job_title'))
+            $this->job_title = $request->get('job_title');
     }
 
     public function dataFromRequest()
@@ -47,8 +50,10 @@ class EmployeeUserDto
             unset($data['password']);
         if ($this->school_id == null)
             unset($data['school_id']);
-        if ($this->role_id == null)
-            unset($data['role_id']);
+        if ($this->role_ids == null)
+            unset($data['role_ids']);
+        if ($this->job_title == null)
+            unset($data['job_title']);
         return $data;
     }
 }

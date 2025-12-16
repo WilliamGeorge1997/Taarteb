@@ -29,7 +29,8 @@ class UpdateProfileRequest extends FormRequest
             $rules['parent_phone'] = ['nullable', 'string'];
             $rules['application_form'] = ['nullable', 'file', 'mimes:pdf', 'max:1024'];
             $rules['address'] = ['nullable', 'string'];
-            $rules['region_id'] = ['nullable', 'exists:regions,id'];
+            $rules['state_id'] = ['nullable', 'exists:states,id'];
+            $rules['region'] = ['nullable', 'string'];
             $rules['branch_id'] = ['nullable', 'exists:branches,id'];
             $rules['name_en'] = ['nullable', 'string'];
             $rules['birth_date'] = ['nullable', 'date'];
@@ -68,7 +69,7 @@ class UpdateProfileRequest extends FormRequest
             $rules['mother_job_address'] = ['nullable', 'string'];
             $rules['mother_education_level'] = ['nullable', 'string'];
             $rules['mother_phone'] = ['nullable', 'string'];
-            $rules['parents_status'] = ['nullable', 'in:together,separated,widower,widow'];
+            $rules['parents_status'] = ['nullable', 'in:together,separated,widower,widow,father_dead,mother_dead'];
             $rules['relative_name'] = ['nullable', 'string'];
             $rules['relative_relation'] = ['nullable', 'string'];
             $rules['relative_phone'] = ['nullable', 'string'];
@@ -104,7 +105,7 @@ class UpdateProfileRequest extends FormRequest
             'password_confirmation' => 'Password Confirmation',
             'application_form' => 'Application Form',
             'address' => 'Address',
-            'region_id' => 'Region',
+            'state_id' => 'State',
             'branch_id' => 'Branch',
             'name_en' => 'Name in English',
             'birth_date' => 'Birth Date',

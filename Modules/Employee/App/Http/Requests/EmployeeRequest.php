@@ -17,18 +17,39 @@ class EmployeeRequest extends FormRequest
      */
     public function rules(): array
     {
-        $roles_ids = Role::whereIn('name', ['Financial Director', 'Sales Employee', 'Purchasing Employee', 'Salaries Employee', 'Maintenance Employee'])->pluck('id');
+        $roles = Role::whereIn('name', ['Financial Director', 'Sales Employee', 'Purchasing Employee', 'Salaries Employee', 'Maintenance Employee', 'Other'])->get();
+        $roles_ids = $roles->pluck('id');
+        $other_role_id = $roles->firstWhere('name', 'Other')?->id;
         $rules = [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'sometimes|nullable|string|max:255|unique:users,phone',
-            'password' => 'required|string|min:6',
             'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,webp|max:1024',
-            'role_id' => 'required|exists:roles,id|in:' . $roles_ids->implode(','),
         ];
-        if (auth('user')->user()->hasRole('Super Admin'))
-            $rules['school_id'] = 'required|exists:schools,id';
-
+        if ($this->route('user')) {
+            $rules['name'] = 'nullable|string|max:255';
+            $rules['email'] = 'nullable|email|unique:users,email,' . $this->route('user')->id;
+            $rules['phone'] = 'sometimes|nullable|string|max:255|unique:users,phone,' . $this->route('user')->id;
+            $rules['role_ids'] = 'nullable|array';
+            $rules['role_ids.*'] = 'exists:roles,id|in:' . $roles_ids->implode(',');
+            $rules['password'] = 'nullable|string|min:6';
+            $has_other_role = $this->hasOtherRole($other_role_id);
+            $rules['job_title'] = $has_other_role
+                ? 'required|string|max:255'
+                : 'nullable';
+            if (auth('user')->user()->hasRole('Super Admin'))
+                $rules['school_id'] = 'nullable|exists:schools,id';
+        } else {
+            $rules['name'] = 'required|string|max:255';
+            $rules['email'] = 'required|email|unique:users,email';
+            $rules['phone'] = 'sometimes|nullable|string|max:255|unique:users,phone';
+            $rules['role_ids'] = 'nullable|array';
+            $rules['role_ids.*'] = 'exists:roles,id|in:' . $roles_ids->implode(',');
+            $has_other_role = $this->hasOtherRole($other_role_id);
+            $rules['job_title'] = $has_other_role
+                ? 'required|string|max:255'
+                : 'nullable|prohibited';
+            $rules['password'] = 'required|string|min:6';
+            if (auth('user')->user()->hasRole('Super Admin'))
+                $rules['school_id'] = 'required|exists:schools,id';
+        }
         return $rules;
     }
 
@@ -44,7 +65,9 @@ class EmployeeRequest extends FormRequest
             'password' => 'Password',
             'image' => 'Image',
             'role_id' => 'Role',
+            'role_ids' => 'Roles',
             'school_id' => 'School',
+            'job_title' => 'Job Title',
         ];
     }
 
@@ -56,6 +79,16 @@ class EmployeeRequest extends FormRequest
         return true;
     }
 
+    private function hasOtherRole(?int $other_role_id): bool
+    {
+        if (!$other_role_id) {
+            return false;
+        }
+
+        $role_ids = $this->input('role_ids', []);
+
+        return in_array($other_role_id, $role_ids);
+    }
     /**
      * Handle a failed validation attempt.
      *

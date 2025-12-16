@@ -49,6 +49,36 @@ class NotificationService
         ]);
     }
 
+    function insert(array $data, array $userIds, string $group_by): void
+    {
+        if (empty($userIds)) {
+            return;
+        }
+
+        $image = null;
+        if (request()->hasFile('image')) {
+            $image = $this->upload(request()->file('image'), 'notification');
+        }
+        $notifications = [];
+        $now = now();
+        foreach ($userIds as $userId) {
+            $notifications[] = [
+                'title' => $data['title'],
+                'description' => $data['description'],
+                'image' => $image ?? ($data['image'] ?? null),
+                'notifiable_id' => $userId,
+                'notifiable_type' => User::class,
+                'group_by' => $group_by,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+        }
+
+        if (!empty($notifications)) {
+            Notification::insert($notifications);
+        }
+    }
+
 
     function sendNotificationToUser($data, $user_id, $group_by)
     {
@@ -73,6 +103,14 @@ class NotificationService
                 $tokens[] = $token;
             }
         }
+        if (!empty($tokens)) {
+            (new FCMService())->sendNotification($data, $tokens);
+        }
+    }
+
+    function sendNotificationToUsers(array $data, array $userIds, array $tokens, string $group_by): void
+    {
+        $this->insert($data, $userIds, $group_by);
         if (!empty($tokens)) {
             (new FCMService())->sendNotification($data, $tokens);
         }

@@ -17,7 +17,7 @@ use Modules\Maintenance\App\Http\Controllers\Api\MaintenanceAdminController;
 
 Route::group(['prefix' => 'admin'], function () {
     Route::get('maintenances', [MaintenanceAdminController::class, 'index']);
-    Route::post('maintenances/{maintenance}/accept', [MaintenanceAdminController::class, 'accept']);
+    Route::post('maintenances/accept', [MaintenanceAdminController::class, 'accept']);
     Route::post('maintenances/{maintenance}/reject', [MaintenanceAdminController::class, 'reject']);
 });
 

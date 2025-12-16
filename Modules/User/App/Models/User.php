@@ -5,7 +5,6 @@ namespace Modules\User\App\Models;
 use Spatie\Activitylog\LogOptions;
 use Modules\School\App\Models\School;
 use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Database\Eloquent\Model;
 use Modules\Student\App\Models\Student;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
@@ -17,12 +16,14 @@ use Modules\User\App\Notifications\UserVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
+use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
+use Illuminate\Auth\MustVerifyEmail;
 
-class User extends Authenticatable implements JWTSubject, CanResetPassword
+class User extends Authenticatable implements JWTSubject,MustVerifyEmailContract,  CanResetPassword
 {
-    use HasFactory, HasRoles, LogsActivity, CanResetPasswordTrait, Notifiable;
+    use HasFactory, HasRoles, LogsActivity, MustVerifyEmail,  CanResetPasswordTrait, Notifiable;
 
-    protected $fillable = ['name', 'email', 'phone', 'password', 'role', 'is_active', 'image', 'school_id', 'fcm_token'];
+    protected $fillable = ['name', 'email', 'phone', 'password', 'role', 'is_active', 'image', 'school_id', 'fcm_token', 'email_verified_at', 'job_title'];
     protected $hidden = ['password', 'remember_token'];
 
 
@@ -44,6 +45,7 @@ class User extends Authenticatable implements JWTSubject, CanResetPassword
     {
         return $date->format('Y-m-d h:i A');
     }
+    
     public function getImageAttribute($value)
     {
         if ($value != null && $value != '') {

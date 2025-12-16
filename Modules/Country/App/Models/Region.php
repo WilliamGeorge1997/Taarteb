@@ -14,7 +14,7 @@ class Region extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = [ 'name', 'state_id'];
+    protected $fillable = ['name', 'state_id'];
 
     public function state()
     {

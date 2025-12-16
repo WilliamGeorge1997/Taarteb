@@ -14,8 +14,8 @@ class EmployeeService
     use UploadHelper;
     public function findAll($data, $relations)
     {
-        $roles = ['Financial Director', 'Sales Employee', 'Purchasing Employee', 'Salaries Employee', 'Maintenance Employee'];
-        $employees = User::query()->available()->whereIn('role', $roles)->with($relations)->latest();
+        $roles = ['Financial Director', 'Sales Employee', 'Purchasing Employee', 'Salaries Employee', 'Maintenance Employee', 'Other'];
+        $employees = User::query()->available()->whereIn('role', $roles)->orWhereNull('role')->with($relations)->latest();
         return getCaseCollection($employees, $data);
     }
 

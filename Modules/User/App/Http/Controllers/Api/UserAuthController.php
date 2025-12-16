@@ -79,7 +79,7 @@ class UserAuthController extends Controller
                     return returnValidationMessage(false,'Unauthorized',['password' => 'Wrong credentials'],'unauthorized');
                 }
             }
-            $user = auth('user')->user();
+            $user = auth('user')->user()->load('roles');
             if ($user->is_active == 0) {
                 return returnMessage(false,'In-Active User Verification Required',null,'temporary_redirect');
             }

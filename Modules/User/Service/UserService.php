@@ -7,6 +7,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Modules\Common\Helpers\UploadHelper;
+use Modules\Employee\App\Models\Employee;
 
 class UserService
 {
@@ -171,16 +172,49 @@ class UserService
     }
     public function saveEmployeeUser($data)
     {
-        $role = Role::find($data['role_id']);
-        $data['role'] = $role->name;
-        $user = User::create($data);
-        $user->assignRole($role->name);
-        return $user;
+        if (isset($data['role_ids']) && !empty($data['role_ids'])) {
+            $roles = Role::whereIn('id', $data['role_ids'])->get();
+            if ($roles->isNotEmpty()) {
+                $data['role'] = $roles->first()->name;
+                $user = User::create($data);
+                $roleNames = $roles->pluck('name')->toArray();
+                $user->assignRole($roleNames);
+            }
+        } else {
+            $user = User::create($data);
+        }
+        return $user->fresh('roles');
+    }
+
+    public function updateEmployeeUser(array $data, User $user): User
+    {
+        if (isset($data['role_ids']) && !empty($data['role_ids'])) {
+            $roles = Role::whereIn('id', $data['role_ids'])->get();
+            if ($roles->isNotEmpty()) {
+                $data['role'] = $roles->first()->name;
+                $roleNames = $roles->pluck('name')->toArray();
+                $user->syncRoles($roleNames);
+                $hasOtherRole = $roles->contains(function ($role) {
+                    return $role->name === 'Other';
+                });
+                if (!$hasOtherRole) {
+                    $data['job_title'] = null;
+                }
+            }
+            unset($data['role_ids']);
+        }
+        $user->update($data);
+        return $user->fresh('roles');
     }
 
     public function findToken($user_id)
     {
         $user = User::find($user_id);
         return $user->fcm_token;
+    }
+    public function findTokens($user_ids)
+    {
+        $tokens = User::whereIn('id', $user_ids)->whereNotNull('fcm_token')->pluck('fcm_token')->toArray();
+        return $tokens;
     }
 }

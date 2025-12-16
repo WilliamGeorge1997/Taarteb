@@ -8,7 +8,6 @@ use Modules\Grade\App\Models\Grade;
 use Modules\Country\App\Models\State;
 use Modules\School\App\Models\School;
 use Modules\Country\App\Models\Branch;
-use Modules\Country\App\Models\Region;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Class\App\Models\Classroom;
 use Modules\Session\App\Models\Attendance;
@@ -51,7 +50,7 @@ class Student extends Model
         'application_form',
         'is_register',
         'address',
-        'region_id',
+        'state_id',
         'branch_id',
         'name_en',
         'birth_date',
@@ -90,17 +89,18 @@ class Student extends Model
         'sibling_order',
         'expense_registration_fee_deducted',
         'is_register_fee_accepted',
+        'region',
 
     ];
     protected $casts = ['behavioral_data' => 'array'];
-    protected $with = ['branch', 'region.state.governorate', 'parent'];
+    protected $with = ['branch', 'state.governorate', 'parent'];
     public function branch()
     {
         return $this->belongsTo(Branch::class);
     }
-    public function region()
+    public function state()
     {
-        return $this->belongsTo(Region::class);
+        return $this->belongsTo(State::class);
     }
     public function parent()
     {

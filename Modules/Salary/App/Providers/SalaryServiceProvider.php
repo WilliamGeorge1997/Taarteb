@@ -20,6 +20,7 @@ class SalaryServiceProvider extends ServiceProvider
         $this->registerCommandSchedules();
         $this->registerTranslations();
         $this->registerConfig();
+        $this->registerCommands();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/migrations'));
     }
@@ -37,7 +38,9 @@ class SalaryServiceProvider extends ServiceProvider
      */
     protected function registerCommands(): void
     {
-        // $this->commands([]);
+        $this->commands([
+            \Modules\Salary\App\Console\GenerateMonthlySalariesCommand::class,
+        ]);
     }
 
     /**

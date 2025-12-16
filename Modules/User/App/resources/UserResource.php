@@ -21,7 +21,8 @@ class UserResource extends JsonResource
             "is_active" => $this->is_active,
             "created_at" => $this->created_at->format('Y-m-d h:i A'),
             "updated_at" => $this->updated_at->format('Y-m-d h:i A'),
-            'role' => $this->role,
+            // 'role' => $this->role,
+            'role' => count($this->roles->pluck('name')) == 1 ? $this->roles->pluck('name')->first() : $this->roles->pluck('name'),
         ];
         if ($this->hasRole('Student')) {
             $data['student'] = $this->student->load(['grade.gradeCategory','studentFees']);

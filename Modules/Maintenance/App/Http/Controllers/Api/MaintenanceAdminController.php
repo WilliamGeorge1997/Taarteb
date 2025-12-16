@@ -5,9 +5,9 @@ namespace Modules\Maintenance\App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Modules\Maintenance\App\Http\Requests\MaintenanceAcceptRequest;
 use Modules\Maintenance\App\Models\Maintenance;
 use Modules\Maintenance\Service\MaintenanceService;
-use Modules\Notification\Service\NotificationService;
 
 class MaintenanceAdminController extends Controller
 {
@@ -31,19 +31,13 @@ class MaintenanceAdminController extends Controller
         ]);
     }
 
-    public function accept(Maintenance $maintenance)
+    public function accept(MaintenanceAcceptRequest $request)
     {
-        if ($maintenance->status == Maintenance::STATUS_ACCEPTED) {
-            return returnMessage(false, 'Maintenance already accepted', null, 'unprocessable_entity');
-        }
         try {
             DB::beginTransaction();
-            $maintenance->update([
-                'status' => Maintenance::STATUS_ACCEPTED,
-            ]);
-            $this->sendNotificationToUser($maintenance);
+            $this->maintenanceService->acceptMultiple($request->validated());
             DB::commit();
-            return returnMessage(true, 'Maintenance accepted successfully', $maintenance);
+            return returnMessage(true, 'Maintenance accepted successfully');
         } catch (\Exception $e) {
             DB::rollBack();
             return returnMessage(false, 'Failed to accept maintenance', null, 'server_error');
@@ -61,7 +55,7 @@ class MaintenanceAdminController extends Controller
                 'status' => Maintenance::STATUS_REJECTED,
                 'reject_reason' => $request->reject_reason
             ]);
-            $this->sendNotificationToUser($maintenance);
+            $this->maintenanceService->sendNotificationToUser($maintenance);
             DB::commit();
             return returnMessage(true, 'Maintenance rejected successfully', $maintenance);
         } catch (\Exception $e) {
@@ -70,19 +64,5 @@ class MaintenanceAdminController extends Controller
         }
     }
 
-    public function sendNotificationToUser($maintenance)
-    {
-        if ($maintenance->status == Maintenance::STATUS_ACCEPTED) {
-            $data = [
-                'title' => 'تم قبول طلب الصيانة',
-                'description' => 'تم قبول طلب الصيانة الخاص بك.',
-            ];
-        } elseif ($maintenance->status == Maintenance::STATUS_REJECTED) {
-            $data = [
-                'title' => 'تم رفض طلب الصيانة',
-                'description' => 'تم رفض طلب الصيانة الخاص بك. السبب: ' . ($maintenance->reject_reason ?? 'لم يتم تحديد السبب'),
-            ];
-        }
-        (new NotificationService())->sendNotificationToUser($data, $maintenance->user_id, 'maintenance');
-    }
+
 }
