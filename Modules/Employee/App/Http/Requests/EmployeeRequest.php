@@ -46,7 +46,7 @@ class EmployeeRequest extends FormRequest
             $rules['job_title'] = $has_other_role
                 ? 'required|string|max:255'
                 : 'nullable|prohibited';
-            $rules['password'] = 'required|string|min:6';
+            $rules['password'] = 'nullable|string|min:6';
             if (auth('user')->user()->hasRole('Super Admin'))
                 $rules['school_id'] = 'required|exists:schools,id';
         }

@@ -71,7 +71,7 @@ class StudentRegisterRequest extends FormRequest
             'mother_job_address' => ['nullable', 'string'],
             'mother_education_level' => ['nullable', 'string'],
             'mother_phone' => ['nullable', 'string'],
-            'parents_status' => ['nullable', 'in:together,separated,widower,widow','father_dead','mother_dead'],
+            'parents_status' => ['nullable', 'in:together,separated,widower,widow,father_dead,mother_dead'],
             'relative_name' => ['nullable', 'string'],
             'relative_relation' => ['nullable', 'string'],
             'relative_phone' => ['nullable', 'string'],

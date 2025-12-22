@@ -28,6 +28,9 @@ class ExpenseRequest extends FormRequest
             'details' => ['required', 'array'],
             'details.*.name' => ['required', 'string', 'max:255'],
             'details.*.price' => ['required', 'numeric', 'min:0'],
+            'installments' => ['nullable', 'array'],
+            'installments.*.title' => ['nullable', 'string', 'max:255'],
+            'installments.*.price' => ['nullable', 'integer', 'min:0'],
         ];
 
     }
@@ -38,9 +41,17 @@ class ExpenseRequest extends FormRequest
             $price = $this->input('price');
             $details = $this->input('details');
 
-            $detailsSum = collect($details)->sum('price');
-            if ($detailsSum != $price) {
-                $validator->errors()->add('details', 'The details price must be equal to the price');
+            // $detailsSum = collect($details)->sum('price');
+            // if ($detailsSum != $price) {
+            //     $validator->errors()->add('details', 'The details price must be equal to the price');
+            // }
+
+            $installments = $this->input('installments');
+            if ($installments) {
+                $installmentsSum = collect($installments)->sum('price');
+                if ($installmentsSum != $price) {
+                    $validator->errors()->add('installments', 'The installments price must be equal to the price');
+                }
             }
         });
     }
@@ -57,6 +68,9 @@ class ExpenseRequest extends FormRequest
             'details' => 'Details',
             'details.*.name' => 'Name',
             'details.*.price' => 'Price',
+            'installments' => 'Installments',
+            'installments.*.title' => 'Title',
+            'installments.*.price' => 'Price',
         ];
     }
 

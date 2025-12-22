@@ -46,7 +46,7 @@ class EmployeesImport implements ToCollection, WithHeadingRow, SkipsEmptyRows, W
                     'email' => $row['email'],
                     'phone' => $row['phone'],
                     'role' => $selected_roles->first()->name,
-                    'password' => bcrypt($row['password']),
+                    'password' => bcrypt($row['password']) ?? null,
                     'job_title' => $has_other_role ? $row['job_title'] : null,
                     'school_id' => auth('user')->user()->hasRole('Super Admin') ? $row['school_id'] : auth('user')->user()->school_id,
                     'is_active' => 1,
@@ -87,8 +87,8 @@ class EmployeesImport implements ToCollection, WithHeadingRow, SkipsEmptyRows, W
             'name' => ['required', 'max:255'],
             'email' => ['required', 'email', 'unique:users,email', 'distinct'],
             'phone' => ['sometimes', 'nullable', 'max:255', 'unique:users,phone', 'distinct'],
-            'password' => ['required', 'min:6'],
-            'role_ids' => ['required'],
+            'password' => ['nullable', 'min:6'],
+            'role_ids' => ['nullable'],
         ];
 
         if (auth('user')->user()->hasRole('Super Admin')) {

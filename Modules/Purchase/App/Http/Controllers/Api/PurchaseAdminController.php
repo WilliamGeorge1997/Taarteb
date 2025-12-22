@@ -5,6 +5,7 @@ namespace Modules\Purchase\App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Modules\Purchase\App\Http\Requests\PurchaseAcceptRequest;
 use Modules\Purchase\App\Models\Purchase;
 use Modules\Purchase\Service\PurchaseService;
 use Modules\Notification\Service\NotificationService;
@@ -31,19 +32,13 @@ class PurchaseAdminController extends Controller
         ]);
     }
 
-    public function accept(Purchase $purchase)
+    public function accept(PurchaseAcceptRequest $request)
     {
-        if ($purchase->status == Purchase::STATUS_ACCEPTED) {
-            return returnMessage(false, 'Purchase already accepted', null, 'unprocessable_entity');
-        }
         try {
             DB::beginTransaction();
-            $purchase->update([
-                'status' => Purchase::STATUS_ACCEPTED,
-            ]);
-            $this->sendNotificationToUser($purchase);
+            $this->purchaseService->acceptMultiple($request->validated());
             DB::commit();
-            return returnMessage(true, 'Purchase accepted successfully', $purchase);
+            return returnMessage(true, 'Purchase accepted successfully');
         } catch (\Exception $e) {
             DB::rollBack();
             return returnMessage(false, 'Failed to accept purchase', null, 'server_error');
@@ -72,17 +67,10 @@ class PurchaseAdminController extends Controller
 
     public function sendNotificationToUser($purchase)
     {
-        if ($purchase->status == Purchase::STATUS_ACCEPTED) {
-            $data = [
-                'title' => 'تم قبول طلب الشراء',
-                'description' => 'تم قبول طلب الشراء الخاص بك.',
-            ];
-        } elseif ($purchase->status == Purchase::STATUS_REJECTED) {
-            $data = [
-                'title' => 'تم رفض طلب الشراء',
-                'description' => 'تم رفض طلب الشراء الخاص بك. السبب: ' . ($purchase->reject_reason ?? 'لم يتم تحديد السبب'),
-            ];
-        }
+        $data = [
+            'title' => 'تم رفض طلب الشراء',
+            'description' => 'تم رفض طلب الشراء الخاص بك. السبب: ' . ($purchase->reject_reason ?? 'لم يتم تحديد السبب'),
+        ];
         (new NotificationService())->sendNotificationToUser($data, $purchase->user_id, 'purchase');
     }
 }

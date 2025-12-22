@@ -20,7 +20,7 @@ class SalaryAdminController extends Controller
 
     public function index(Request $request)
     {
-        $relations = ['employee', 'createdBy', 'school'];
+        $relations = ['employee.roles', 'createdBy.roles', 'school'];
         $salaries = $this->salaryService->findAll($request->all(), $relations);
         $totalCost = $this->salaryService->totalCost();
         return returnMessage(true, 'Salaries fetched successfully', [

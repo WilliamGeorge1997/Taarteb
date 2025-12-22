@@ -16,7 +16,7 @@ use Modules\Purchase\App\Http\Controllers\Api\PurchaseAdminController;
 */
 Route::group(['prefix' => 'admin'],function(){
     Route::get('purchases', [PurchaseAdminController::class, 'index']);
-    Route::post('purchases/{purchase}/accept', [PurchaseAdminController::class, 'accept']);
+    Route::post('purchases/accept', [PurchaseAdminController::class, 'accept']);
     Route::post('purchases/{purchase}/reject', [PurchaseAdminController::class, 'reject']);
 });
 

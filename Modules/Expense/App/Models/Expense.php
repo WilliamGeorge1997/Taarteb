@@ -74,6 +74,11 @@ class Expense extends Model
         return $this->hasMany(ExpenseDetail::class);
     }
 
+    public function installments()
+    {
+        return $this->hasMany(ExpenseInstallment::class);
+    }
+
     public function scopeAvailable($query)
     {
         if (auth('user')->check()) {

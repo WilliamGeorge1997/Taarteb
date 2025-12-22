@@ -31,15 +31,29 @@ class ExpenseService
         $expense = Expense::create($data);
         if (isset($data['details']) && !empty($data['details'])) {
             $expense->details()->createMany($data['details']);
-
         }
-        return $expense->load('details');
+        if (isset($data['installments']) && !empty($data['installments'])) {
+            $expense->installments()->createMany($data['installments']);
+        }
+        return $expense->load('details', 'installments');
     }
 
     function update($expense, $data)
     {
         $expense->update($data);
-        return $expense;
+        if (isset($data['details'])) {
+            $expense->details()->delete();
+            if (!empty($data['details'])) {
+                $expense->details()->createMany($data['details']);
+            }
+        }
+        if (isset($data['installments'])) {
+            $expense->installments()->delete();
+            if (!empty($data['installments'])) {
+                $expense->installments()->createMany($data['installments']);
+            }
+        }
+        return $expense->load('details', 'installments');
     }
 
     function delete($expense)

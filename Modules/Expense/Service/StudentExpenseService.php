@@ -75,8 +75,8 @@ class StudentExpenseService
             ->get();
 
         if ($existingExpenses->count() > 0) {
-            $totalAmountPaid = $existingExpenses->sum('amount_paid');
-            $latestExpense = $existingExpenses->sortByDesc('id')->first();
+            // $totalAmountPaid = $existingExpenses->sum('amount_paid');
+            // $latestExpense = $existingExpenses->sortByDesc('id')->first();
 
             $pendingExpense = $existingExpenses->firstWhere('status', 'pending');
             if ($pendingExpense) {
@@ -88,9 +88,15 @@ class StudentExpenseService
                 throw new \Exception('You have a rejected expense request, please update it before creating a new one');
             }
 
-            if ($latestExpense && $latestExpense->payment_status === 'full' && $totalAmountPaid >= ($data['amount'])) {
-                throw new \Exception('You have paid the required amount for this expense');
+            $totalAmountPaid = $existingExpenses->where('status', 'accepted')->sum('amount_paid');
+            $requiredAmount = $data['amount'];
+            if ($totalAmountPaid >= $requiredAmount) {
+                throw new \Exception('You have already paid the full amount for this expense');
             }
+
+            // if ($latestExpense && $latestExpense->payment_status === 'full' && $totalAmountPaid >= ($data['amount'])) {
+            //     throw new \Exception('You have paid the required amount for this expense');
+            // }
         }
         $studentExpense = StudentExpense::create($data);
         return $studentExpense;
@@ -122,7 +128,8 @@ class StudentExpenseService
                 ->get();
 
             $previouslyPaid = $allStudentExpenses->sum('amount_paid');
-            $newPayment = $studentExpense->is_registration_fee ? $studentExpense->expense->details->where('name', 'مقدم الدفع')->first()->price : $data['amount_paid'];
+            // $newPayment = $studentExpense->is_registration_fee ? $studentExpense->expense->details->where('name', 'مقدم الدفع')->first()->price : $data['amount_paid'];
+            $newPayment = $studentExpense->is_registration_fee ? $studentExpense->expense->installments->first()->price : $data['amount_paid'];
             $totalAmountPaid = $previouslyPaid + $newPayment;
 
             $requiredAmount = $studentExpense->amount;
@@ -131,6 +138,12 @@ class StudentExpenseService
             if ($newPayment > $remaining) {
                 throw new \Exception("Payment amount ({$newPayment}) exceeds remaining balance ({$remaining})");
             }
+
+            // $remaining = $requiredAmount - $previouslyPaid;
+
+            // if ($newPayment > $remaining) {
+            //     throw new \Exception("Payment amount ({$newPayment}) exceeds remaining balance ({$remaining})");
+            // }
 
             $paymentStatus = ($totalAmountPaid >= $requiredAmount) ? 'full' : 'partial';
 
@@ -171,6 +184,7 @@ class StudentExpenseService
                     $query->where('student_id', $student->id);
                 },
                 'details',
+                'installments',
                 'gradeCategory',
                 'grade',
                 'school',
