@@ -13,7 +13,7 @@ class ExpenseInstallment extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = ['expense_id', 'title', 'price'];
+    protected $fillable = ['expense_id', 'title', 'price', 'is_optional'];
 
     protected function serializeDate(\DateTimeInterface $date)
     {

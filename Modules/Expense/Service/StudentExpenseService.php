@@ -129,7 +129,7 @@ class StudentExpenseService
 
             $previouslyPaid = $allStudentExpenses->sum('amount_paid');
             // $newPayment = $studentExpense->is_registration_fee ? $studentExpense->expense->details->where('name', 'مقدم الدفع')->first()->price : $data['amount_paid'];
-            $newPayment = $studentExpense->is_registration_fee ? $studentExpense->expense->installments->first()->price : $data['amount_paid'];
+            $newPayment = $studentExpense->is_registration_fee ? $studentExpense->expense->installments->where('name', 'مقدم الدفع')->first()->price : $data['amount_paid'];
             $totalAmountPaid = $previouslyPaid + $newPayment;
 
             $requiredAmount = $studentExpense->amount;

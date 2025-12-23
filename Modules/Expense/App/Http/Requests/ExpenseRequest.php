@@ -31,6 +31,7 @@ class ExpenseRequest extends FormRequest
             'installments' => ['nullable', 'array'],
             'installments.*.title' => ['nullable', 'string', 'max:255'],
             'installments.*.price' => ['nullable', 'integer', 'min:0'],
+            'installments.*.is_optional' => ['nullable', 'in:1,0'],
         ];
 
     }
@@ -48,9 +49,11 @@ class ExpenseRequest extends FormRequest
 
             $installments = $this->input('installments');
             if ($installments) {
-                $installmentsSum = collect($installments)->sum('price');
+                $installmentsSum = collect($installments)
+                    ->filter(fn($installment) => !($installment['is_optional'] == 1))
+                    ->sum('price');
                 if ($installmentsSum != $price) {
-                    $validator->errors()->add('installments', 'The installments price must be equal to the price');
+                    $validator->errors()->add('installments', 'The non-optional installments price must be equal to the price');
                 }
             }
         });
