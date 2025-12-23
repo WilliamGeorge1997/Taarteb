@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('expense_installments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('expense_id')->constrained('expenses')->onDelete('cascade');
-            $table->string('title')->nullable();
+            $table->string('name')->nullable();
             $table->unsignedInteger('price')->nullable();
             $table->timestamps();
         });

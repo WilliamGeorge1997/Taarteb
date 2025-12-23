@@ -29,7 +29,7 @@ class ExpenseRequest extends FormRequest
             'details.*.name' => ['required', 'string', 'max:255'],
             'details.*.price' => ['required', 'numeric', 'min:0'],
             'installments' => ['nullable', 'array'],
-            'installments.*.title' => ['nullable', 'string', 'max:255'],
+            'installments.*.name' => ['nullable', 'string', 'max:255'],
             'installments.*.price' => ['nullable', 'integer', 'min:0'],
             'installments.*.is_optional' => ['nullable', 'in:1,0'],
         ];
