@@ -11,9 +11,24 @@ class RequiredExpensesResource extends JsonResource
      */
     public function toArray($request): array
     {
-        $basePrice = $this->exceptions->first()
-            ? $this->exceptions->first()->pivot->exception_price
+        // Check if student has an exception for this expense
+        $hasException = $this->exceptions->isNotEmpty();
+        $exception = $hasException ? $this->exceptions->first() : null;
+
+        // Base price: use exception price if exists, otherwise use expense price
+        $basePrice = $hasException
+            ? $exception->pivot->exception_price
             : $this->price;
+
+        // Get details: use exception details if exists, otherwise use expense details
+        $details = $hasException && $this->exceptionDetails->isNotEmpty()
+            ? $this->exceptionDetails
+            : $this->details;
+
+        // Get installments: use exception installments if exists, otherwise use expense installments
+        $installments = $hasException && $this->exceptionInstallments->isNotEmpty()
+            ? $this->exceptionInstallments
+            : $this->installments;
 
         $total_paid_amount = $this->requests && $this->requests->isNotEmpty()
             ? $this->requests->where('status', 'accepted')->sum('amount_paid')
@@ -27,13 +42,15 @@ class RequiredExpensesResource extends JsonResource
             'grade_category_name' => $this->gradeCategory->name,
             'grade_name' => $this->grade->name,
             'price' => $basePrice,
+            'original_price' => $this->price,
             'year' => $this->created_at->format('Y') ?? null,
-            'exceptions_price' => $this->exceptions->first()
-                ? $this->exceptions->first()->pivot->exception_price
+            'has_exception' => $hasException,
+            'exceptions_price' => $hasException
+                ? $exception->pivot->exception_price
                 : null,
-            'exceptions_notes' => $this->exceptions->first()->pivot->notes ?? null,
-            'details' => $this->whenLoaded('details'),
-            'installments' => $this->whenLoaded('installments'),
+            'exceptions_notes' => $exception->pivot->notes ?? null,
+            'details' => $details,
+            'installments' => $installments,
             'student_expenses' => $this->requests && $this->requests->isNotEmpty()
                 ? $this->requests->map(function ($request) {
                     return [

@@ -19,9 +19,11 @@ use Modules\Expense\App\Http\Controllers\Api\ExpenseStudentAdminController;
 
 Route::group(['prefix' => 'admin'], function () {
     Route::apiResource('expenses', ExpenseController::class)->only(['index', 'store']);
+    Route::post('expenses/{expense}', [ExpenseController::class, 'update']);
     Route::get('expenses/{expense}/exceptions', [ExpenseController::class, 'exceptions']);
     Route::post('expenses/{expense}/exceptions', [ExpenseController::class, 'storeExceptions']);
     Route::post('expenses/{expense}/exceptions/update', [ExpenseController::class, 'updateExceptions']);
+    Route::post('expenses/{expense}/exceptions/delete', [ExpenseController::class, 'deleteExceptions']);
     Route::get('expenses/students', [ExpenseController::class, 'students']);
 
     Route::apiResource('student-expenses', ExpenseStudentAdminController::class)->only(['index']);

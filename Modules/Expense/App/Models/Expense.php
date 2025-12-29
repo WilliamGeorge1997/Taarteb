@@ -10,7 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 use Modules\Student\App\Models\Student;
 use Modules\Grade\App\Models\GradeCategory;
 use Modules\Expense\App\Models\ExpenseDetail;
+use Modules\Expense\App\Models\ExceptionDetail;
 use Modules\Expense\App\Models\StudentExpense;
+use Modules\Expense\App\Models\ExceptionInstallment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Expense extends Model
@@ -77,6 +79,16 @@ class Expense extends Model
     public function installments()
     {
         return $this->hasMany(ExpenseInstallment::class);
+    }
+
+    public function exceptionDetails()
+    {
+        return $this->hasMany(ExceptionDetail::class);
+    }
+
+    public function exceptionInstallments()
+    {
+        return $this->hasMany(ExceptionInstallment::class);
     }
 
     public function scopeAvailable($query)

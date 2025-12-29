@@ -21,11 +21,13 @@ class ExpenseRequest extends FormRequest
      */
     public function rules(): array
     {
+        $isUpdate = $this->expense !== null;
+
         return [
-            'grade_category_id' => ['required', 'exists:grade_categories,id'],
-            'grade_id' => ['required', 'exists:grades,id'],
-            'price' => ['required', 'numeric', 'min:0'],
-            'details' => ['required', 'array'],
+            'grade_category_id' => [$isUpdate ? 'sometimes' : 'required', 'exists:grade_categories,id'],
+            'grade_id' => [$isUpdate ? 'sometimes' : 'required', 'exists:grades,id'],
+            'price' => [$isUpdate ? 'sometimes' : 'required', 'numeric', 'min:0'],
+            'details' => [$isUpdate ? 'sometimes' : 'required', 'array'],
             'details.*.name' => ['required', 'string', 'max:255'],
             'details.*.price' => ['required', 'numeric', 'min:0'],
             'installments' => ['nullable', 'array'],

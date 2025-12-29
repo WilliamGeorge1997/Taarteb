@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\File;
 use Modules\Expense\App\Models\Expense;
 use Modules\Common\Helpers\UploadHelper;
 use Modules\Expense\App\Models\StudentExpense;
+use Modules\Expense\App\Models\ExceptionInstallment;
 
 
 class StudentExpenseService
@@ -128,8 +129,25 @@ class StudentExpenseService
                 ->get();
 
             $previouslyPaid = $allStudentExpenses->sum('amount_paid');
-            // $newPayment = $studentExpense->is_registration_fee ? $studentExpense->expense->details->where('name', 'مقدم الدفع')->first()->price : $data['amount_paid'];
-            $newPayment = $studentExpense->is_registration_fee ? $studentExpense->expense->installments->where('name', 'مقدم الدفع')->first()->price : $data['amount_paid'];
+
+            // For registration fee, check if student has exception installments first
+            if ($studentExpense->is_registration_fee) {
+                // Check for exception installments
+                $exceptionInstallment = ExceptionInstallment::where('expense_id', $studentExpense->expense_id)
+                    ->where('student_id', $studentExpense->student_id)
+                    ->where('name', 'مقدم الدفع')
+                    ->first();
+
+                // Use exception installment if exists, otherwise use expense installment
+                if ($exceptionInstallment) {
+                    $newPayment = $exceptionInstallment->price;
+                } else {
+                    $newPayment = $studentExpense->expense->installments->where('name', 'مقدم الدفع')->first()->price ?? 0;
+                }
+            } else {
+                $newPayment = $data['amount_paid'];
+            }
+
             $totalAmountPaid = $previouslyPaid + $newPayment;
 
             $requiredAmount = $studentExpense->amount;
@@ -138,12 +156,6 @@ class StudentExpenseService
             if ($newPayment > $remaining) {
                 throw new \Exception("Payment amount ({$newPayment}) exceeds remaining balance ({$remaining})");
             }
-
-            // $remaining = $requiredAmount - $previouslyPaid;
-
-            // if ($newPayment > $remaining) {
-            //     throw new \Exception("Payment amount ({$newPayment}) exceeds remaining balance ({$remaining})");
-            // }
 
             $paymentStatus = ($totalAmountPaid >= $requiredAmount) ? 'full' : 'partial';
 
@@ -185,6 +197,12 @@ class StudentExpenseService
                 },
                 'details',
                 'installments',
+                'exceptionDetails' => function ($query) use ($student) {
+                    $query->where('student_id', $student->id);
+                },
+                'exceptionInstallments' => function ($query) use ($student) {
+                    $query->where('student_id', $student->id);
+                },
                 'gradeCategory',
                 'grade',
                 'school',

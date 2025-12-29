@@ -12,13 +12,20 @@ class ExpenseExceptionRequest extends FormRequest
     public function rules(): array
     {
         return [
-
             'student_ids' => ['required', 'array'],
             'student_ids.*' => ['required', 'exists:students,id,school_id,' . auth('user')->user()->school_id, 'distinct'],
             'exception_price' => ['required', 'numeric', 'min:0'],
             'notes' => ['nullable', 'string'],
+            // Exception Details
+            'details' => ['nullable', 'array'],
+            'details.*.name' => ['nullable', 'string', 'max:255'],
+            'details.*.price' => ['required_with:details', 'numeric', 'min:0'],
+            // Exception Installments
+            'installments' => ['nullable', 'array'],
+            'installments.*.name' => ['nullable', 'string', 'max:255'],
+            'installments.*.price' => ['required_with:installments', 'numeric', 'min:0'],
+            'installments.*.is_optional' => ['nullable', 'in:0,1'],
         ];
-
     }
 
     /**
@@ -31,6 +38,13 @@ class ExpenseExceptionRequest extends FormRequest
             'student_ids.*' => 'Student ID',
             'exception_price' => 'Exception Price',
             'notes' => 'Notes',
+            'details' => 'Exception Details',
+            'details.*.name' => 'Detail Name',
+            'details.*.price' => 'Detail Price',
+            'installments' => 'Exception Installments',
+            'installments.*.name' => 'Installment Name',
+            'installments.*.price' => 'Installment Price',
+            'installments.*.is_optional' => 'Is Optional',
         ];
     }
 
@@ -63,6 +77,7 @@ class ExpenseExceptionRequest extends FormRequest
      */
     public function withValidator($validator)
     {
+        // Check for existing exceptions (only for store, not update)
         if (!in_array('update', request()->segments())) {
             $validator->after(function ($validator) {
                 $expense = $this->route('expense');
@@ -87,6 +102,23 @@ class ExpenseExceptionRequest extends FormRequest
                 }
             });
         }
+
+        $validator->after(function ($validator) {
+            $installments = $this->input('installments');
+            $exceptionPrice = $this->input('exception_price');
+
+            if ($installments) {
+                $installmentsSum = collect($installments)
+                    ->filter(fn($installment) => !($installment['is_optional'] == 1))
+                    ->sum('price');
+                if ($installmentsSum != $exceptionPrice) {
+                    $validator->errors()->add(
+                        'installments',
+                        'مجموع أسعار الأقساط (' . $installmentsSum . ') يجب أن يساوي سعر الاستثناء (' . $exceptionPrice . ')'
+                    );
+                }
+            }
+        });
     }
 
     /**
