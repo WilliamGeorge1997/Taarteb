@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Modules\Student\DTO\StudentDto;
+use Modules\Student\DTO\StudentParentDto;
 use App\Http\Controllers\Controller;
 use Modules\User\DTO\StudentUserDto;
 use Modules\User\Service\UserService;
@@ -17,6 +18,7 @@ use Modules\Student\App\Http\Requests\StudentRequest;
 use Modules\Student\App\Http\Requests\UpgradeRequest;
 use Modules\Student\App\Http\Requests\GraduateRequest;
 use Modules\Student\App\Http\Requests\StudentImportRequest;
+use Modules\Student\App\Http\Requests\StudentUpdateRequest;
 
 class StudentController extends Controller
 {
@@ -24,13 +26,7 @@ class StudentController extends Controller
     public function __construct(StudentService $studentService)
     {
         $this->middleware('auth:user');
-        $this->middleware('role:Super Admin|School Manager|Teacher');
-        $this->middleware('permission:Index-student', ['only' => ['index']]);
-        $this->middleware('permission:Create-student', ['only' => ['store', 'importStudents']]);
-        $this->middleware('permission:Edit-student', ['only' => ['update', 'activate']]);
-        $this->middleware('permission:Delete-student', ['only' => ['destroy']]);
-        $this->middleware('permission:Index-student-upgrade|Create-student-upgrade|Edit-student-upgrade|Delete-student-upgrade', ['only' => ['getStudentsToUpgrade', 'upgrade']]);
-        $this->middleware('permission:Index-student-graduation|Create-student-graduation|Edit-student-graduation|Delete-student-graduation', ['only' => ['getStudentsToGraduate', 'graduate']]);
+        $this->middleware('role:Super Admin|School Manager|Teacher|Financial Director');
         $this->studentService = $studentService;
     }
     public function index(Request $request)
@@ -56,12 +52,14 @@ class StudentController extends Controller
         }
     }
 
-    public function update(StudentRequest $request, Student $student)
+    public function update(StudentUpdateRequest $request, Student $student)
     {
         try {
             DB::beginTransaction();
+            $studentUserData = (new StudentUserDto($request))->dataFromRequest();
             $data = (new StudentDto($request))->dataFromRequest();
-            $student = $this->studentService->update($student, $data);
+            $studentParentData = (new StudentParentDto($request))->dataFromRequest();
+            $student = $this->studentService->update($student, $data, $studentUserData, $studentParentData);
             DB::commit();
             return returnMessage(true, 'Student Updated Successfully', $student);
         } catch (Exception $e) {

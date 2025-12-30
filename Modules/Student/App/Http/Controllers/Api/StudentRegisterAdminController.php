@@ -18,7 +18,8 @@ class StudentRegisterAdminController extends Controller
 
     public function index()
     {
-        $students = $this->studentService->findBy('is_fee_paid', 0);
+        $relations = ['grade.gradeCategory', 'class'];
+        $students = $this->studentService->findBy('is_fee_paid', 0, $relations);
         return returnMessage(true, 'Students fetched successfully', $students);
     }
 

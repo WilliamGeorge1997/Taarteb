@@ -16,8 +16,9 @@ class StudentDto
     public $class_id;
     public $school_id;
     public $is_fee_paid;
-
+    public $address;
     public $state_id;
+    public $region;
     public $branch_id;
     public $name_en;
     public $birth_date;
@@ -35,16 +36,36 @@ class StudentDto
     public $nearest_landmark;
     public $home_location_url;
     public $siblings_count;
+    public $sibling_order;
+    public $distinguished_skills;
+    public $has_previous_education;
+    public $previous_school_data;
+    public $can_distinguish_letters_randomly;
+    public $reads_short_words;
+    public $reads_short_sentences;
+    public $memorizes_quran_surahs;
+    public $memorizes_quran_from;
+    public $memorizes_quran_to;
+    public $additional_educational_notes;
 
-    public function __construct($request) {
-        if($request->get('name')) $this->name = $request->get('name');
-        if($request->get('email')) $this->email = $request->get('email');
-        if($request->get('gender')) $this->gender = $request->get('gender');
-        if($request->get('identity_number')) $this->identity_number = $request->get('identity_number');
-        if($request->get('parent_email')) $this->parent_email = $request->get('parent_email');
-        if($request->get('parent_phone')) $this->parent_phone = $request->get('parent_phone');
-        if($request->get('grade_id')) $this->grade_id = $request->get('grade_id');
-        if($request->get('class_id')) $this->class_id = $request->get('class_id');
+    public function __construct($request)
+    {
+        if ($request->get('name'))
+            $this->name = $request->get('name');
+        if ($request->get('email'))
+            $this->email = $request->get('email');
+        if ($request->get('gender'))
+            $this->gender = $request->get('gender');
+        if ($request->get('identity_number'))
+            $this->identity_number = $request->get('identity_number');
+        if ($request->get('parent_email'))
+            $this->parent_email = $request->get('parent_email');
+        if ($request->get('parent_phone'))
+            $this->parent_phone = $request->get('parent_phone');
+        if ($request->get('grade_id'))
+            $this->grade_id = $request->get('grade_id');
+        if ($request->get('class_id'))
+            $this->class_id = $request->get('class_id');
         if (auth('user')->user()->hasRole('Super Admin')) {
             if ($request->get('school_id')) {
                 $this->school_id = $request->get('school_id');
@@ -54,9 +75,14 @@ class StudentDto
                 $this->school_id = auth('user')->user()->school_id;
             }
         }
-        if($request->get('is_fee_paid')) $this->is_fee_paid = $request->get('is_fee_paid');
+        if ($request->get('is_fee_paid'))
+            $this->is_fee_paid = $request->get('is_fee_paid');
+        if ($request->get('address'))
+            $this->address = $request->get('address');
         if ($request->get('state_id'))
             $this->state_id = $request->get('state_id');
+        if ($request->get('region'))
+            $this->region = $request->get('region');
         if ($request->get('branch_id'))
             $this->branch_id = $request->get('branch_id');
         if ($request->get('name_en'))
@@ -91,6 +117,28 @@ class StudentDto
             $this->home_location_url = $request->get('home_location_url');
         if ($request->get('siblings_count'))
             $this->siblings_count = $request->get('siblings_count');
+        if ($request->get('sibling_order'))
+            $this->sibling_order = $request->get('sibling_order');
+        if ($request->get('distinguished_skills'))
+            $this->distinguished_skills = $request->get('distinguished_skills');
+        if ($request->get('has_previous_education'))
+            $this->has_previous_education = $request->get('has_previous_education');
+        if ($request->get('previous_school_data'))
+            $this->previous_school_data = $request->get('previous_school_data');
+        if ($request->get('can_distinguish_letters_randomly'))
+            $this->can_distinguish_letters_randomly = $request->get('can_distinguish_letters_randomly');
+        if ($request->get('reads_short_words'))
+            $this->reads_short_words = $request->get('reads_short_words');
+        if ($request->get('reads_short_sentences'))
+            $this->reads_short_sentences = $request->get('reads_short_sentences');
+        if ($request->get('memorizes_quran_surahs'))
+            $this->memorizes_quran_surahs = $request->get('memorizes_quran_surahs');
+        if ($request->get('memorizes_quran_from'))
+            $this->memorizes_quran_from = $request->get('memorizes_quran_from');
+        if ($request->get('memorizes_quran_to'))
+            $this->memorizes_quran_to = $request->get('memorizes_quran_to');
+        if ($request->get('additional_educational_notes'))
+            $this->additional_educational_notes = $request->get('additional_educational_notes');
     }
 
     public function dataFromRequest()
@@ -116,8 +164,12 @@ class StudentDto
             unset($data['school_id']);
         if ($this->is_fee_paid == null)
             unset($data['is_fee_paid']);
+        if ($this->address == null)
+            unset($data['address']);
         if ($this->state_id == null)
             unset($data['state_id']);
+        if ($this->region == null)
+            unset($data['region']);
         if ($this->branch_id == null)
             unset($data['branch_id']);
         if ($this->name_en == null)
@@ -152,6 +204,28 @@ class StudentDto
             unset($data['home_location_url']);
         if ($this->siblings_count == null)
             unset($data['siblings_count']);
+        if ($this->sibling_order == null)
+            unset($data['sibling_order']);
+        if ($this->distinguished_skills == null)
+            unset($data['distinguished_skills']);
+        if ($this->has_previous_education == null)
+            unset($data['has_previous_education']);
+        if ($this->previous_school_data == null)
+            unset($data['previous_school_data']);
+        if ($this->can_distinguish_letters_randomly == null)
+            unset($data['can_distinguish_letters_randomly']);
+        if ($this->reads_short_words == null)
+            unset($data['reads_short_words']);
+        if ($this->reads_short_sentences == null)
+            unset($data['reads_short_sentences']);
+        if ($this->memorizes_quran_surahs == null)
+            unset($data['memorizes_quran_surahs']);
+        if ($this->memorizes_quran_from == null)
+            unset($data['memorizes_quran_from']);
+        if ($this->memorizes_quran_to == null)
+            unset($data['memorizes_quran_to']);
+        if ($this->additional_educational_notes == null)
+            unset($data['additional_educational_notes']);
         return $data;
     }
 }

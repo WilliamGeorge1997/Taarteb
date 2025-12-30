@@ -3,6 +3,7 @@
 namespace Modules\Student\Service;
 
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 use Modules\Class\App\Models\Classroom;
 use Modules\Student\App\Models\Student;
 use Modules\Common\Helpers\UploadHelper;
@@ -39,9 +40,9 @@ class StudentService
         return $student;
     }
 
-    function findBy($key, $value)
+    function findBy($key, $value, $relations = [])
     {
-        $student = Student::available()->where($key, $value)->get();
+        $student = Student::available()->where($key, $value)->with($relations)->get();
         return $student;
     }
 
@@ -76,20 +77,97 @@ class StudentService
         return $student;
     }
 
-    function update($student, $data)
+    function update($student, $data, $studentUserData = null, $studentParentData = null)
     {
+        // Handle file uploads
         if (request()->hasFile('application_form')) {
-            File::delete(public_path('uploads/student/application_form/' . $student->application_form));
+            if ($student->application_form) {
+                File::delete(public_path('uploads/student/application_form/' . $student->application_form));
+            }
             $data['application_form'] = $this->uploadFile(request()->file('application_form'), 'student/application_form');
         }
+        if (request()->hasFile('parent_identity_card_image')) {
+            if ($student->parent_identity_card_image) {
+                File::delete(public_path('uploads/student/parent_identity_card_image/' . $student->parent_identity_card_image));
+            }
+            $data['parent_identity_card_image'] = $this->uploadFile(request()->file('parent_identity_card_image'), 'student/parent_identity_card_image');
+        }
+        if (request()->hasFile('student_residence_card_image')) {
+            if ($student->student_residence_card_image) {
+                File::delete(public_path('uploads/student/student_residence_card_image/' . $student->student_residence_card_image));
+            }
+            $data['student_residence_card_image'] = $this->uploadFile(request()->file('student_residence_card_image'), 'student/student_residence_card_image');
+        }
+        if (request()->hasFile('image')) {
+            if ($student->image) {
+                File::delete(public_path('uploads/student/' . $student->image));
+            }
+            $data['image'] = $this->uploadFile(request()->file('image'), 'student');
+        }
+        if (request()->hasFile('student_passport_image')) {
+            if ($student->student_passport_image) {
+                File::delete(public_path('uploads/student/student_passport_image/' . $student->student_passport_image));
+            }
+            $data['student_passport_image'] = $this->uploadFile(request()->file('student_passport_image'), 'student/student_passport_image');
+        }
+        if (request()->hasFile('student_birth_certificate_image')) {
+            if ($student->student_birth_certificate_image) {
+                File::delete(public_path('uploads/student/student_birth_certificate_image/' . $student->student_birth_certificate_image));
+            }
+            $data['student_birth_certificate_image'] = $this->uploadFile(request()->file('student_birth_certificate_image'), 'student/student_birth_certificate_image');
+        }
+        if (request()->hasFile('student_health_card_image')) {
+            if ($student->student_health_card_image) {
+                File::delete(public_path('uploads/student/student_health_card_image/' . $student->student_health_card_image));
+            }
+            $data['student_health_card_image'] = $this->uploadFile(request()->file('student_health_card_image'), 'student/student_health_card_image');
+        }
+        if (request()->hasFile('home_map_image')) {
+            if ($student->home_map_image) {
+                File::delete(public_path('uploads/student/home_map_image/' . $student->home_map_image));
+            }
+            $data['home_map_image'] = $this->uploadFile(request()->file('home_map_image'), 'student/home_map_image');
+        }
+
+        // Update student record
         $student->update($data);
-        if ($student->user_id) {
+
+        // Update user record if user data is provided
+        if ($studentUserData && $student->user_id) {
+            $userUpdateData = [];
+            if (isset($studentUserData['name'])) {
+                $userUpdateData['name'] = $studentUserData['name'];
+            }
+            if (isset($studentUserData['email'])) {
+                $userUpdateData['email'] = $studentUserData['email'];
+            }
+            if (isset($studentUserData['phone'])) {
+                $userUpdateData['phone'] = $studentUserData['phone'];
+            }
+            if (isset($studentUserData['password'])) {
+                $userUpdateData['password'] = $studentUserData['password'];
+            }
+            if (!empty($userUpdateData)) {
+                $student->user->update($userUpdateData);
+            }
+        } elseif ($student->user_id) {
+            // Fallback: update user with student name and email if no user data provided
             $student->user->update([
                 'name' => $student->name,
                 'email' => $student->email,
             ]);
         }
-        return $student;
+
+        // Update parent record if parent data is provided
+        if ($studentParentData && !empty($studentParentData)) {
+            if ($student->parent) {
+                $student->parent->update($studentParentData);
+            } else {
+                $student->parent()->create($studentParentData);
+            }
+        }
+
+        return $student->fresh('user', 'parent','grade','class','school','branch','state.governorate');
     }
 
     function delete($student)
