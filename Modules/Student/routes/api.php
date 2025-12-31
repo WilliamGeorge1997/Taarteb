@@ -20,7 +20,6 @@ use Modules\Student\App\Http\Controllers\Api\StudentRegisterAdminController;
 */
 
 Route::apiResource('students', StudentController::class)->only(['index', 'store', 'destroy']);
-Route::post('students/{student}', [StudentController::class, 'update']);
 Route::group(['prefix' => 'students'], function () {
     Route::get('graduate', [StudentController::class, 'getStudentsToGraduate']);
     Route::post('graduate', [StudentController::class, 'graduate']);
@@ -35,6 +34,7 @@ Route::group(['prefix' => 'students'], function () {
 });
 Route::get('classes/{class}/students/upgrade', [StudentController::class, 'getStudentsToUpgrade']);
 Route::post('students/import', [StudentController::class, 'importStudents']);
+Route::post('students/{student}', [StudentController::class, 'update']);
 
 
 
