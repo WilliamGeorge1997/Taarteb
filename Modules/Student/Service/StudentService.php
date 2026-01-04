@@ -221,7 +221,7 @@ class StudentService
             ->where('grade_id', $student->grade_id)
             ->where('grade_category_id', $student->grade->grade_category_id)
             ->where('school_id', $student->school_id)
-            ->with('details')
+            ->with(['details', 'installments'])
             ->oldest()
             ->first();
 
