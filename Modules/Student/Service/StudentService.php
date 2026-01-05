@@ -229,8 +229,8 @@ class StudentService
             throw new \Exception('No expenses found for your grade');
         }
 
-        $startPaymentDetail = $firstExpense->installments->firstWhere('name', 'مقدم الدفع');
-        // $startPaymentDetail = $firstExpense->details->firstWhere('name', 'مقدم الدفع');
+        // $startPaymentDetail = $firstExpense->installments->firstWhere('name', 'مقدم الدفع');
+        $startPaymentDetail = $firstExpense->details->firstWhere('name', 'مقدم الدفع');
 
         if (!$startPaymentDetail) {
             throw new \Exception('Registration fee (مقدم الدفع) not configured for this grade');

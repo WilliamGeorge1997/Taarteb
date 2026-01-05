@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\File;
 use Modules\Expense\App\Models\Expense;
 use Modules\Common\Helpers\UploadHelper;
 use Modules\Expense\App\Models\StudentExpense;
-use Modules\Expense\App\Models\ExceptionInstallment;
+use Modules\Expense\App\Models\ExceptionDetail;
 
 
 class StudentExpenseService
@@ -130,19 +130,19 @@ class StudentExpenseService
 
             $previouslyPaid = $allStudentExpenses->sum('amount_paid');
 
-            // For registration fee, check if student has exception installments first
+            // For registration fee, check if student has exception details first
             if ($studentExpense->is_registration_fee) {
-                // Check for exception installments
-                $exceptionInstallment = ExceptionInstallment::where('expense_id', $studentExpense->expense_id)
+                // Check for exception details
+                $exceptionDetail = ExceptionDetail::where('expense_id', $studentExpense->expense_id)
                     ->where('student_id', $studentExpense->student_id)
                     ->where('name', 'مقدم الدفع')
                     ->first();
 
-                // Use exception installment if exists, otherwise use expense installment
-                if ($exceptionInstallment) {
-                    $newPayment = $exceptionInstallment->price;
+                // Use exception detail if exists, otherwise use expense detail
+                if ($exceptionDetail) {
+                    $newPayment = $exceptionDetail->price;
                 } else {
-                    $newPayment = $studentExpense->expense->installments->where('name', 'مقدم الدفع')->first()->price ?? 0;
+                    $newPayment = $studentExpense->expense->details->where('name', 'مقدم الدفع')->first()->price ?? 0;
                 }
             } else {
                 $newPayment = $data['amount_paid'];

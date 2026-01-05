@@ -8,8 +8,8 @@ class ExpenseStudentResource extends JsonResource
 {
     public function toArray($request): array
     {
-        $amount_paid = $this->is_registration_fee ? $this->expense->installments->where('name', 'مقدم الدفع')->first()->price : $this->amount_paid;
-        // $amount_paid = $this->is_registration_fee ? $this->expense->details->where('name', 'مقدم الدفع')->first()->price : $this->amount_paid;
+        // $amount_paid = $this->is_registration_fee ? $this->expense->installments->where('name', 'مقدم الدفع')->first()->price : $this->amount_paid;
+        $amount_paid = $this->is_registration_fee ? $this->expense->details->where('name', 'مقدم الدفع')->first()->price : $this->amount_paid;
 
         return [
             'id' => $this->id,
